@@ -1,0 +1,1596 @@
+[
+  {
+    "id": "world-home:regionshape-4746",
+    "parts": 1,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-house-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-1-const",
+          "hom-2-const",
+          "hom-road-chunk-1",
+          "hom-road-chunk-2",
+          "hom-road-chunk-3",
+          "hom-road-chunk-4",
+          "hom-house-cityscape-wide",
+          "hom-house-yard",
+          "hom-road-suburb",
+          "hom-road-hills"
+        ],
+        "resident_only": [
+          "hom-road-woods",
+          "hom-road-farm",
+          "hom-town-streets-script"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -196.515056667355,
+          -76.71391296386719,
+          -26.025674715338347
+        ],
+        "max": [
+          -15.598449935017065,
+          123.28611239360423,
+          17.275996229097952
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-4747",
+    "parts": 2,
+    "selection_paths": [
+      {
+        "variant": 3,
+        "when": [
+          "!beforeTask(home, hom-house-daughter-room)",
+          "taskComplete(home, hom-house-escape)",
+          "!taskComplete(home, hom-house-escape)"
+        ]
+      },
+      {
+        "variant": 2,
+        "when": [
+          "!beforeTask(home, hom-house-daughter-room)",
+          "taskComplete(home, hom-house-escape)",
+          "taskComplete(home, hom-house-escape)"
+        ]
+      },
+      {
+        "variant": 3,
+        "when": [
+          "!beforeTask(home, hom-house-daughter-room)",
+          "!taskComplete(home, hom-house-escape)",
+          "!objectSpawned(ss-hom-player-settings-1)",
+          "!objectSpawned(ss-hom-player-settings-1)"
+        ]
+      },
+      {
+        "variant": 2,
+        "when": [
+          "!beforeTask(home, hom-house-daughter-room)",
+          "!taskComplete(home, hom-house-escape)",
+          "!objectSpawned(ss-hom-player-settings-1)",
+          "objectSpawned(ss-hom-player-settings-1)"
+        ]
+      },
+      {
+        "variant": 3,
+        "when": [
+          "!beforeTask(home, hom-house-daughter-room)",
+          "!taskComplete(home, hom-house-escape)",
+          "objectSpawned(ss-hom-player-settings-1)",
+          "!getBoolean(0x4f12da44, ss-hom-player-settings-1)"
+        ]
+      },
+      {
+        "variant": 2,
+        "when": [
+          "!beforeTask(home, hom-house-daughter-room)",
+          "!taskComplete(home, hom-house-escape)",
+          "objectSpawned(ss-hom-player-settings-1)",
+          "getBoolean(0x4f12da44, ss-hom-player-settings-1)"
+        ]
+      },
+      {
+        "variant": 1,
+        "when": [
+          "beforeTask(home, hom-house-daughter-room)"
+        ]
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-1-house",
+          "hom-cache-hom-2-road",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-house-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-1-const",
+          "hom-2-const",
+          "hom-road-chunk-1",
+          "hom-road-chunk-2",
+          "hom-road-chunk-3",
+          "hom-house-cityscape-wide",
+          "hom-house-interior",
+          "hom-house-yard",
+          "hom-house-interior-script",
+          "hom-road-suburb",
+          "hom-road-hills"
+        ],
+        "resident_only": [
+          "hom-house-interior-low",
+          "hom-road-woods",
+          "hom-road-farm"
+        ]
+      },
+      "2": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-1-house",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-house-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-1-const",
+          "hom-2-const",
+          "hom-road-chunk-1",
+          "hom-road-chunk-2",
+          "hom-road-chunk-3",
+          "hom-house-cityscape-wide",
+          "hom-house-yard",
+          "hom-house-interior-low",
+          "hom-house-interior-script",
+          "hom-road-suburb",
+          "hom-road-hills"
+        ],
+        "resident_only": [
+          "hom-road-woods",
+          "hom-road-farm"
+        ]
+      },
+      "3": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-1-house",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-house-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-1-const",
+          "hom-2-const",
+          "hom-road-chunk-1",
+          "hom-road-chunk-2",
+          "hom-road-chunk-3",
+          "hom-house-cityscape-wide",
+          "hom-house-interior",
+          "hom-house-yard",
+          "hom-house-interior-script",
+          "hom-road-suburb",
+          "hom-road-hills"
+        ],
+        "resident_only": [
+          "hom-house-interior-low",
+          "hom-road-woods",
+          "hom-road-farm"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -17.27853412709318,
+          -76.71387122793965,
+          -100.00477470478206
+        ],
+        "max": [
+          43.442863785522775,
+          123.28614291117871,
+          14.19301704778793
+        ]
+      },
+      {
+        "min": [
+          -16.226818517190154,
+          -76.7138671875,
+          -26.025670901198154
+        ],
+        "max": [
+          43.4428640788283,
+          123.28614404366495,
+          14.530289687738577
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-4750",
+    "parts": 4,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-road-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-2-const",
+          "hom-road-chunk-2",
+          "hom-road-chunk-3",
+          "hom-road-chunk-4",
+          "hom-road-hills",
+          "hom-road-woods"
+        ],
+        "resident_only": [
+          "hom-road-farm",
+          "hom-town-low",
+          "hom-town-streets-script"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -342.2274866968908,
+          -76.71390585060821,
+          -126.12017222503391
+        ],
+        "max": [
+          -291.83336405827737,
+          123.28612765239147,
+          -87.11164299452935
+        ]
+      },
+      {
+        "min": [
+          -307.3968719466251,
+          -76.71389861786017,
+          -112.06535776949225
+        ],
+        "max": [
+          -269.25880456620956,
+          123.28608703613281,
+          -53.904428912123706
+        ]
+      },
+      {
+        "min": [
+          -287.344545509639,
+          -76.71390438695146,
+          -60.42461884885823
+        ],
+        "max": [
+          -247.39020590307632,
+          123.28608130786002,
+          -15.707578077100472
+        ]
+      },
+      {
+        "min": [
+          -287.3445521819748,
+          -76.7139030514026,
+          -84.78750723903029
+        ],
+        "max": [
+          -256.39092545635754,
+          123.28608187602974,
+          -53.90443759062384
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-4751",
+    "parts": 7,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-road-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-2-const",
+          "hom-road-chunk-2",
+          "hom-road-chunk-3",
+          "hom-road-chunk-4",
+          "hom-road-chunk-5",
+          "hom-road-chunk-6",
+          "hom-road-hills",
+          "hom-road-woods",
+          "hom-road-farm",
+          "hom-road-highway",
+          "hom-town-low"
+        ],
+        "resident_only": [
+          "hom-town-freeway",
+          "hom-town-streets-script"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -421.0417129372076,
+          -76.71387079897067,
+          11.609662452636819
+        ],
+        "max": [
+          -378.898136736119,
+          123.28612765239149,
+          57.34467761283063
+        ]
+      },
+      {
+        "min": [
+          -409.4715692872049,
+          -76.71385192871094,
+          -73.18074241350686
+        ],
+        "max": [
+          -377.03257460026884,
+          123.28615485573472,
+          -35.114130893051936
+        ]
+      },
+      {
+        "min": [
+          -388.2575281130991,
+          -76.7138671875,
+          110.52964698346905
+        ],
+        "max": [
+          -323.567924074182,
+          123.2861047642106,
+          148.29376977428367
+        ]
+      },
+      {
+        "min": [
+          -421.04170915469626,
+          -76.71386951235596,
+          -35.42460932664238
+        ],
+        "max": [
+          -377.0325862382569,
+          123.28614291117871,
+          12.541117957897013
+        ]
+      },
+      {
+        "min": [
+          -330.84679908584155,
+          -76.71387061046012,
+          185.62917403827024
+        ],
+        "max": [
+          -247.3568197883175,
+          123.28610476421062,
+          255.3649292749251
+        ]
+      },
+      {
+        "min": [
+          -412.0279965367322,
+          -76.7138671875,
+          54.70071737174495
+        ],
+        "max": [
+          -353.79863336102574,
+          123.28610476421062,
+          118.17888360470444
+        ]
+      },
+      {
+        "min": [
+          -365.8535501691119,
+          -76.71386718750001,
+          138.64126377463091
+        ],
+        "max": [
+          -288.58462135975105,
+          123.28610476421062,
+          195.30668108614256
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-4752",
+    "parts": 1,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-road-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-3-shared",
+          "hom-2-const",
+          "hom-road-chunk-3",
+          "hom-road-chunk-4",
+          "hom-road-chunk-5",
+          "hom-road-chunk-6",
+          "hom-road-woods",
+          "hom-road-farm",
+          "hom-road-highway",
+          "hom-town-freeway",
+          "hom-town-low"
+        ],
+        "resident_only": [
+          "hom-town-freeway-wide",
+          "hom-town-wide",
+          "hom-town-streets-script"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -521.6605659649381,
+          -76.71386993666562,
+          195.3065682279247
+        ],
+        "max": [
+          -295.5378908714191,
+          123.28612765239149,
+          315.6628281624109
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-4753",
+    "parts": 2,
+    "selection_paths": [
+      {
+        "variant": 0,
+        "when": [
+          "!taskComplete(home, hom-town-crash)",
+          "!taskComplete(home, hom-road-freeway-traffic)"
+        ]
+      },
+      {
+        "variant": 1,
+        "when": [
+          "!taskComplete(home, hom-town-crash)",
+          "taskComplete(home, hom-road-freeway-traffic)"
+        ]
+      },
+      {
+        "variant": 2,
+        "when": [
+          "taskComplete(home, hom-town-crash)"
+        ]
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "char-level-joel-young-crash",
+          "char-level-tommy-young-crash",
+          "char-level-sarah-crash",
+          "char-level-sarah-player",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-town-audio",
+          "hom-road-audio",
+          "hom-2-const",
+          "hom-3-shared",
+          "hom-3-const",
+          "hom-3-anim-crash-rescue",
+          "hom-road-chunk-5",
+          "hom-road-chunk-6",
+          "hom-anim-civ",
+          "hom-town-freeway-low",
+          "hom-town-streets-a",
+          "hom-town-streets-b",
+          "hom-town-streets-a-col",
+          "hom-town-streets-crowd",
+          "hom-alley-streets-script",
+          "hom-town-bridge-wide",
+          "hom-town-freeway-wide",
+          "hom-town-wide"
+        ],
+        "resident_only": [
+          "hom-town-streets-c",
+          "hom-town-streets-script",
+          "hom-town-streets-lights",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col"
+        ]
+      },
+      "2": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "char-level-joel-young-crash",
+          "char-level-tommy-young-crash",
+          "char-level-sarah-crash",
+          "hom-const",
+          "hom-const-audio",
+          "hom-town-audio",
+          "hom-3-shared",
+          "hom-3-const",
+          "hom-3-anim-crash-rescue",
+          "hom-4-const",
+          "hom-anim-civ",
+          "hom-town-streets-a",
+          "hom-town-streets-b",
+          "hom-town-streets-c",
+          "hom-town-streets-d",
+          "hom-town-streets-e",
+          "hom-town-streets-script",
+          "hom-town-streets-lights",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col",
+          "hom-town-streets-crowd",
+          "hom-alley-streets-script",
+          "hom-town-bridge-wide",
+          "hom-town-freeway-wide",
+          "hom-town-wide"
+        ],
+        "resident_only": [
+          "hom-alley-way"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -940.6624438002395,
+          -162.7957434154457,
+          241.46491461453087
+        ],
+        "max": [
+          -835.357616683956,
+          37.20436709822397,
+          380.4220755050228
+        ]
+      },
+      {
+        "min": [
+          -986.6118047549331,
+          -162.79574838897344,
+          241.46489771929595
+        ],
+        "max": [
+          -930.8014349398484,
+          37.204310750447426,
+          379.29696117110603
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-5323",
+    "parts": 1,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-const",
+          "hom-const-road",
+          "sky-hometown",
+          "hom-town"
+        ],
+        "resident_only": []
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -128.43978881835938,
+          -94.40273284912112,
+          -13.859024047851562
+        ],
+        "max": [
+          338.5505676269531,
+          5.597263813018799,
+          421.30524762806334
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-5771",
+    "parts": 3,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": [
+          "!taskComplete(home, hom-road-highway)"
+        ]
+      },
+      {
+        "variant": 2,
+        "when": [
+          "taskComplete(home, hom-road-highway)"
+        ]
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-road-audio",
+          "char-level-joel-young-crash",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-town-freeway",
+          "hom-2-const",
+          "hom-3-shared",
+          "hom-3-const",
+          "hom-3-anim-crash-rescue",
+          "hom-road-chunk-4",
+          "hom-road-chunk-5",
+          "hom-road-chunk-6",
+          "hom-town-freeway-wide",
+          "hom-town-wide",
+          "hom-town-low",
+          "hom-town-streets-crowd"
+        ],
+        "resident_only": [
+          "hom-town-audio",
+          "hom-town-freeway-low",
+          "hom-town-streets-a",
+          "hom-town-streets-b",
+          "hom-town-streets-c",
+          "hom-town-streets-script",
+          "hom-town-streets-lights",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col"
+        ]
+      },
+      "2": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-road-audio",
+          "char-level-joel-young-crash",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-town-freeway",
+          "hom-2-const",
+          "hom-3-shared",
+          "hom-3-const",
+          "hom-3-anim-crash-rescue",
+          "hom-road-chunk-4",
+          "hom-road-chunk-5",
+          "hom-road-chunk-6",
+          "hom-anim-civ",
+          "hom-town-freeway-wide",
+          "hom-town-wide",
+          "hom-town-streets-a",
+          "hom-town-streets-b",
+          "hom-town-streets-a-col",
+          "hom-town-streets-crowd"
+        ],
+        "resident_only": [
+          "hom-town-audio",
+          "hom-town-freeway-low",
+          "hom-town-streets-c",
+          "hom-town-streets-script",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col",
+          "hom-town-streets-lights"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -879.7160724659049,
+          -76.71389770507812,
+          380.3720283112077
+        ],
+        "max": [
+          -721.4070178346878,
+          123.28614081821861,
+          512.5623068500494
+        ]
+      },
+      {
+        "min": [
+          -889.7797568811376,
+          -76.71386606362674,
+          286.2907661335723
+        ],
+        "max": [
+          -721.4070115413563,
+          123.28613929317814,
+          403.99638200498015
+        ]
+      },
+      {
+        "min": [
+          -835.3578418547435,
+          -76.71387018378441,
+          275.21088301583325
+        ],
+        "max": [
+          -715.3354387140253,
+          123.28614340447406,
+          380.3720943362726
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-5982",
+    "parts": 2,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-road-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-1-const",
+          "hom-2-const",
+          "hom-road-chunk-1",
+          "hom-road-chunk-2",
+          "hom-road-chunk-3",
+          "hom-road-chunk-4",
+          "hom-house-cityscape-wide",
+          "hom-house-yard",
+          "hom-road-suburb",
+          "hom-road-hills"
+        ],
+        "resident_only": [
+          "hom-road-woods",
+          "hom-road-farm",
+          "hom-town-streets-script"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -279.3202829918637,
+          -76.71391181432675,
+          -16.861806103716905
+        ],
+        "max": [
+          -195.28812636235077,
+          123.28611239360423,
+          19.672581278398344
+        ]
+      },
+      {
+        "min": [
+          -247.39021867151664,
+          -76.71391181432675,
+          -17.12269909472421
+        ],
+        "max": [
+          -195.28812636235077,
+          123.28611239360424,
+          17.27600278005439
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-6157",
+    "parts": 3,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": [
+          "!taskComplete(home, hom-alley-clear)"
+        ]
+      },
+      {
+        "variant": 2,
+        "when": [
+          "taskComplete(home, hom-alley-clear)"
+        ]
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-audio",
+          "hom-town-audio",
+          "hom-3-shared",
+          "hom-4-const",
+          "hom-3-const",
+          "hom-5-const",
+          "char-level-joel-young-crash",
+          "char-level-tommy-young-crash",
+          "char-level-sarah-crash",
+          "hom-town-freeway-wide",
+          "hom-town-bridge-wide",
+          "hom-town-wide",
+          "hom-town-streets-c",
+          "hom-town-streets-d",
+          "hom-town-streets-e",
+          "hom-town-streets-script",
+          "hom-town-streets-lights",
+          "hom-town-streets-crowd",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col",
+          "hom-alley-way",
+          "hom-alley-bar",
+          "hom-alley-way-script",
+          "hom-alley-streets-script",
+          "hom-alley-parking-lot-script",
+          "hom-4-anim-bar",
+          "hom-alley-bar-script"
+        ],
+        "resident_only": [
+          "hom-woods-hill"
+        ]
+      },
+      "2": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-audio",
+          "hom-alley-audio",
+          "hom-3-shared",
+          "hom-4-const",
+          "hom-5-const",
+          "char-level-joel-young-crash",
+          "char-level-tommy-young-crash",
+          "char-level-sarah-crash",
+          "hom-town-streets-e",
+          "hom-town-streets-crowd",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col",
+          "hom-alley-way",
+          "hom-alley-bar",
+          "hom-alley-way-script",
+          "hom-alley-streets-script",
+          "hom-alley-parking-lot-script",
+          "hom-4-anim-bar",
+          "hom-alley-bar-interior",
+          "hom-alley-bar-script"
+        ],
+        "resident_only": [
+          "hom-woods-hill"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -1077.3978285742069,
+          -162.79580273678272,
+          339.48951543853394
+        ],
+        "max": [
+          -1020.6468352910504,
+          37.20422363281251,
+          403.25842857787853
+        ]
+      },
+      {
+        "min": [
+          -1117.6094311010497,
+          -162.7958860544083,
+          304.51228889993854
+        ],
+        "max": [
+          -1020.646869549976,
+          37.204223012420755,
+          377.32812383449294
+        ]
+      },
+      {
+        "min": [
+          -1142.0209427533014,
+          -162.7958526611328,
+          304.5122283482454
+        ],
+        "max": [
+          -1082.7604719563383,
+          37.204263997332106,
+          374.2431060585311
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-6939",
+    "parts": 1,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-audio",
+          "hom-town-audio",
+          "char-level-joel-young-crash",
+          "char-level-tommy-young-crash",
+          "char-level-sarah-crash",
+          "hom-3-const",
+          "hom-3-shared",
+          "hom-4-const",
+          "hom-town-bridge-wide",
+          "hom-town-freeway-wide",
+          "hom-town-wide",
+          "hom-town-streets-script",
+          "hom-town-streets-lights",
+          "hom-town-streets-crowd",
+          "hom-town-streets-a",
+          "hom-town-streets-b",
+          "hom-town-streets-c",
+          "hom-town-streets-d",
+          "hom-town-streets-e",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col",
+          "hom-alley-streets-script"
+        ],
+        "resident_only": [
+          "hom-alley-way",
+          "hom-woods-hill"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -1021.025220954248,
+          -162.79581832885742,
+          354.91775286128546
+        ],
+        "max": [
+          -940.6623386962425,
+          37.20426651369529,
+          443.1419571863627
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-7267",
+    "parts": 2,
+    "selection_paths": [
+      {
+        "variant": 4,
+        "when": [
+          "!taskComplete(home, hom-alley-bar-split-up)",
+          "!taskComplete(home, hom-alley-bar-enter)",
+          "!taskComplete(home, hom-alley-clear)"
+        ]
+      },
+      {
+        "variant": 1,
+        "when": [
+          "!taskComplete(home, hom-alley-bar-split-up)",
+          "!taskComplete(home, hom-alley-bar-enter)",
+          "taskComplete(home, hom-alley-clear)"
+        ]
+      },
+      {
+        "variant": 2,
+        "when": [
+          "!taskComplete(home, hom-alley-bar-split-up)",
+          "taskComplete(home, hom-alley-bar-enter)"
+        ]
+      },
+      {
+        "variant": 3,
+        "when": [
+          "taskComplete(home, hom-alley-bar-split-up)"
+        ]
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "char-level-tommy-young-crash",
+          "char-level-joel-young-crash",
+          "char-level-sarah-crash",
+          "hom-alley-audio",
+          "hom-woods-audio",
+          "hom-const-audio",
+          "hom-3-shared",
+          "hom-3-shared-no-civ",
+          "hom-5-const",
+          "hom-4-const",
+          "hom-4-anim-bar",
+          "hom-town-streets-e",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-e-col",
+          "hom-town-streets-f-col",
+          "hom-town-streets-crowd",
+          "hom-alley-bar",
+          "hom-alley-bar-script",
+          "hom-alley-parking-lot-script",
+          "hom-alley-way",
+          "hom-alley-way-script",
+          "hom-alley-streets-script",
+          "hom-alley-bar-interior",
+          "hom-woods-hill"
+        ],
+        "resident_only": [
+          "hom-alley-way-low",
+          "mil-const",
+          "mil-sound-const",
+          "mil-sound-plaza",
+          "char-level-joel-military-city-start",
+          "sky-mil-test"
+        ]
+      },
+      "2": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "char-level-tommy-young-crash",
+          "char-level-joel-young-crash",
+          "char-level-sarah-crash",
+          "hom-alley-audio",
+          "hom-woods-audio",
+          "hom-const-audio",
+          "hom-3-shared-no-civ",
+          "hom-5-const",
+          "hom-4-anim-bar",
+          "hom-alley-bar",
+          "hom-alley-bar-script",
+          "hom-alley-parking-lot-script",
+          "hom-alley-bar-interior",
+          "hom-alley-way-low",
+          "hom-woods-hill",
+          "mil-puddle-water"
+        ],
+        "resident_only": [
+          "mil-const",
+          "mil-sound-const",
+          "mil-sound-plaza",
+          "char-level-joel-military-city-start",
+          "sky-mil-test",
+          "char-level-tess",
+          "mil-city-alley",
+          "mil-city-plaza-col",
+          "mil-city-back-alley-col",
+          "mil-exit-apt-anim",
+          "mil-city-back-alley"
+        ]
+      },
+      "3": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "char-level-joel-young-crash",
+          "char-level-sarah-crash",
+          "hom-alley-audio",
+          "hom-woods-audio",
+          "hom-const-audio",
+          "hom-3-shared-no-civ",
+          "hom-5-const",
+          "hom-alley-bar",
+          "hom-alley-parking-lot-script",
+          "hom-alley-way-low",
+          "hom-woods-hill"
+        ],
+        "resident_only": [
+          "mil-const",
+          "mil-sound-const",
+          "mil-sound-plaza",
+          "char-level-joel-military-city-start",
+          "sky-mil-test",
+          "char-level-tess",
+          "mil-puddle-water",
+          "mil-city-alley",
+          "mil-city-plaza-col",
+          "mil-city-back-alley-col",
+          "mil-exit-apt-anim",
+          "mil-city-back-alley",
+          "mil-city-plaza-ai",
+          "mil-city-back-alley-ai",
+          "mil-city-vehicle-checkpoint-door"
+        ]
+      },
+      "4": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "char-level-tommy-young-crash",
+          "char-level-joel-young-crash",
+          "char-level-sarah-crash",
+          "hom-alley-audio",
+          "hom-woods-audio",
+          "hom-const-audio",
+          "hom-3-shared",
+          "hom-3-shared-no-civ",
+          "hom-5-const",
+          "hom-4-const",
+          "hom-4-anim-bar",
+          "hom-town-streets-e",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-e-col",
+          "hom-town-streets-f-col",
+          "hom-town-streets-crowd",
+          "hom-alley-bar",
+          "hom-alley-bar-script",
+          "hom-alley-parking-lot-script",
+          "hom-alley-way",
+          "hom-alley-way-script",
+          "hom-alley-streets-script",
+          "hom-alley-bar-interior",
+          "hom-alley-way-low"
+        ],
+        "resident_only": [
+          "hom-woods-hill"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -1142.021090133456,
+          -162.79584121704102,
+          348.55753181289947
+        ],
+        "max": [
+          -1077.3977243469799,
+          37.2043101526742,
+          440.17305032283133
+        ]
+      },
+      {
+        "min": [
+          -1276.064574838975,
+          -162.79572092009982,
+          348.55751475755886
+        ],
+        "max": [
+          -1113.4545376355122,
+          37.20437622070312,
+          597.6004925259988
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-7273",
+    "parts": 1,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-audio",
+          "hom-town-audio",
+          "char-level-joel-young-crash",
+          "char-level-tommy-young-crash",
+          "char-level-sarah-crash",
+          "hom-3-const",
+          "hom-4-const",
+          "hom-5-const",
+          "hom-3-shared",
+          "hom-town-freeway-wide",
+          "hom-town-bridge-wide",
+          "hom-town-wide",
+          "hom-alley-parking-lot-script",
+          "hom-alley-way-script",
+          "hom-town-streets-script",
+          "hom-town-streets-lights",
+          "hom-town-streets-crowd",
+          "hom-alley-streets-script",
+          "hom-town-streets-b",
+          "hom-town-streets-c",
+          "hom-town-streets-d",
+          "hom-town-streets-e",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col",
+          "hom-alley-way"
+        ],
+        "resident_only": [
+          "hom-woods-hill"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -1058.155301935208,
+          -162.79580688476562,
+          339.4895190214583
+        ],
+        "max": [
+          -986.6117923974759,
+          37.204246520996094,
+          416.92488239983004
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-11241",
+    "parts": 3,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-road-audio",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-2-const",
+          "hom-road-chunk-2",
+          "hom-road-chunk-3",
+          "hom-road-chunk-4",
+          "hom-road-hills",
+          "hom-road-woods",
+          "hom-road-farm",
+          "hom-town-low"
+        ],
+        "resident_only": [
+          "hom-road-highway",
+          "hom-town-streets-script"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -409.47152264631313,
+          -76.71388244628906,
+          -97.28138330397556
+        ],
+        "max": [
+          -377.82530940103146,
+          123.28612002299785,
+          -71.85989041085823
+        ]
+      },
+      {
+        "min": [
+          -393.8764825502629,
+          -76.71388414194416,
+          -126.12019302530904
+        ],
+        "max": [
+          -341.809131668512,
+          123.28611239360424,
+          -85.65126010817842
+        ]
+      },
+      {
+        "min": [
+          -406.9123359664716,
+          -76.71389123518351,
+          -112.64593990920974
+        ],
+        "max": [
+          -377.8603243362104,
+          123.2861047642106,
+          -85.65126010817842
+        ]
+      }
+    ]
+  },
+  {
+    "id": "world-home:regionshape-13203",
+    "parts": 1,
+    "selection_paths": [
+      {
+        "variant": 1,
+        "when": []
+      }
+    ],
+    "sets": {
+      "1": {
+        "display": [
+          "hom-cache-const",
+          "hom-cache-hom-2-road",
+          "hom-cache-hom-3-town",
+          "hom-cache-hom-4-alley",
+          "hom-cache-hom-5-woods",
+          "hom-cache-mil-city",
+          "hom-fx",
+          "hom-road-fx",
+          "sky-hometown-3",
+          "hom-const",
+          "hom-const-road",
+          "hom-const-audio",
+          "hom-road-audio",
+          "char-level-joel-young-crash",
+          "char-level-joel-young",
+          "char-level-tommy-young",
+          "char-level-sarah-player",
+          "hom-3-shared",
+          "hom-2-const",
+          "hom-road-chunk-3",
+          "hom-road-chunk-4",
+          "hom-road-chunk-5",
+          "hom-road-chunk-6",
+          "hom-road-highway",
+          "hom-town-freeway",
+          "hom-town-low",
+          "hom-town-freeway-wide",
+          "hom-town-wide"
+        ],
+        "resident_only": [
+          "hom-town-freeway-low",
+          "hom-town-streets-a",
+          "hom-town-streets-b",
+          "hom-town-streets-c",
+          "hom-town-streets-script",
+          "hom-town-streets-lights",
+          "hom-town-streets-a-col",
+          "hom-town-streets-b-col",
+          "hom-town-streets-d-col",
+          "hom-town-streets-e-col"
+        ]
+      }
+    },
+    "bounds": [
+      {
+        "min": [
+          -729.1872247498326,
+          -76.7138671875,
+          232.47578289960524
+        ],
+        "max": [
+          -501.04138052956824,
+          123.28611239360423,
+          377.6706860971905
+        ]
+      }
+    ]
+  }
+]

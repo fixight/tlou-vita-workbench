@@ -1,0 +1,41 @@
+{
+  "timing_source": "native animation notes; explicit voice offsets with native preroll",
+  "control": [
+    {
+      "time": 0,
+      "profile": "full_cinematic"
+    }
+  ],
+  "audio_banks": [
+    "app0:/assets/cinematics/bedroom/audio/scene.vabk"
+  ],
+  "audio": [
+    {
+      "time": 0.0,
+      "sound": "vox-igc-sar-igc-hom-bedroom-phone-001",
+      "volume": 1,
+      "pan": 0,
+      "loop": false,
+      "timing_source": "explicit_scene_offset_native_stream_preroll_preserved"
+    },
+    {
+      "time": 0.0,
+      "sound": "vox-igc-tmy-igc-hom-bedroom-phone-001",
+      "volume": 1,
+      "pan": 0,
+      "loop": false,
+      "timing_source": "explicit_scene_offset_native_stream_preroll_preserved"
+    },
+    {
+      "time": 5.133333333333334,
+      "sound": "sfx-sarah-bedroom-phone-call",
+      "volume": 1,
+      "pan": 0,
+      "loop": false,
+      "timing_source": "native_animation_note",
+      "frame": 154.0,
+      "note_offset": 2206392,
+      "clip": "hom1-house-sarah-bedroom-phone--sarah"
+    }
+  ]
+}

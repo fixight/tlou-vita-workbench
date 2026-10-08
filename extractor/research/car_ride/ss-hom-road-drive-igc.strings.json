@@ -1,0 +1,150 @@
+[
+  [
+    43591,
+    "?fff?"
+  ],
+  [
+    43695,
+    "?ss-hom-road-drive-igc igc-chunk-4-start (on (update))"
+  ],
+  [
+    43750,
+    "ss-hom-road-drive-igc igc-chunk-2-start (on (start))"
+  ],
+  [
+    43803,
+    "hom-road"
+  ],
+  [
+    43812,
+    "ss-hom-road-drive-igc igc-chunk-5-start (on (update))"
+  ],
+  [
+    43866,
+    "ss-hom-road-drive-igc initial (on (start))"
+  ],
+  [
+    43909,
+    "ss-hom-road-drive-igc igc-chunk-6 (on (update))"
+  ],
+  [
+    43957,
+    "spawning for chunk-6-crowd %s"
+  ],
+  [
+    43988,
+    "ss-hom-road-drive-igc igc-chunk-1-start (on (update))"
+  ],
+  [
+    44042,
+    "ss-hom-road-drive-igc igc-chunk-4-start (on (start))"
+  ],
+  [
+    44095,
+    "ss-hom-road-drive-igc already-done (on (start))"
+  ],
+  [
+    44143,
+    "ss-hom-road-drive-igc igc-chunk-2 (on (start))"
+  ],
+  [
+    44190,
+    "t1ps4final/t1ps4/src/game/script/ss-home/ss-hom-road-drive-igc.dc"
+  ],
+  [
+    44256,
+    "ss-hom-road-drive-igc igc-chunk-5 (on (start))"
+  ],
+  [
+    44303,
+    "ss-hom-road-drive-igc igc-chunk-4 (on (start))"
+  ],
+  [
+    44350,
+    "======================="
+  ],
+  [
+    44374,
+    "ss-hom-road-drive-igc task-complete (on (update))"
+  ],
+  [
+    44424,
+    "ss-hom-road-drive-igc igc-chunk-3-start (on (start))"
+  ],
+  [
+    44477,
+    "ss-hom-road-drive-igc igc-chunk-2-start (on (update))"
+  ],
+  [
+    44531,
+    "HOM DRIVE IGC CHUNK END:"
+  ],
+  [
+    44556,
+    "ss-hom-road-drive-igc igc-chunk-1-start (on (start))"
+  ],
+  [
+    44609,
+    "ss-hom-road-drive-igc igc-chunk-6 (on (start))"
+  ],
+  [
+    44656,
+    "ss-hom-road-drive-igc igc-chunk-5 (on (event))"
+  ],
+  [
+    44703,
+    "ss-hom-road-drive-igc task-complete (on (start))"
+  ],
+  [
+    44752,
+    "ss-hom-road-drive-igc igc-chunk-3-start (on (update))"
+  ],
+  [
+    44806,
+    "ss-hom-road-drive-igc igc-chunk-3 (on (start))"
+  ],
+  [
+    44853,
+    "ss-hom-road-drive-igc igc-chunk-6-start (on (update))"
+  ],
+  [
+    44907,
+    "ss-hom-road-drive-igc igc-chunk-5-start (on (start))"
+  ],
+  [
+    44960,
+    "ss-hom-road-drive-igc igc-chunk-1 (on (start))"
+  ],
+  [
+    45007,
+    "ss-hom-road-drive-igc initial (on (event))"
+  ],
+  [
+    45050,
+    "ss-hom-road-drive-igc --all-- (on (event))"
+  ],
+  [
+    45093,
+    "ss-hom-road-drive-igc igc-chunk-6-start (on (start))"
+  ],
+  [
+    45207,
+    "``00`0000"
+  ],
+  [
+    45235,
+    "JRU%UU%I"
+  ],
+  [
+    45254,
+    "TUUURRUI"
+  ],
+  [
+    45270,
+    "TUJ)U"
+  ],
+  [
+    45281,
+    "TUUIU%)UUUUI)UUU"
+  ]
+]

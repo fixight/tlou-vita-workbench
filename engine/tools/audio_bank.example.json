@@ -1,0 +1,8 @@
+{
+  "resident_budget_bytes": 8388608,
+  "sounds": [
+    {"name": "door.open", "source": "audio/door_open.wav", "storage": "resident", "bus": "effects"},
+    {"name": "sarah.phone.call", "source": "audio/sarah-bedroom-phone-call.xvag", "storage": "stream", "bus": "effects"},
+    {"name": "music.house", "source": "audio/house_music.wav", "storage": "stream", "bus": "music", "loop": true, "volume": 0.6}
+  ]
+}

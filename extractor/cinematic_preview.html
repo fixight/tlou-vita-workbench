@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<title>Кабинет Джоэла — тест катсцены</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#15191d;color:#f0f1f3;font:14px system-ui}canvas{display:block}
+#panel{position:absolute;top:12px;left:12px;background:#15191def;padding:15px;border:1px solid #46525e;border-radius:10px;width:min(510px,calc(100vw - 55px))}
+h1{font-size:18px;margin:0 0 10px}p{font-size:12px;line-height:1.5;color:#bbc4ce;margin:8px 0}button,select{padding:7px 10px;color:#eee;background:#34404c;border:1px solid #596b7d;border-radius:5px}select{width:100%;margin-bottom:8px}input[type=range]{width:100%}label{margin-right:12px;font-size:12px}#status{color:#a9d9c0;font-size:12px}#time{float:right}#error{color:#ffa398;white-space:pre-wrap}#credits{position:absolute;bottom:10px;right:14px;font-size:12px;background:#15191ddb;padding:8px}
+#panel.collapsed>*:not(h1){display:none}h1 button{float:right;font-size:11px;padding:3px}
+</style>
+<script type="importmap">{"imports":{"three":"./cinematic_vendor/three.module.js"}}</script>
+<div id="panel">
+ <h1><span id="sceneTitle">Кабинет Джоэла · тест</span> <button id="fold">Свернуть</button></h1>
+ <select id="stage" disabled></select>
+ <label><input id="continuous" type="checkbox" checked disabled>Вся сцена непрерывно</label>
+ <button id="play" disabled>▶ Играть</button> <button id="restart" disabled>С начала</button> <button id="view">К персонажам</button>
+ <span id="time">0 / 0 с</span><input id="seek" type="range" min="0" max="1" step="0.001" value="0" disabled>
+ <label>Камера <select id="cameraMode"><option value="native">Исходная траектория</option><option value="free">Свободный осмотр</option></select></label>
+ <label>Скорость <select id="speed" style="width:80px"><option>0.1</option><option>0.25</option><option>0.5</option><option selected>1</option></select></label>
+ <label><input id="house" type="checkbox" checked>Дом</label><label><input id="cutaway" type="checkbox">Срез стен</label><label><input id="labels" type="checkbox">Имена</label><label><input id="follow" type="checkbox" checked>Следить</label>
+ <label><input id="studyDoors" type="checkbox">Двери кабинета (статичные)</label>
+ <p id="sceneDescription">Оригинальные позы, движения и привязка к кабинету. Режим «Вся сцена непрерывно» автоматически переключает фрагменты. Порядок теста: кабинет → встречный ракурс → появление Джимми → выход. Точные сценарные задержки ещё не восстановлены. В первом фрагменте Сара замирает после короткой анимации входа.</p>
+ <p>Исходная камера: движение, поворот, фокусное расстояние и смены планов из клипа. Границы глубины резкости извлечены; размытие и цветокор пока не воспроизводятся. В свободном осмотре мышь — поворот, правая кнопка — сдвиг, колесо — приближение.</p>
+ <p id="doorExplanation">Двери кабинета скрыты для проверки камеры: их сценарное открытие пока не воспроизводится, закрытая геометрия перекрывает некоторые ракурсы.</p>
+ <div id="lensStatus" style="color:#b8d6ef;font-size:12px;margin-bottom:6px"></div><div id="controlStatus" style="color:#f4d39a;font-size:12px;margin-bottom:6px"></div><div id="status">Загрузка дома и персонажей…</div><div id="error"></div>
+</div><div id="credits">Тест в браузере · частота кадров не оценивает производительность Vita</div>
+<script type="module" src="cinematic_preview.js"></script>
+</html>

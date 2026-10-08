@@ -1,0 +1,17 @@
+{
+  "snapshot_date": "2026-10-08",
+  "parser_base_commit": "ec0879b35f0a25c182ad090a7a0bf8ed124b51ae",
+  "engine_base_commit": "5604462afc0793f765b7663e9b2ccea1524bca93",
+  "glm_commit": "6f14f4792a0cde5d0cf2c910506724d61cb95834",
+  "vitaGL": {
+    "url": "https://github.com/Rinnegatamante/vitaGL.git",
+    "commit": "96c41a12bb766eb665a24c42e01346313fb14534"
+  },
+  "vdpm": {
+    "url": "https://github.com/vitasdk/vdpm.git",
+    "commit": "e423be457622a9ba517858f4831566dcd263729a"
+  },
+  "compiler": "arm-vita-eabi-g++ 15.2.0",
+  "game_assets_included": false,
+  "working_tree_changes_included": true
+}

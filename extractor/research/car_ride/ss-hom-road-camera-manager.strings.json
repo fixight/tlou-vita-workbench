@@ -1,0 +1,106 @@
+[
+  [
+    7896,
+    "ss-hom-road-camera-manager look-center^right (on (start))"
+  ],
+  [
+    7954,
+    "ss-hom-road-camera-manager look-left^center (on (start))"
+  ],
+  [
+    8011,
+    "hom-road"
+  ],
+  [
+    8020,
+    "ss-hom-road-camera-manager look-front^center (on (start))"
+  ],
+  [
+    8078,
+    "ss-hom-road-camera-manager look-center (on (update))"
+  ],
+  [
+    8131,
+    "ss-hom-road-camera-manager look-center (on (start))"
+  ],
+  [
+    8183,
+    "ss-hom-road-camera-manager look-center^front (on (start))"
+  ],
+  [
+    8241,
+    "ss-hom-road-camera-manager look-left^center (on (update))"
+  ],
+  [
+    8299,
+    "ss-hom-road-camera-manager look-center^left (on (update))"
+  ],
+  [
+    8357,
+    "ss-hom-road-camera-manager look-center^right (on (update))"
+  ],
+  [
+    8416,
+    "ss-hom-road-camera-manager look-right (on (start))"
+  ],
+  [
+    8467,
+    "ss-hom-road-camera-manager look-center^front (on (update))"
+  ],
+  [
+    8526,
+    "ss-hom-road-camera-manager look-front^center (on (update))"
+  ],
+  [
+    8585,
+    "ss-hom-road-camera-manager initial (on (start))"
+  ],
+  [
+    8633,
+    "ss-hom-road-camera-manager look-front (on (start))"
+  ],
+  [
+    8684,
+    "ss-hom-road-camera-manager look-left (on (start))"
+  ],
+  [
+    8734,
+    "ss-hom-road-camera-manager start (on (start))"
+  ],
+  [
+    8780,
+    "ss-hom-road-camera-manager look-left (on (update))"
+  ],
+  [
+    8831,
+    "t1ps4final/t1ps4/src/game/script/ss-home/ss-hom-road-camera-manager.dc"
+  ],
+  [
+    8902,
+    "ss-hom-road-camera-manager look-right^center (on (start))"
+  ],
+  [
+    8960,
+    "ss-hom-road-camera-manager look-right^center (on (update))"
+  ],
+  [
+    9019,
+    "ss-hom-road-camera-manager look-right (on (update))"
+  ],
+  [
+    9071,
+    "ss-hom-road-camera-manager initial (on (event))"
+  ],
+  [
+    9119,
+    "ss-hom-road-camera-manager look-center^left (on (start))"
+  ],
+  [
+    9176,
+    "ss-hom-road-camera-manager look-front (on (update))"
+  ],
+  [
+    9271,
+    "``000"
+  ]
+]

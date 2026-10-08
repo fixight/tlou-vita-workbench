@@ -1,0 +1,1147 @@
+[
+  {
+    "name": "ss-hom-road-drive-igc-1",
+    "id": "0x76ae269e",
+    "source_offset": 49536,
+    "position": [
+      8.289607048034668,
+      28.0,
+      -6.614844799041748
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x0c9482eb",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 49688,
+        "payload_offset": 49832,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x45c51f9f",
+        "type": 5,
+        "declared_size": 21,
+        "source_offset": 49704,
+        "payload_offset": 49856,
+        "string": "ss-hom-road-drive-igc"
+      },
+      {
+        "key": "0x545152e8",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 49720,
+        "payload_offset": 49904,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x56da20e1",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 49736,
+        "payload_offset": 49928,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x66c6d3fe",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 49752,
+        "payload_offset": 49952,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xa88f1ca6",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 49768,
+        "payload_offset": 49976,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc867d993",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 49784,
+        "payload_offset": 50000,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc87fbb93",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 49800,
+        "payload_offset": 50024,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-const-ingame14.pak"
+  },
+  {
+    "name": "hom-road-drive-igc-ap-1",
+    "id": "0x1ee2e6ca",
+    "source_offset": 52416,
+    "position": [
+      -122.02149963378906,
+      27.39558982849121,
+      -6.187004089355469
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x5bc5ec55",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 52568,
+        "payload_offset": 52616,
+        "raw_hex": "01000000",
+        "value": 1
+      },
+      {
+        "key": "0xe5d5e502",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 52584,
+        "payload_offset": 52640,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-const-road-ingame14.pak"
+  },
+  {
+    "name": "hom-road-drive-igc-ap-2",
+    "id": "0x13a1c013",
+    "source_offset": 52672,
+    "position": [
+      -278.26251220703125,
+      27.492229461669922,
+      -67.95671081542969
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x5bc5ec55",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 52824,
+        "payload_offset": 52872,
+        "raw_hex": "01000000",
+        "value": 1
+      },
+      {
+        "key": "0xe5d5e502",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 52840,
+        "payload_offset": 52896,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-const-road-ingame14.pak"
+  },
+  {
+    "name": "hom-road-drive-igc-ap-3",
+    "id": "0x1760dda4",
+    "source_offset": 52928,
+    "position": [
+      -391.9093933105469,
+      35.507259368896484,
+      -52.929019927978516
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x5bc5ec55",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 53080,
+        "payload_offset": 53128,
+        "raw_hex": "01000000",
+        "value": 1
+      },
+      {
+        "key": "0xe5d5e502",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 53096,
+        "payload_offset": 53152,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-const-road-ingame14.pak"
+  },
+  {
+    "name": "hom-road-drive-igc-ap-4",
+    "id": "0x09278da1",
+    "source_offset": 53184,
+    "position": [
+      -459.3734130859375,
+      14.520939826965332,
+      276.9704895019531
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x5bc5ec55",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 53336,
+        "payload_offset": 53384,
+        "raw_hex": "01000000",
+        "value": 1
+      },
+      {
+        "key": "0xe5d5e502",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 53352,
+        "payload_offset": 53408,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-const-road-ingame14.pak"
+  },
+  {
+    "name": "hom-road-drive-igc-ap-5",
+    "id": "0x0de69016",
+    "source_offset": 53440,
+    "position": [
+      -856.1646118164062,
+      -17.235509872436523,
+      330.1676025390625
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x5bc5ec55",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 53592,
+        "payload_offset": 53640,
+        "raw_hex": "01000000",
+        "value": 1
+      },
+      {
+        "key": "0xe5d5e502",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 53608,
+        "payload_offset": 53664,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-const-road-ingame14.pak"
+  },
+  {
+    "name": "hom-road-drive-igc-ap-6",
+    "id": "0x00a5b6cf",
+    "source_offset": 53696,
+    "position": [
+      -947.6693115234375,
+      -17.218830108642578,
+      323.3638000488281
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x5bc5ec55",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 53848,
+        "payload_offset": 53896,
+        "raw_hex": "01000000",
+        "value": 1
+      },
+      {
+        "key": "0xe5d5e502",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 53864,
+        "payload_offset": 53920,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-const-road-ingame14.pak"
+  },
+  {
+    "name": "ss-fx-hom-drive-1",
+    "id": "0xd0052564",
+    "source_offset": 65584,
+    "position": [
+      -984.2551879882812,
+      -12.05879020690918,
+      347.06500244140625
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x0c9482eb",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 65736,
+        "payload_offset": 65880,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x45c51f9f",
+        "type": 5,
+        "declared_size": 15,
+        "source_offset": 65752,
+        "payload_offset": 65904,
+        "string": "ss-fx-hom-drive"
+      },
+      {
+        "key": "0x545152e8",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 65768,
+        "payload_offset": 65944,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x56da20e1",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 65784,
+        "payload_offset": 65968,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x66c6d3fe",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 65800,
+        "payload_offset": 65992,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xa88f1ca6",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 65816,
+        "payload_offset": 66016,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc867d993",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 65832,
+        "payload_offset": 66040,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc87fbb93",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 65848,
+        "payload_offset": 66064,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-fx-ingame14.pak"
+  },
+  {
+    "name": "hom-road-civilians-drive-ap-1",
+    "id": "0x24489c7c",
+    "source_offset": 354960,
+    "position": [
+      -111.68350219726562,
+      27.31926918029785,
+      -5.706002235412598
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x5bc5ec55",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355112,
+        "payload_offset": 355160,
+        "raw_hex": "01000000",
+        "value": 1
+      },
+      {
+        "key": "0xe5d5e502",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355128,
+        "payload_offset": 355184,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-road-suburb-ingame14.pak"
+  },
+  {
+    "name": "ss-hom-road-civilians-drive-1",
+    "id": "0xf615e783",
+    "source_offset": 355232,
+    "position": [
+      -109.8373031616211,
+      27.318370819091797,
+      -5.565727233886719
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x0c9482eb",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355384,
+        "payload_offset": 355528,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x45c51f9f",
+        "type": 5,
+        "declared_size": 27,
+        "source_offset": 355400,
+        "payload_offset": 355552,
+        "string": "ss-hom-road-civilians-drive"
+      },
+      {
+        "key": "0x545152e8",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355416,
+        "payload_offset": 355608,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x56da20e1",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355432,
+        "payload_offset": 355632,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x66c6d3fe",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355448,
+        "payload_offset": 355656,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xa88f1ca6",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355464,
+        "payload_offset": 355680,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc867d993",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355480,
+        "payload_offset": 355704,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc87fbb93",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 355496,
+        "payload_offset": 355728,
+        "raw_hex": "00000000",
+        "value": 0
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-road-suburb-ingame14.pak"
+  },
+  {
+    "name": "hom-road-civilians-drive-car-1",
+    "id": "0x157987e0",
+    "source_offset": 367680,
+    "position": [
+      -113.7697982788086,
+      27.726289749145508,
+      0.5563864707946777
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x0c9482eb",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367832,
+        "payload_offset": 368088,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x31c48ebd",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367848,
+        "payload_offset": 368112,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x39769c80",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367864,
+        "payload_offset": 368136,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x545152e8",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367880,
+        "payload_offset": 368160,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x560619f3",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367896,
+        "payload_offset": 368184,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x56da20e1",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367912,
+        "payload_offset": 368208,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x65c281d4",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367928,
+        "payload_offset": 368232,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x66c6d3fe",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367944,
+        "payload_offset": 368256,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x78812e7e",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367960,
+        "payload_offset": 368280,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x871aab05",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367976,
+        "payload_offset": 368304,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x97587862",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 367992,
+        "payload_offset": 368328,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xa88f1ca6",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 368008,
+        "payload_offset": 368352,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc867d993",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 368024,
+        "payload_offset": 368376,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc87fbb93",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 368040,
+        "payload_offset": 368400,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xe07cb817",
+        "type": 13,
+        "declared_size": 4,
+        "source_offset": 368056,
+        "payload_offset": 368424,
+        "raw_hex": "f3d0ba39",
+        "symbol_id": "0x39bad0f3"
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-road-suburb-ingame14.pak"
+  },
+  {
+    "name": "driver-1",
+    "id": "0xc4d8cd0d",
+    "source_offset": 133504,
+    "position": [
+      -1024.4820556640625,
+      -18.97835922241211,
+      348.1199035644531
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x0c9482eb",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133656,
+        "payload_offset": 133912,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x31c48ebd",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133672,
+        "payload_offset": 133936,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x39769c80",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133688,
+        "payload_offset": 133960,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x545152e8",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133704,
+        "payload_offset": 133984,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x560619f3",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133720,
+        "payload_offset": 134008,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x56da20e1",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133736,
+        "payload_offset": 134032,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x65c281d4",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133752,
+        "payload_offset": 134056,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x66c6d3fe",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133768,
+        "payload_offset": 134080,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x78812e7e",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133784,
+        "payload_offset": 134104,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x871aab05",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133800,
+        "payload_offset": 134128,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x97587862",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133816,
+        "payload_offset": 134152,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xa88f1ca6",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133832,
+        "payload_offset": 134176,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc867d993",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133848,
+        "payload_offset": 134200,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc87fbb93",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 133864,
+        "payload_offset": 134224,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xe07cb817",
+        "type": 13,
+        "declared_size": 4,
+        "source_offset": 133880,
+        "payload_offset": 134248,
+        "raw_hex": "f3d0ba39",
+        "symbol_id": "0x39bad0f3"
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-town-streets-script-ingame14.pak"
+  },
+  {
+    "name": "driver-2",
+    "id": "0xc99bebd4",
+    "source_offset": 134288,
+    "position": [
+      -1023.7869873046875,
+      -18.97835922241211,
+      348.5470886230469
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x0c9482eb",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134440,
+        "payload_offset": 134696,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x31c48ebd",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134456,
+        "payload_offset": 134720,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x39769c80",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134472,
+        "payload_offset": 134744,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x545152e8",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134488,
+        "payload_offset": 134768,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x560619f3",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134504,
+        "payload_offset": 134792,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x56da20e1",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134520,
+        "payload_offset": 134816,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x65c281d4",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134536,
+        "payload_offset": 134840,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x66c6d3fe",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134552,
+        "payload_offset": 134864,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x78812e7e",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134568,
+        "payload_offset": 134888,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x871aab05",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134584,
+        "payload_offset": 134912,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x97587862",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134600,
+        "payload_offset": 134936,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xa88f1ca6",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134616,
+        "payload_offset": 134960,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc867d993",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134632,
+        "payload_offset": 134984,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc87fbb93",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 134648,
+        "payload_offset": 135008,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xe07cb817",
+        "type": 13,
+        "declared_size": 4,
+        "source_offset": 134664,
+        "payload_offset": 135032,
+        "raw_hex": "f3d0ba39",
+        "symbol_id": "0x39bad0f3"
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-town-streets-script-ingame14.pak"
+  },
+  {
+    "name": "hom-town-wagoneer-1",
+    "id": "0x1fe1e128",
+    "source_offset": 182128,
+    "position": [
+      -962.388671875,
+      -17.24403953552246,
+      346.30621337890625
+    ],
+    "rotation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "properties": [
+      {
+        "key": "0x0c9482eb",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182280,
+        "payload_offset": 182536,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x31c48ebd",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182296,
+        "payload_offset": 182560,
+        "raw_hex": "01000000",
+        "value": 1
+      },
+      {
+        "key": "0x39769c80",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182312,
+        "payload_offset": 182584,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x545152e8",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182328,
+        "payload_offset": 182608,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x560619f3",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182344,
+        "payload_offset": 182632,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x56da20e1",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182360,
+        "payload_offset": 182656,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x65c281d4",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182376,
+        "payload_offset": 182680,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x66c6d3fe",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182392,
+        "payload_offset": 182704,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x78812e7e",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182408,
+        "payload_offset": 182728,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x871aab05",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182424,
+        "payload_offset": 182752,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0x97587862",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182440,
+        "payload_offset": 182776,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xa88f1ca6",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182456,
+        "payload_offset": 182800,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc867d993",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182472,
+        "payload_offset": 182824,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xc87fbb93",
+        "type": 1,
+        "declared_size": 4,
+        "source_offset": 182488,
+        "payload_offset": 182848,
+        "raw_hex": "00000000",
+        "value": 0
+      },
+      {
+        "key": "0xe07cb817",
+        "type": 13,
+        "declared_size": 4,
+        "source_offset": 182504,
+        "payload_offset": 182872,
+        "raw_hex": "f3d0ba39",
+        "symbol_id": "0x39bad0f3"
+      }
+    ],
+    "bank": "D:\\TLOUPS4\\Extracted\\pak32\\hom-town-streets-script-ingame14.pak"
+  }
+]

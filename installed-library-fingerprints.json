@@ -1,0 +1,22 @@
+{
+  "libvitaGL.a": {
+    "size": 5617722,
+    "sha256": "946a5a4b83040bc7cfa107508bc7ca8afc9c902a9d825148f8ad8db742f9e892"
+  },
+  "libvitashark.a": {
+    "size": 3316,
+    "sha256": "4609bc02e66815d7bd312316c31b2256f772f3134be53ff49e97fad620935d26"
+  },
+  "libSceShaccCgExt.a": {
+    "size": 66234,
+    "sha256": "985e0a76edd5d9b6b32441151e968ac286b362553bdc8c354957c3a718bd5cfa"
+  },
+  "libmathneon.a": {
+    "size": 42350,
+    "sha256": "85be6304977b0a6eaf5d7091739e9df54909122a5272c42815bfa6f0bd83b65e"
+  },
+  "libpthread.a": {
+    "size": 149420,
+    "sha256": "a6a7cfbdaa6320e57d516323354f0ce30e8586e392fce534889c727508f0d712"
+  }
+}

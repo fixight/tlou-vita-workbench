@@ -1,0 +1,238 @@
+{
+  "script": "dc1/ss-home/ss-hom-road-drive-igc.bin",
+  "archive": "bin.psarc",
+  "motion": "six recorded animation placement curves, not an inferred spline",
+  "segments": [
+    {
+      "clip": "hom2-drive-chunk1-wagoneer",
+      "locator": "hom-road-drive-igc-ap-1",
+      "frames": 1030,
+      "fps": 30.0,
+      "duration": 34.3,
+      "path_metres": 281.98635024232317,
+      "start": [
+        8.225961080279774,
+        28.012998819351196,
+        -18.137997507703716
+      ],
+      "end": [
+        -242.07804433493695,
+        30.871700333658488,
+        8.280719020903021
+      ]
+    },
+    {
+      "clip": "hom2-drive-chunk2-wagoneer",
+      "locator": "hom-road-drive-igc-ap-2",
+      "frames": 580,
+      "fps": 30.0,
+      "duration": 19.3,
+      "path_metres": 244.46972710220356,
+      "start": [
+        -242.07802329758965,
+        30.87200113645434,
+        8.280722212435336
+      ],
+      "end": [
+        -394.15001864760643,
+        34.544901083147906,
+        -80.32949747697474
+      ]
+    },
+    {
+      "clip": "hom2-drive-chunk3-wagoneer",
+      "locator": "hom-road-drive-igc-ap-3",
+      "frames": 701,
+      "fps": 30.0,
+      "duration": 23.333333333333332,
+      "path_metres": 327.52912753677145,
+      "start": [
+        -394.1379674011346,
+        34.562695434578835,
+        -80.0241994555157
+      ],
+      "end": [
+        -306.17497229886726,
+        22.109895179183525,
+        215.11998676669026
+      ]
+    },
+    {
+      "clip": "hom2-drive-chunk4-wagoneer",
+      "locator": "hom-road-drive-igc-ap-4",
+      "frames": 1226,
+      "fps": 30.0,
+      "duration": 40.833333333333336,
+      "path_metres": 555.0409941704964,
+      "start": [
+        -306.1229921745945,
+        22.116402879405346,
+        215.32301508741503
+      ],
+      "end": [
+        -807.798699139872,
+        -17.347797065070303,
+        358.73548152283917
+      ]
+    },
+    {
+      "clip": "hom2-drive-chunk5-wagoneer",
+      "locator": "hom-road-drive-igc-ap-5",
+      "frames": 981,
+      "fps": 30.0,
+      "duration": 32.666666666666664,
+      "path_metres": 223.70547951823445,
+      "start": [
+        -807.798679890485,
+        -17.347795883822556,
+        358.7354563395989
+      ],
+      "end": [
+        -930.597318419444,
+        -17.19557896256447,
+        302.5143559686933
+      ]
+    },
+    {
+      "clip": "hom2-drive-chunk6-wagoneer",
+      "locator": "hom-road-drive-igc-ap-6",
+      "frames": 701,
+      "fps": 30.0,
+      "duration": 23.333333333333332,
+      "path_metres": 57.05153997543904,
+      "start": [
+        -930.5974262774621,
+        -17.195587197318673,
+        302.5143857165597
+      ],
+      "end": [
+        -954.4213000581032,
+        -17.195587197318673,
+        352.15520475335535
+      ]
+    }
+  ],
+  "total_clip_seconds": 173.76666666666665,
+  "stream_inventory": [
+    {
+      "name": "animstream14/igc-stream-hom2-drive-chunk1.stm",
+      "bytes": 1837680,
+      "records": 170,
+      "roles": [
+        "hom2-drive-chunk1-joel",
+        "hom2-drive-chunk1-policecar1",
+        "hom2-drive-chunk1-policecar2",
+        "hom2-drive-chunk1-tommy",
+        "hom2-drive-chunk1-wagoneer"
+      ]
+    },
+    {
+      "name": "animstream14/igc-stream-hom2-drive-chunk2.stm",
+      "bytes": 972096,
+      "records": 95,
+      "roles": [
+        "hom2-drive-chunk2-joel",
+        "hom2-drive-chunk2-policecar1",
+        "hom2-drive-chunk2-policecar2",
+        "hom2-drive-chunk2-tommy",
+        "hom2-drive-chunk2-wagoneer"
+      ]
+    },
+    {
+      "name": "animstream14/igc-stream-hom2-drive-chunk3.stm",
+      "bytes": 954624,
+      "records": 69,
+      "roles": [
+        "hom2-drive-chunk3-joel",
+        "hom2-drive-chunk3-tommy",
+        "hom2-drive-chunk3-wagoneer"
+      ]
+    },
+    {
+      "name": "animstream14/igc-stream-hom2-drive-chunk4.stm",
+      "bytes": 2312736,
+      "records": 240,
+      "roles": [
+        "hom2-drive-chunk4-daughter",
+        "hom2-drive-chunk4-father",
+        "hom2-drive-chunk4-joel",
+        "hom2-drive-chunk4-mother",
+        "hom2-drive-chunk4-tommy",
+        "hom2-drive-chunk4-wagoneer"
+      ]
+    },
+    {
+      "name": "animstream14/igc-stream-hom2-drive-chunk5.stm",
+      "bytes": 2627936,
+      "records": 320,
+      "roles": [
+        "hom2-drive-chunk5-civ",
+        "hom2-drive-chunk5-civa",
+        "hom2-drive-chunk5-helicopter",
+        "hom2-drive-chunk5-honda",
+        "hom2-drive-chunk5-inf",
+        "hom2-drive-chunk5-infa",
+        "hom2-drive-chunk5-joel",
+        "hom2-drive-chunk5-sarah",
+        "hom2-drive-chunk5-tommy",
+        "hom2-drive-chunk5-wagoneer"
+      ]
+    },
+    {
+      "name": "animstream14/igc-stream-hom2-drive-chunk6.stm",
+      "bytes": 2512272,
+      "records": 391,
+      "roles": [
+        "hom2-drive-chunk6-civ",
+        "hom2-drive-chunk6-civ-fem",
+        "hom2-drive-chunk6-civ-fema",
+        "hom2-drive-chunk6-civ-femb",
+        "hom2-drive-chunk6-civa",
+        "hom2-drive-chunk6-civb",
+        "hom2-drive-chunk6-civd",
+        "hom2-drive-chunk6-cive",
+        "hom2-drive-chunk6-civf",
+        "hom2-drive-chunk6-civg",
+        "hom2-drive-chunk6-civh",
+        "hom2-drive-chunk6-joel",
+        "hom2-drive-chunk6-npc",
+        "hom2-drive-chunk6-ramtruck",
+        "hom2-drive-chunk6-sarah",
+        "hom2-drive-chunk6-tommy",
+        "hom2-drive-chunk6-wagoneer"
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "from": "hom2-drive-chunk1-wagoneer",
+      "to": "hom2-drive-chunk2-wagoneer",
+      "placement_gap_metres": 0.00030155443596844054
+    },
+    {
+      "from": "hom2-drive-chunk2-wagoneer",
+      "to": "hom2-drive-chunk3-wagoneer",
+      "placement_gap_metres": 0.306053513933717
+    },
+    {
+      "from": "hom2-drive-chunk3-wagoneer",
+      "to": "hom2-drive-chunk4-wagoneer",
+      "placement_gap_metres": 0.20967780640284006
+    },
+    {
+      "from": "hom2-drive-chunk4-wagoneer",
+      "to": "hom2-drive-chunk5-wagoneer",
+      "placement_gap_metres": 3.1719549775430366e-05
+    },
+    {
+      "from": "hom2-drive-chunk5-wagoneer",
+      "to": "hom2-drive-chunk6-wagoneer",
+      "placement_gap_metres": 0.00011218778360587703
+    }
+  ],
+  "limitations": [
+    "Skeletal root motion is not included.",
+    "Script waits, animation blends and event times are not decoded.",
+    "No assumption of a separate spline route."
+  ]
+}

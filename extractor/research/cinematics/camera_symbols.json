@@ -1,0 +1,297 @@
+{
+  "0xcde4b742": {
+    "name": "player",
+    "source": "eboot.bin",
+    "offset": 17881315
+  },
+  "0x235cfa87": {
+    "name": "say",
+    "source": "eboot.bin",
+    "offset": 17389788
+  },
+  "0x159dcdd2": {
+    "name": "say-pre-roll",
+    "source": "eboot.bin",
+    "offset": 17389840
+  },
+  "0x8e93ac28": {
+    "name": "initial",
+    "source": "eboot.bin",
+    "offset": 17393196
+  },
+  "0x1ed2e0a2": {
+    "name": "array",
+    "source": "eboot.bin",
+    "offset": 18841465
+  },
+  "0x2d591c30": {
+    "name": "infected",
+    "source": "eboot.bin",
+    "offset": 17493342
+  },
+  "0x8ce62576": {
+    "name": "camera-force-strafe-look-at",
+    "source": "eboot.bin",
+    "offset": 17425591
+  },
+  "0xb71ca7a3": {
+    "name": "camera-enable",
+    "source": "eboot.bin",
+    "offset": 17426206
+  },
+  "0xb5e93ed4": {
+    "name": "camera-fade-out",
+    "source": "eboot.bin",
+    "offset": 17426307
+  },
+  "0x6d6f58a8": {
+    "name": "pre-roll-sound",
+    "source": "eboot.bin",
+    "offset": 17428450
+  },
+  "0x57505a6e": {
+    "name": "set-black-fade",
+    "source": "eboot.bin",
+    "offset": 17428980
+  },
+  "0x58b2d6fd": {
+    "name": "look-at",
+    "source": "eboot.bin",
+    "offset": 17431662
+  },
+  "0xd4674d47": {
+    "name": "stop-playback-on-material-texture",
+    "source": "eboot.bin",
+    "offset": 17431891
+  },
+  "0xaadf2adc": {
+    "name": "gesture",
+    "source": "eboot.bin",
+    "offset": 17734171
+  },
+  "0x84591781": {
+    "name": "animate",
+    "source": "eboot.bin",
+    "offset": 18217392
+  },
+  "0x2061c32f": {
+    "name": "complete",
+    "source": "eboot.bin",
+    "offset": 18011294
+  },
+  "0x83b7e09d": {
+    "name": "tommy",
+    "source": "eboot.bin",
+    "offset": 17484096
+  },
+  "0x578b1316": {
+    "name": "joel",
+    "source": "eboot.bin",
+    "offset": 17485999
+  },
+  "0xd331a5b5": {
+    "name": "npc-set-weapon-visible",
+    "source": "eboot.bin",
+    "offset": 17498307
+  },
+  "0x33633de2": {
+    "name": "npc-holster-weapon",
+    "source": "eboot.bin",
+    "offset": 17499811
+  },
+  "0x83613a82": {
+    "name": "start",
+    "source": "eboot.bin",
+    "offset": 18828039
+  },
+  "0x4da74e0b": {
+    "name": "camera-set-strafe-idle",
+    "source": "eboot.bin",
+    "offset": 17605845
+  },
+  "0x89335b6e": {
+    "name": "camera",
+    "source": "eboot.bin",
+    "offset": 17881276
+  },
+  "0xfd7784b5": {
+    "name": "control",
+    "source": "eboot.bin",
+    "offset": 17957705
+  },
+  "0x45c51f9f": {
+    "name": "state-script",
+    "source": "eboot.bin",
+    "offset": 17962584
+  },
+  "0xc4ab6121": {
+    "name": "symbol",
+    "source": "eboot.bin",
+    "offset": 18712700
+  },
+  "0x4eb9055f": {
+    "name": "vox",
+    "source": "eboot.bin",
+    "offset": 18008912
+  },
+  "0x1b3ccb57": {
+    "name": "is-on-screen?",
+    "source": "eboot.bin",
+    "offset": 18029656
+  },
+  "0xb812f3f4": {
+    "name": "is-object-on-screen?",
+    "source": "eboot.bin",
+    "offset": 18029670
+  },
+  "0xdf781fbf": {
+    "name": "kill-entity",
+    "source": "eboot.bin",
+    "offset": 18031177
+  },
+  "0xa93d2926": {
+    "name": "object-spawned?",
+    "source": "eboot.bin",
+    "offset": 18031453
+  },
+  "0xf43db80a": {
+    "name": "spawn-entity",
+    "source": "eboot.bin",
+    "offset": 18031807
+  },
+  "0x49d090e5": {
+    "name": "get-spawner-position",
+    "source": "eboot.bin",
+    "offset": 18032700
+  },
+  "0x072af1ac": {
+    "name": "get-spawner-locator",
+    "source": "eboot.bin",
+    "offset": 18033050
+  },
+  "0x8efc5558": {
+    "name": "set-spawner-locator",
+    "source": "eboot.bin",
+    "offset": 18033184
+  },
+  "0xe36d7f8e": {
+    "name": "rotate-locator-lookat",
+    "source": "eboot.bin",
+    "offset": 18033634
+  },
+  "0xb4c97ee4": {
+    "name": "get-object-locator",
+    "source": "eboot.bin",
+    "offset": 18033729
+  },
+  "0x021fff0f": {
+    "name": "offset-locator",
+    "source": "eboot.bin",
+    "offset": 18033925
+  },
+  "0x4902715b": {
+    "name": "get-joint-position",
+    "source": "eboot.bin",
+    "offset": 18034125
+  },
+  "0x0ab7afb8": {
+    "name": "kill-part-spawner",
+    "source": "eboot.bin",
+    "offset": 18036223
+  },
+  "0x48059f73": {
+    "name": "set-single-shader-instance-param",
+    "source": "eboot.bin",
+    "offset": 18038672
+  },
+  "0x0f182ec3": {
+    "name": "float",
+    "source": "eboot.bin",
+    "offset": 18470849
+  },
+  "0xcd4b9c1b": {
+    "name": "alloc-vector",
+    "source": "eboot.bin",
+    "offset": 18040814
+  },
+  "0x87f13bc2": {
+    "name": "main",
+    "source": "eboot.bin",
+    "offset": 18708387
+  },
+  "0x933344d6": {
+    "name": "wait-animate",
+    "source": "eboot.bin",
+    "offset": 18217400
+  },
+  "0xb3189857": {
+    "name": "send-event",
+    "source": "eboot.bin",
+    "offset": 18288803
+  },
+  "0x8b4e76ff": {
+    "name": "boolean",
+    "source": "eboot.bin",
+    "offset": 18466029
+  },
+  "0x6fbd6d25": {
+    "name": "fov",
+    "source": "eboot.bin",
+    "offset": 18812871
+  },
+  "0x25124088": {
+    "name": "get-symbol",
+    "source": "eboot.bin",
+    "offset": 18845612
+  },
+  "0x01d011b2": {
+    "name": "set-symbol",
+    "source": "eboot.bin",
+    "offset": 18845664
+  },
+  "0x1cb8c51f": {
+    "name": "get-float",
+    "source": "eboot.bin",
+    "offset": 18845716
+  },
+  "0xc1bc5183": {
+    "name": "set-float",
+    "source": "eboot.bin",
+    "offset": 18845766
+  },
+  "0xba711e0d": {
+    "name": "set-boolean",
+    "source": "eboot.bin",
+    "offset": 18846070
+  },
+  "0x64b0f52e": {
+    "name": "signal",
+    "source": "eboot.bin",
+    "offset": 18846343
+  },
+  "0x568eab14": {
+    "name": "wait",
+    "source": "eboot.bin",
+    "offset": 18846486
+  },
+  "0x6e22f8d5": {
+    "name": "wait-frames",
+    "source": "eboot.bin",
+    "offset": 18846491
+  },
+  "0x19d1ce7d": {
+    "name": "wait-until-frame",
+    "source": "eboot.bin",
+    "offset": 18846615
+  },
+  "0xca1359a3": {
+    "name": "wait-for",
+    "source": "eboot.bin",
+    "offset": 18846865
+  },
+  "0xb7eceedc": {
+    "name": "wait-one-frame",
+    "source": "eboot.bin",
+    "offset": 18846874
+  }
+}

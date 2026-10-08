@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {horizontalFov, verticalFov, sampleLens, cameraBlend} from '../cinematic_lens.mjs';
+assert.ok(Math.abs(horizontalFov(50,0)-39.597752709)<1e-7);
+assert.equal(horizontalFov(50,1),75);
+const aspect=960/544;
+assert.ok(Math.abs(Math.tan(verticalFov(horizontalFov(50,0),aspect)*Math.PI/360)*aspect-.36)<1e-8);
+const track={lens:{samples:[[0,50,0,1],[0,23.458,0,0]],depth_of_field:null}};
+assert.equal(cameraBlend(track,0,0),0);
+assert.equal(cameraBlend(track,0,.5),1);
+assert.equal(sampleLens(track,.5,1).focalLength,23.458);
+assert.equal(sampleLens(track,.5,.5).fov,horizontalFov((50+23.458)/2,0));
+assert.deepEqual(sampleLens({fov_degrees:60},0,0),{fov:60,axis:'vertical'});
+console.log('PASS camera lens: focal length, projection axis, native cuts, interpolated optics, legacy fallback');

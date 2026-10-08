@@ -1,0 +1,54 @@
+[
+  [
+    9143,
+    "?ss-hom-back-seat-manager hit-reaction (on (update))"
+  ],
+  [
+    9196,
+    "turn idle off"
+  ],
+  [
+    9210,
+    "ss-hom-back-seat-manager task-check (on (start))"
+  ],
+  [
+    9259,
+    "t1ps4final/t1ps4/src/game/script/ss-home/ss-hom-back-seat-manager.dc"
+  ],
+  [
+    9328,
+    "ss-hom-back-seat-manager sitting-close (on (start))"
+  ],
+  [
+    9380,
+    "ss-hom-back-seat-manager sitting (on (update))"
+  ],
+  [
+    9427,
+    "ss-hom-back-seat-manager hit-reaction (on (start))"
+  ],
+  [
+    9478,
+    "ss-hom-back-seat-manager sitting (on (start))"
+  ],
+  [
+    9524,
+    "turn idle on"
+  ],
+  [
+    9537,
+    "ss-hom-back-seat-manager sitting-close (on (update))"
+  ],
+  [
+    9590,
+    "ss-hom-back-seat-manager --all-- (on (event))"
+  ],
+  [
+    9636,
+    "ss-hom-back-seat-manager waiting (on (event))"
+  ],
+  [
+    9767,
+    "R%)%c"
+  ]
+]

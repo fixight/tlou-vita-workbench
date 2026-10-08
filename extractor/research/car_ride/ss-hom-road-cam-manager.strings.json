@@ -1,0 +1,258 @@
+[
+  [
+    21040,
+    "hom-road"
+  ],
+  [
+    21049,
+    "ss-hom-road-cam-manager look-idle^front (on (update))"
+  ],
+  [
+    21103,
+    "ss-hom-road-cam-manager look-front^center (on (update))"
+  ],
+  [
+    21159,
+    "ss-hom-road-cam-manager look-front^left (on (update))"
+  ],
+  [
+    21213,
+    "ss-hom-road-cam-manager look-center (on (start))"
+  ],
+  [
+    21262,
+    "ss-hom-road-cam-manager look-left^center (on (update))"
+  ],
+  [
+    21317,
+    "ss-hom-road-cam-manager look-front (on (update))"
+  ],
+  [
+    21366,
+    "ss-hom-road-cam-manager look-idle (on (update))"
+  ],
+  [
+    21414,
+    "ss-hom-road-cam-manager look-at-right (on (start))"
+  ],
+  [
+    21465,
+    "ss-hom-road-cam-manager look-center^right (on (start))"
+  ],
+  [
+    21520,
+    "ss-hom-road-cam-manager look-left^center (on (start))"
+  ],
+  [
+    21574,
+    "ss-hom-road-cam-manager look-center (on (update))"
+  ],
+  [
+    21624,
+    "ss-hom-road-cam-manager look-right^center (on (update))"
+  ],
+  [
+    21680,
+    "ss-hom-road-cam-manager look-idle^right (on (update))"
+  ],
+  [
+    21734,
+    "ss-hom-road-cam-manager look-front^left (on (start))"
+  ],
+  [
+    21787,
+    "ss-hom-road-cam-manager look-at-left (on (start))"
+  ],
+  [
+    21837,
+    "ss-hom-road-cam-manager look-center^left (on (update))"
+  ],
+  [
+    21892,
+    "ss-hom-road-cam-manager look-left^idle (on (update))"
+  ],
+  [
+    21945,
+    "ss-hom-road-cam-manager look-left^idle (on (start))"
+  ],
+  [
+    21997,
+    "ss-hom-road-cam-manager look-front-attack (on (start))"
+  ],
+  [
+    22052,
+    "ss-hom-road-cam-manager look-front^idle (on (start))"
+  ],
+  [
+    22105,
+    "ss-hom-road-cam-manager look-front (on (start))"
+  ],
+  [
+    22153,
+    "ss-hom-road-cam-manager look-left (on (start))"
+  ],
+  [
+    22200,
+    "ss-hom-road-cam-manager look-right^front (on (start))"
+  ],
+  [
+    22254,
+    "ss-hom-road-cam-manager look-idle^right (on (start))"
+  ],
+  [
+    22307,
+    "ss-hom-road-cam-manager look-center^left (on (start))"
+  ],
+  [
+    22361,
+    "ss-hom-road-cam-manager look-front^center (on (start))"
+  ],
+  [
+    22416,
+    "ss-hom-road-cam-manager initial (on (update))"
+  ],
+  [
+    22462,
+    "ss-hom-road-cam-manager look-idle (on (start))"
+  ],
+  [
+    22509,
+    "t1ps4final/t1ps4/src/game/script/ss-home/ss-hom-road-cam-manager.dc"
+  ],
+  [
+    22577,
+    "ss-hom-road-cam-manager look-front^right (on (start))"
+  ],
+  [
+    22631,
+    "ss-hom-road-cam-manager look-front^idle (on (update))"
+  ],
+  [
+    22685,
+    "ss-hom-road-cam-manager start (on (start))"
+  ],
+  [
+    22728,
+    "ss-hom-road-cam-manager look-right^idle (on (update))"
+  ],
+  [
+    22782,
+    "ss-hom-road-cam-manager look-idle^front (on (start))"
+  ],
+  [
+    22835,
+    "ss-hom-road-cam-manager look-center^front (on (start))"
+  ],
+  [
+    22890,
+    "ss-hom-road-cam-manager look-idle^front-attack (on (update))"
+  ],
+  [
+    22951,
+    "ss-hom-road-cam-manager look-center^front (on (update))"
+  ],
+  [
+    23007,
+    "ss-hom-road-cam-manager --all-- (on (update))"
+  ],
+  [
+    23053,
+    "ss-hom-road-cam-manager look-at-front (on (update))"
+  ],
+  [
+    23105,
+    "ss-hom-road-cam-manager look-right (on (start))"
+  ],
+  [
+    23153,
+    "ss-hom-road-cam-manager look-at-front (on (start))"
+  ],
+  [
+    23204,
+    "ss-hom-road-cam-manager look-right^idle (on (start))"
+  ],
+  [
+    23257,
+    "ss-hom-road-cam-manager look-right^front (on (update))"
+  ],
+  [
+    23312,
+    "ss-hom-road-cam-manager initial (on (event))"
+  ],
+  [
+    23357,
+    "ss-hom-road-cam-manager look-at-left (on (update))"
+  ],
+  [
+    23408,
+    "ss-hom-road-cam-manager look-left^front (on (update))"
+  ],
+  [
+    23462,
+    "ss-hom-road-cam-manager look-idle^left (on (start))"
+  ],
+  [
+    23514,
+    "ss-hom-road-cam-manager look-idle^left (on (update))"
+  ],
+  [
+    23567,
+    "ss-hom-road-cam-manager look-center^right (on (update))"
+  ],
+  [
+    23623,
+    "ss-hom-road-cam-manager look-right (on (update))"
+  ],
+  [
+    23672,
+    "ss-hom-road-cam-manager initial (on (start))"
+  ],
+  [
+    23717,
+    "ss-hom-road-cam-manager look-front^right (on (update))"
+  ],
+  [
+    23772,
+    "ss-hom-road-cam-manager look-left (on (update))"
+  ],
+  [
+    23820,
+    "ss-hom-road-cam-manager look-front-attack (on (update))"
+  ],
+  [
+    23876,
+    "ss-hom-road-cam-manager look-idle^front-attack (on (start))"
+  ],
+  [
+    23936,
+    "ss-hom-road-cam-manager --all-- (on (event))"
+  ],
+  [
+    23981,
+    "ss-hom-road-cam-manager look-center (on (end))"
+  ],
+  [
+    24028,
+    "ss-hom-road-cam-manager look-at-right (on (update))"
+  ],
+  [
+    24080,
+    "ss-hom-road-cam-manager look-right^center (on (start))"
+  ],
+  [
+    24135,
+    "ss-hom-road-cam-manager look-left^front (on (start))"
+  ],
+  [
+    24188,
+    "ss-hom-road-cam-manager --all-- (on (start))"
+  ],
+  [
+    24279,
+    "TUUUUUU"
+  ],
+  [
+    24400,
+    "J)I)U"
+  ]
+]

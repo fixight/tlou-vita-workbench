@@ -1,0 +1,4388 @@
+import json
+import base64
+import os
+from tlou_extractor.pak_reader import PakFile
+from tlou_extractor.mesh_builder import MeshBuilder
+from tlou_extractor.texture_handler import TextureHandler
+
+def extract_model_data(pak_path, tex_path, model_title):
+    pak = PakFile(pak_path)
+    mb = MeshBuilder(pak)
+    sm = mb.models[0].submeshes[0]
+    
+    with open(tex_path, 'rb') as f:
+        tex_b64 = 'data:image/png;base64,' + base64.b64encode(f.read()).decode('ascii')
+    
+    pos = [round(c, 5) for v in sm.positions for c in v]
+    nrm = [round(c, 5) for v in sm.normals for c in v] if sm.normals else []
+    uvs = [round(c, 5) for v in sm.uv0 for c in v] if sm.uv0 else []
+    idx = sm.indices
+    
+    min_b = [min(pos[i::3]) for i in range(3)]
+    max_b = [max(pos[i::3]) for i in range(3)]
+    center = [(min_b[i] + max_b[i]) / 2.0 for i in range(3)]
+    size = max(max_b[i] - min_b[i] for i in range(3))
+    
+    return {
+        'title': model_title,
+        'positions': pos,
+        'normals': nrm,
+        'uvs': uvs,
+        'indices': idx,
+        'texture': tex_b64,
+        'center': center,
+        'size': size if size > 0 else 1.0,
+        'stats': {
+            'verts': len(sm.positions),
+            'tris': len(sm.indices) // 3
+        }
+    }
+
+def extract_model_data_all_submeshes(pak_path, tex_folder_or_path, model_title):
+    pak = PakFile(pak_path)
+    mb = MeshBuilder(pak)
+    pos = []
+    nrm = []
+    uvs = []
+    idx = []
+    v_off = 0
+    submeshes_data = []
+
+    tex_cache = {}
+    def get_b64(path):
+        if not path or not os.path.exists(path): return ""
+        if path not in tex_cache:
+            with open(path, 'rb') as f:
+                tex_cache[path] = 'data:image/png;base64,' + base64.b64encode(f.read()).decode('ascii')
+        return tex_cache[path]
+
+    tex_dir = tex_folder_or_path if os.path.isdir(tex_folder_or_path) else os.path.dirname(tex_folder_or_path)
+    avail_texs = [f for f in os.listdir(tex_dir) if f.endswith('.png')] if os.path.exists(tex_dir) else []
+
+    geom_items = pak.get_items('GEOMETRY_1')
+    p_sub = pak.read_ptr(geom_items[0].abs_offset + 0x30) if geom_items else 0
+
+    texture_handler = TextureHandler(pak)
+    first_texture = texture_handler.get_texture_by_hash(mb.models[0].submeshes[0].diffuse_hash)
+    primary_tex_name = first_texture.name + '.png' if first_texture else ''
+    main_tex_b64 = get_b64(os.path.join(tex_dir, primary_tex_name)) if primary_tex_name else ''
+
+    for i, sm in enumerate(mb.models[0].submeshes):
+        if not sm.positions or not sm.indices:
+            continue
+        sm_pos = [round(c, 5) for p in sm.positions for c in p]
+        sm_nrm = [round(c, 5) for n in sm.normals for c in n] if sm.normals else []
+        sm_uvs = [round(c, 5) for u in sm.uv0 for c in u] if sm.uv0 else []
+        sm_idx = sm.indices
+        
+        name_l = sm.name.lower()
+        if 'atm' in name_l: clean_name = 'Банкомат (ATM)'
+        elif 'hospital' in name_l: clean_name = 'Здание госпиталя'
+        elif 'mall' in name_l: clean_name = 'Торговый центр'
+        elif 'ground' in name_l and 'street' not in name_l: clean_name = 'Полотно дороги (Развилка)'
+        elif 'street_pieces' in name_l: clean_name = 'Дорожная разметка'
+        elif 'trash' in name_l: clean_name = 'Мусорный бак'
+        elif 'onramp' in name_l: clean_name = 'Съезд на трассу (On-ramp)'
+        elif 'sign' in name_l: clean_name = 'Дорожный знак'
+        elif 'r_door' in name_l or 'door' in name_l: clean_name = 'Двери / Панели'
+        elif 'wheel' in name_l: clean_name = 'Колеса'
+        elif 'siren' in name_l or 'light' in name_l or 'signal' in name_l: clean_name = 'Спецсигналы / Фары'
+        elif 'glass' in name_l: clean_name = 'Остекление'
+        elif 'body' in name_l or 'test_mesh' in name_l: clean_name = 'Кузов / Шасси'
+        elif 'hatchback' in name_l: clean_name = 'Хэтчбек'
+        elif 'pickup' in name_l: clean_name = 'Пикап'
+        elif 'suv' in name_l: clean_name = 'Внедорожник SUV'
+        else:
+            parts = [p for p in sm.name.split('|') if p]
+            last = parts[-1] if parts else f"Деталь {i+1}"
+            last_clean = last.split('_shader')[0].replace('Shape', '')
+            clean_name = last_clean if len(last_clean) > 2 else f"Деталь {i+1}"
+
+        mat_str = ""
+        if p_sub:
+            p_mat = pak.read_ptr(p_sub + i * 136 + 0x48)
+            if p_mat:
+                mat_str = pak.read_str_at(p_mat)
+
+        # Resolve only the texture named by this material's albedo slot.
+        texture_info = texture_handler.get_texture_by_hash(sm.diffuse_hash)
+        matched_tex = texture_info.name + '.png' if texture_info else ''
+        sm_tex_b64 = get_b64(os.path.join(tex_dir, matched_tex)) if matched_tex else ''
+
+        sm_min = [min(sm_pos[c::3]) for c in range(3)]
+        sm_max = [max(sm_pos[c::3]) for c in range(3)]
+        sm_center = [(sm_min[c] + sm_max[c]) / 2.0 for c in range(3)]
+        sm_size = max(sm_max[c] - sm_min[c] for c in range(3))
+
+        submeshes_data.append({
+            'title': f"{clean_name} — {model_title}",
+            'name': f"{clean_name} ({len(sm.positions)} верш.)",
+            'positions': sm_pos,
+            'normals': sm_nrm,
+            'uvs': sm_uvs,
+            'indices': sm_idx,
+            'texture': sm_tex_b64,
+            'texName': texture_info.name if texture_info else '',
+            'texHash': sm.diffuse_hash,
+            'center': sm_center,
+            'size': sm_size if sm_size > 0 else 1.0,
+            'stats': {'verts': len(sm.positions), 'tris': len(sm.indices) // 3}
+        })
+
+        for c in sm_pos: pos.append(c)
+        for c in sm_nrm: nrm.append(c)
+        for c in sm_uvs: uvs.append(c)
+        for j in sm_idx: idx.append(j + v_off)
+        v_off += len(sm.positions)
+
+    min_b = [min(pos[i::3]) for i in range(3)] if pos else [0, 0, 0]
+    max_b = [max(pos[i::3]) for i in range(3)] if pos else [1, 1, 1]
+    center = [(min_b[i] + max_b[i]) / 2.0 for i in range(3)]
+    size = max(max_b[i] - min_b[i] for i in range(3))
+
+    return {
+        'title': model_title,
+        'positions': pos,
+        'normals': nrm,
+        'uvs': uvs,
+        'indices': idx,
+        'texture': main_tex_b64,
+        'center': center,
+        'size': size if size > 0 else 1.0,
+        'stats': {
+            'verts': v_off,
+            'tris': len(idx) // 3
+        },
+        'submeshes': submeshes_data
+    }
+
+import sys
+
+if '--empty' in sys.argv:
+    models_json = '{}'
+else:
+    phone_data = extract_model_data(
+        r'D:\TLOUPS4\Extracted\actor50\cell-phone-tstrm.pak',
+        './viewer_models/cell-phone/textures/cell-color.png',
+        'Телефон Сары (Sarah\'s Cell Phone)'
+    )
+
+    card_data = extract_model_data(
+        r'D:\TLOUPS4\Extracted\actor50\hom-birthday-card-tstrm.pak',
+        './viewer_models/hom-birthday-card/textures/note-ap-birthday-card-color.png',
+        'Открытка на день рождения (Birthday Card to Joel)'
+    )
+
+    brick_data = extract_model_data(
+        r'D:\TLOUPS4\Extracted\actor50\brick-tstrm.pak',
+        './viewer_models/brick/textures/throw-brick-color2.png',
+        'Кирпич (Brick Weapon)'
+    )
+
+    freeway_data = extract_model_data_all_submeshes(
+        r'D:\TLOUPS4\Extracted\pak32\hom-town-freeway-tstrm.pak',
+        './viewer_models/hom-town-freeway/hom-town-freeway/textures',
+        'Чанк Шоссе: hom-town-freeway (71 сабмеш)'
+    )
+
+    sedan_data = extract_model_data_all_submeshes(
+        r'D:\TLOUPS4\Extracted\actor50\sedan-tstrm.pak',
+        './viewer_models/sedan/textures',
+        'Автомобиль Седан (6 сабмешей с колесами)'
+    )
+
+    ambulance_data = extract_model_data_all_submeshes(
+        r'D:\TLOUPS4\Extracted\actor50\ambulance-tstrm.pak',
+        './viewer_models/ambulance/textures',
+        'Скорая помощь (8 сабмешей: кузов, двери, сирена, колеса)'
+    )
+
+    models_json = json.dumps({
+        'cell-phone': phone_data,
+        'birthday-card': card_data,
+        'brick': brick_data,
+        'freeway': freeway_data,
+        'sedan': sedan_data,
+        'ambulance': ambulance_data
+    })
+
+
+html_content = f"""<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>TLOU Remastered 3D Asset Viewer (.PAK & .GLB)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {{
+      margin: 0;
+      overflow: hidden;
+      user-select: none;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }}
+    canvas {{
+      width: 100%;
+      height: 100%;
+      display: block;
+    }}
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen w-screen flex flex-col antialiased">
+
+  <!-- Header & Toolbar -->
+  <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-5 py-3 flex items-center justify-between z-10">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30">
+        3D
+      </div>
+      <div>
+        <h1 id="model-title" class="font-semibold text-sm sm:text-base text-slate-100 tracking-wide">
+          {phone_data['title']}
+        </h1>
+        <p id="model-stats" class="text-xs text-slate-400">
+          Полигоны: {phone_data['stats']['tris']} | Вершины: {phone_data['stats']['verts']} | Формат: Прямой .PAK
+        </p>
+      </div>
+    </div>
+
+    <!-- Model Switcher Buttons -->
+    <div class="flex items-center gap-2">
+      <button onclick="switchModel('cell-phone')" id="btn-cell-phone" 
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition border border-emerald-500/50 bg-emerald-500/20 text-emerald-300">
+        📱 Телефон
+      </button>
+      <button onclick="switchModel('birthday-card')" id="btn-birthday-card"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">
+        💌 Открытка
+      </button>
+      <button onclick="switchModel('brick')" id="btn-brick"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">
+        🧱 Кирпич
+      </button>
+      <button onclick="switchModel('freeway')" id="btn-freeway"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">
+        🛣️ Шоссе (71 сабмеш)
+      </button>
+      <button onclick="switchModel('sedan')" id="btn-sedan"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">
+        🚗 Седан (Авто)
+      </button>
+      <button onclick="switchModel('ambulance')" id="btn-ambulance"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">
+        🚑 Скорая помощь
+      </button>
+
+      <button onclick="loadAnimatedCharacter('sarah')" id="btn-sarah"
+              class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition border border-pink-500/50 bg-pink-500/20 text-pink-300 hover:bg-pink-500/30 flex items-center gap-1 shadow-sm">
+        🏃‍♀️ Сара
+      </button>
+      <button onclick="loadAnimatedCharacter('young-joel')" id="btn-young-joel"
+              class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition border border-cyan-500/50 bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 flex items-center gap-1 shadow-sm">
+        🏃‍♂️ Джоэл
+      </button>
+      <button onclick="loadAnimatedCharacter('young-tommy')" id="btn-young-tommy"
+              class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition border border-amber-500/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 flex items-center gap-1 shadow-sm">
+        🤠 Томми
+      </button>
+      <button onclick="loadAnimatedCharacter('inf-fem-home-run-a')" id="btn-runner"
+              class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition border border-rose-500/50 bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 flex items-center gap-1 shadow-sm">
+        🧟 Бегун
+      </button>
+
+      <label class="px-3 py-1.5 text-xs font-medium rounded-lg transition border border-emerald-500/40 bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 cursor-pointer flex items-center gap-1 shadow-sm">
+        ⚡ Импорт .PAK / .GLB (Ctrl/Shift)
+        <input type="file" id="file-input" accept=".pak,.glb,.gltf" multiple class="hidden" onchange="handleFileSelect(event)">
+      </label>
+
+      <button id="export-fbx" onclick="exportSceneFBX()" title="Экспорт сцены или персонажа в Blender (.blend со скелетом, мешами и анимациями) и FBX" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-emerald-500/60 bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 disabled:opacity-50 flex items-center gap-1 shadow-sm">🎬 Экспорт в Blender + FBX</button>
+      <button id="download-glb" onclick="downloadCurrentGLB()" title="Скачать исходный .GLB файл модели со всеми анимациями и скелетом" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-purple-500/60 bg-purple-950/40 hover:bg-purple-900/50 text-purple-300 flex items-center gap-1 shadow-sm">📥 Скачать GLB</button>
+      <span id="export-status" class="text-xs text-slate-300" role="status"></span>
+
+      <!-- Real-time Performance HUD -->
+      <div id="fps-badge" class="px-2.5 py-1 text-xs font-mono rounded-lg border border-slate-700 bg-slate-900/80 text-emerald-400 flex items-center gap-1.5 shadow-sm">
+        ⚡ <span id="fps-val" class="font-bold text-emerald-300">60</span> FPS
+        <span class="text-slate-600">|</span>
+        <span id="draw-stats" class="text-slate-400 text-[11px]">0 батчей</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3D Viewport -->
+  <main class="flex-1 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <canvas id="glcanvas"></canvas>
+
+    <!-- Floating Viewport Controls -->
+    <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+      <!-- Render Mode Buttons -->
+      <div class="pointer-events-auto bg-slate-900/80 backdrop-blur border border-slate-800 rounded-xl p-1.5 flex items-center gap-1 text-xs shadow-xl">
+        <button onclick="setRenderMode(0)" id="rmode-0" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-medium">
+          Текстура
+        </button>
+        <button onclick="setRenderMode(1)" id="rmode-1" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200">
+          Студия (Clay)
+        </button>
+        <button onclick="setRenderMode(2)" id="rmode-2" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200">
+          Нормали
+        </button>
+        <button onclick="setRenderMode(3)" id="rmode-3" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200">
+          UV
+        </button>
+        <div class="h-4 w-px bg-slate-800 mx-1"></div>
+        <button onclick="toggleWireframe()" id="btn-wire" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200">
+          Сетка: Выкл
+        </button>
+        <button onclick="toggleBones()" id="btn-bones" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200" title="Включить отображение скелета персонажа (Клавиша: B)">
+          🦴 Кости: Выкл
+        </button>
+        <button onclick="toggleCullFace()" id="btn-cull" class="px-2.5 py-1 rounded-lg text-emerald-400 font-medium">
+          2-стороны: Вкл
+        </button>
+      </div>
+
+      <!-- Animation Controls (Visible when active model has animations) -->
+      <div id="anim-controls" class="hidden pointer-events-auto bg-slate-900/90 backdrop-blur border border-emerald-500/40 rounded-xl p-1.5 flex items-center gap-2 text-xs shadow-2xl flex-wrap">
+        <button id="btn-anim-play" onclick="togglePlayAnimation()" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition flex items-center gap-1">
+          <span id="btn-anim-icon">⏸</span> <span id="btn-anim-text">Пауза</span>
+        </button>
+        <div class="flex items-center gap-1 border-l border-slate-700/80 pl-2">
+          <span class="text-slate-400 font-medium">Фильтр:</span>
+          <select id="anim-filter-select" onchange="filterAnimationCategory(this.value)" class="bg-slate-800 text-slate-200 border border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer hover:border-slate-600 transition">
+            <option value="all">Все группы</option>
+            <option value="locomotion">🏃 Локомоция (Walk / Run)</option>
+            <option value="idle">🧍 Ожидание (Idle)</option>
+            <option value="action">🎭 Полное тело / Действия</option>
+            <option value="additive">➕ Доп. слои (--add / --part)</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-1 border-l border-slate-700/80 pl-2">
+          <span class="text-slate-400 font-medium">Клип:</span>
+          <select id="anim-clip-select" onchange="selectAnimationClip(parseInt(this.value))" class="bg-slate-800 text-emerald-300 border border-slate-700 rounded-lg px-2 py-1 text-xs outline-none cursor-pointer hover:border-slate-600 transition max-w-[210px] font-mono">
+          </select>
+        </div>
+        <div class="flex items-center gap-1.5 border-l border-slate-700/80 pl-2">
+          <input type="range" id="anim-time-slider" min="0" max="1000" step="1" value="0"
+            class="w-28 accent-emerald-400 cursor-pointer"
+            oninput="seekAnimation(this.value)">
+          <span id="anim-time-display" class="text-emerald-400 font-mono text-[11px] min-w-[70px] text-right">0.0s / 1.0s</span>
+        </div>
+        <div class="flex items-center gap-1 border-l border-slate-700/80 pl-2">
+          <span class="text-slate-400 text-[11px]">Скорость:</span>
+          <select id="anim-speed-select" onchange="setAnimSpeed(parseFloat(this.value))" class="bg-slate-800 text-slate-200 border border-slate-700 rounded-lg px-1.5 py-1 text-xs outline-none">
+            <option value="0.01">0.01x</option>
+            <option value="0.025">0.025x</option>
+            <option value="0.05">0.05x</option>
+            <option value="0.1">0.1x</option>
+            <option value="0.25">0.25x</option>
+            <option value="0.5">0.5x</option>
+            <option value="1.0" selected>1.0x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2.0">2.0x</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Submesh Selector (Visible when multiple submeshes exist) -->
+      <div id="submesh-container" class="hidden pointer-events-auto bg-slate-900/80 backdrop-blur border border-slate-800 rounded-xl p-1.5 flex items-center gap-1.5 text-xs shadow-xl">
+        <span class="text-slate-400 pl-1 font-medium">Деталь:</span>
+        <select id="submesh-select" onchange="selectSubmesh(this.value)" class="bg-slate-800 text-slate-200 border border-slate-700 rounded-lg px-2.5 py-1 text-xs outline-none cursor-pointer hover:border-slate-600 transition">
+        </select>
+      </div>
+
+      <!-- Camera Controls -->
+      <div class="pointer-events-auto bg-slate-900/80 backdrop-blur border border-slate-800 rounded-xl p-1.5 flex items-center gap-1.5 text-xs shadow-xl">
+        <!-- Near Clip Control -->
+        <div class="flex items-center gap-1 px-1" title="Дальность отсечения камеры (Near Clip). Меньше = камера мельче, объекты не обрезаются вблизи (до 0.1 мм)">
+          <span class="text-slate-500 text-[11px]">🔭</span>
+          <span class="text-slate-400 text-[11px]">Клип:</span>
+          <input type="range" id="near-clip-slider" min="0" max="10" step="1" value="6"
+            class="w-16 accent-emerald-400 cursor-pointer"
+            oninput="setNearClip(this.value)"
+            title="0=0.0001м (0.1мм) | 3=0.001м (1мм) | 6=0.01м (1см) | 10=0.5м">
+          <span id="near-clip-val" class="text-emerald-400 font-mono text-[11px] w-12">0.01m</span>
+        </div>
+        <!-- Fly Speed Control -->
+        <div class="flex items-center gap-1 px-1" title="Скорость камеры (также ПКМ + колесико мыши; Alt/Ctrl = супер-замедление x0.15; Shift = ускорение x2.5)">
+          <span class="text-slate-500 text-[11px]">⚡</span>
+          <span class="text-slate-400 text-[11px]">Скор:</span>
+          <input type="range" id="fly-speed-slider" min="0" max="12" step="1" value="7"
+            class="w-16 accent-amber-400 cursor-pointer"
+            oninput="setFlySpeedFromSlider(this.value)"
+            title="0=0.002x | 2=0.01x | 5=0.1x | 7=0.5x | 8=1.0x | 12=25.0x">
+          <span id="fly-speed-val" class="text-amber-400 font-mono text-[11px] w-12">0.5x</span>
+        </div>
+        <!-- FOV Control -->
+        <div class="flex items-center gap-1 px-1" title="Угол обзора камеры (Field of View)">
+          <span class="text-slate-400 text-[11px]">FOV:</span>
+          <input type="range" id="fov-slider" min="30" max="110" step="5" value="60"
+            class="w-14 accent-cyan-400 cursor-pointer"
+            oninput="setFov(this.value)">
+          <span id="fov-val" class="text-cyan-400 font-mono text-[11px] w-8">60°</span>
+        </div>
+        <div class="h-4 w-px bg-slate-700 mx-0.5"></div>
+        <button onclick="toggleInvertMouse()" id="btn-invert-mouse" class="px-2.5 py-1 rounded-lg text-emerald-400 font-medium hover:text-emerald-300 transition flex items-center gap-1" title="Переключить инверсию мыши (Клавиша I)">
+          🎮 Мышь: Unreal
+        </button>
+        <button onclick="toggleAutoRotate()" id="btn-autorotate" class="px-2.5 py-1 rounded-lg text-emerald-400 font-medium">
+          Вращение: Вкл
+        </button>
+        <button onclick="resetCamera()" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200">
+          Сброс камеры
+        </button>
+      </div>
+    </div>
+
+    <!-- Drag & Drop Overlay Hint -->
+    <div id="drop-zone" class="absolute inset-0 border-2 border-dashed border-emerald-500/50 bg-emerald-950/60 backdrop-blur-sm hidden flex items-center justify-center pointer-events-none z-20">
+      <div class="text-center p-8 bg-slate-900/90 rounded-2xl border border-emerald-500/50 shadow-2xl">
+        <div class="text-4xl mb-3">📦</div>
+        <p class="font-semibold text-base text-emerald-300">Перетащите сюда файлы .PAK или .GLB (один или несколько)</p>
+        <p class="text-xs text-slate-400 mt-1">Визуализатор объединит их в едином мировом пространстве координат!</p>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="absolute top-4 left-1/2 -translate-x-1/2 bg-slate-800/95 border border-slate-700 text-slate-200 px-4 py-2 rounded-xl text-xs shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-30">
+      Сообщение
+    </div>
+
+    <!-- Controls Helper Tooltip -->
+    <div class="absolute top-4 right-4 pointer-events-none bg-slate-900/80 backdrop-blur border border-slate-800/80 rounded-xl px-3.5 py-2.5 text-[11px] text-slate-300 space-y-1.5 shadow-xl">
+      <div class="font-semibold text-emerald-400 flex items-center gap-1.5">
+        <span>🎮</span> Управление в стиле Unreal Engine:
+      </div>
+      <div>🖱️ Зажать <b>ПКМ</b> + мышь: свободный осмотр (Look around)</div>
+      <div>⌨️ <b>W, A, S, D</b> (при зажатой ПКМ): полёт камеры</div>
+      <div>⌨️ <b>Q / E</b>: вниз / вверх &nbsp;|&nbsp; <b>Shift</b>: x2.5 &nbsp;|&nbsp; <b>Alt/Ctrl</b>: x0.15 (микро-шаг)</div>
+      <div>🖱️ Колесо при зажатой ПКМ: скорость полёта (от 0.001x)</div>
+      <div class="text-slate-400 pt-1 border-t border-slate-800/80 flex justify-between items-center">
+        <span>🖱️ <b>ЛКМ</b>: вращение &nbsp;|&nbsp; 🖱️ <b>СКМ</b>: панорама</span>
+        <span class="text-amber-400 font-mono text-[10px]">⌨️ I: инверсия &nbsp;|&nbsp; ⌨️ B: кости &nbsp;|&nbsp; Пробел: пауза</span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const PRELOADED_MODELS = {models_json};
+    let currentModelKey = 'cell-phone';
+    let currentMesh = null;
+    let renderMode = 0; // 0: Texture, 1: Clay, 2: Normals, 3: UV
+    let showWireframe = false;
+    let autoRotate = true;
+
+    // Camera Near Clip & FOV settings
+    // Near clip levels: 0.0001 (0.1мм), 0.0002, 0.0005, 0.001 (1мм), 0.002, 0.005, 0.01 (1см default), 0.02, 0.05, 0.1, 0.5
+    const NEAR_CLIP_LEVELS = [0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.5];
+    let camNear = 0.01;  // default ~object scale
+    let camFovDeg = 60;  // degrees
+
+    // Camera Speed settings (Ultra-slow to fast)
+    const FLY_SPEED_LEVELS = [0.002, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0, 25.0];
+    let flySpeed = 0.5;
+
+    function setNearClip(idx) {{
+      camNear = NEAR_CLIP_LEVELS[parseInt(idx)] || 0.01;
+      const el = document.getElementById('near-clip-val');
+      if (el) {{
+        if (camNear < 0.001) el.innerText = camNear.toFixed(4).replace(/\\.?0+$/, '') + 'm';
+        else if (camNear < 0.01) el.innerText = camNear.toFixed(3).replace(/\\.?0+$/, '') + 'm';
+        else el.innerText = camNear.toFixed(2).replace(/\\.?0+$/, '') + 'm';
+      }}
+    }}
+
+    function setFlySpeedFromSlider(idx) {{
+      flySpeed = FLY_SPEED_LEVELS[parseInt(idx)] || 0.5;
+      updateFlySpeedUI();
+    }}
+
+    function updateFlySpeedUI() {{
+      const elVal = document.getElementById('fly-speed-val');
+      const elSlider = document.getElementById('fly-speed-slider');
+      if (elVal) {{
+        const txt = flySpeed < 0.01 ? flySpeed.toFixed(4) : (flySpeed < 0.1 ? flySpeed.toFixed(3) : (flySpeed < 1.0 ? flySpeed.toFixed(2) : flySpeed.toFixed(1)));
+        elVal.innerText = txt + 'x';
+      }}
+      if (elSlider) {{
+        let closestIdx = 0;
+        let minDiff = Infinity;
+        for (let i = 0; i < FLY_SPEED_LEVELS.length; i++) {{
+          const diff = Math.abs(FLY_SPEED_LEVELS[i] - flySpeed);
+          if (diff < minDiff) {{ minDiff = diff; closestIdx = i; }}
+        }}
+        elSlider.value = closestIdx;
+      }}
+    }}
+
+    function setFov(deg) {{
+      camFovDeg = parseInt(deg);
+      const el = document.getElementById('fov-val');
+      if (el) el.innerText = camFovDeg + '°';
+    }}
+
+    // Animation Player State & Skeletal Rigging
+    let activeAnimations = [];
+    let currentAnimIdx = 0;
+    let isAnimPlaying = true;
+    let animCurrentTime = 0.0;
+    let animSpeed = 1.0;
+    let isDraggingTimeSlider = false;
+    let currentSkinnedPrims = null;
+    let currentSkinData = null;
+    let animGlbNodes = null;
+    let animNodeParents = null;
+    let currentNormPositions = null;
+    let currentModelCenter = [0, 0, 0];
+    let currentModelScale = 1.0;
+    let evalNodeTRS = null;
+    let evalWorldMats = null;
+    let skinMatricesFlat = null;
+
+    // Skeleton Bone Visualization State
+    let showBones = false;
+    let boneProgram = null;
+    let boneLineBuffer = null;
+    let bonePointBuffer = null;
+    let boneLineCount = 0;
+    let bonePointCount = 0;
+    let bonePosLoc = -1;
+    let boneMvpLoc = null;
+    let boneColorLoc = null;
+    let bonePointSizeLoc = null;
+    let boneIsPointLoc = null;
+
+    function slerpQuat(out, q0, q1, t) {{
+      let dot = q0[0]*q1[0] + q0[1]*q1[1] + q0[2]*q1[2] + q0[3]*q1[3];
+      let sign = 1.0;
+      if (dot < 0.0) {{ dot = -dot; sign = -1.0; }}
+      let f0 = 1.0 - t, f1 = t * sign;
+      if (dot < 0.9995) {{
+        const theta = Math.acos(Math.min(1.0, Math.max(-1.0, dot)));
+        const sinTheta = Math.sin(theta);
+        if (sinTheta > 1e-5) {{
+          f0 = Math.sin((1.0 - t) * theta) / sinTheta;
+          f1 = (Math.sin(t * theta) / sinTheta) * sign;
+        }}
+      }}
+      let rx = q0[0]*f0 + q1[0]*f1;
+      let ry = q0[1]*f0 + q1[1]*f1;
+      let rz = q0[2]*f0 + q1[2]*f1;
+      let rw = q0[3]*f0 + q1[3]*f1;
+      const len = Math.hypot(rx, ry, rz, rw) || 1.0;
+      out[0] = rx/len; out[1] = ry/len; out[2] = rz/len; out[3] = rw/len;
+      return out;
+    }}
+
+    function getTRSMatrix(t, r, s) {{
+      const m = mat4Create();
+      const x = r[0], y = r[1], z = r[2], w = r[3];
+      const x2 = x + x, y2 = y + y, z2 = z + z;
+      const xx = x * x2, xy = x * y2, xz = x * z2;
+      const yy = y * y2, yz = y * z2, zz = z * z2;
+      const wx = w * x2, wy = w * y2, wz = w * z2;
+      const sx = s[0], sy = s[1], sz = s[2];
+
+      m[0] = (1 - (yy + zz)) * sx;
+      m[1] = (xy + wz) * sx;
+      m[2] = (xz - wy) * sx;
+      m[3] = 0;
+
+      m[4] = (xy - wz) * sy;
+      m[5] = (1 - (xx + zz)) * sy;
+      m[6] = (yz + wx) * sy;
+      m[7] = 0;
+
+      m[8] = (xz + wy) * sz;
+      m[9] = (yz - wx) * sz;
+      m[10] = (1 - (xx + yy)) * sz;
+      m[11] = 0;
+
+      m[12] = t[0];
+      m[13] = t[1];
+      m[14] = t[2];
+      m[15] = 1;
+
+      return m;
+    }}
+
+    function togglePlayAnimation() {{
+      isAnimPlaying = !isAnimPlaying;
+      const icon = document.getElementById('btn-anim-icon');
+      const text = document.getElementById('btn-anim-text');
+      if (icon) icon.innerText = isAnimPlaying ? '⏸' : '▶';
+      if (text) text.innerText = isAnimPlaying ? 'Пауза' : 'Пуск';
+    }}
+
+    let currentAnimCategory = 'all';
+
+    function getClipCategory(name) {{
+      const n = (name || '').toLowerCase();
+      if (n.includes('--add') || n.includes('-add') || n.includes('--part') || n.includes('-part') || n.includes('--finger') || n.includes('finger') || n.includes('--facial') || n.includes('face') || n.includes('gest') || n.includes('--sub')) {{
+        return 'additive';
+      }}
+      if (n.includes('walk') || n.includes('run') || n.includes('sprint') || n.includes('jog') || n.includes('stairs') || n.includes('vault') || n.includes('turn') || n.includes('step') || n.includes('evade') || n.includes('strafe')) {{
+        return 'locomotion';
+      }}
+      if (n.includes('idle') || n.includes('stand') || n.includes('rest')) {{
+        return 'idle';
+      }}
+      return 'action';
+    }}
+
+    function populateAnimationSelect(preferredIdx = 0) {{
+      const clipSelect = document.getElementById('anim-clip-select');
+      if (!clipSelect) return;
+      clipSelect.innerHTML = '';
+
+      const groups = {{
+        'locomotion': {{ label: '🏃 Локомоция (Walk / Run / Stairs)', options: [] }},
+        'idle': {{ label: '🧍 Стойка / Ожидание (Idle)', options: [] }},
+        'action': {{ label: '🎭 Полное тело / Действия', options: [] }},
+        'additive': {{ label: '➕ Доп. слои (--add / --part / --facial)', options: [] }}
+      }};
+
+      activeAnimations.forEach((clip, idx) => {{
+        const cat = getClipCategory(clip.name);
+        if (currentAnimCategory === 'all' || currentAnimCategory === cat) {{
+          if (groups[cat]) groups[cat].options.push({{ clip, idx }});
+        }}
+      }});
+
+      let firstValidIdx = -1;
+      let hasPreferred = false;
+
+      for (const catKey of ['locomotion', 'idle', 'action', 'additive']) {{
+        const grp = groups[catKey];
+        if (grp && grp.options.length > 0) {{
+          const optGroup = document.createElement('optgroup');
+          optGroup.label = `${{grp.label}} (${{grp.options.length}})`;
+          grp.options.forEach(({{ clip, idx }}) => {{
+            if (firstValidIdx === -1) firstValidIdx = idx;
+            if (idx === preferredIdx) hasPreferred = true;
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.innerText = `${{clip.name}} (${{clip.duration.toFixed(1)}}s)`;
+            optGroup.appendChild(opt);
+          }});
+          clipSelect.appendChild(optGroup);
+        }}
+      }}
+
+      const selectedIdx = hasPreferred ? preferredIdx : (firstValidIdx >= 0 ? firstValidIdx : 0);
+      clipSelect.value = selectedIdx.toString();
+      selectAnimationClip(selectedIdx);
+    }}
+
+    function filterAnimationCategory(cat) {{
+      currentAnimCategory = cat;
+      populateAnimationSelect(currentAnimIdx);
+    }}
+
+    function selectAnimationClip(idx) {{
+      if (idx >= 0 && idx < activeAnimations.length) {{
+        currentAnimIdx = idx;
+        animCurrentTime = 0.0;
+        const clip = activeAnimations[currentAnimIdx];
+        const timeDisplay = document.getElementById('anim-time-display');
+        if (timeDisplay && clip) timeDisplay.innerText = '0.0s / ' + clip.duration.toFixed(1) + 's';
+        const clipSelect = document.getElementById('anim-clip-select');
+        if (clipSelect && clipSelect.value !== idx.toString()) {{
+          clipSelect.value = idx.toString();
+        }}
+      }}
+    }}
+
+    function seekAnimation(val) {{
+      if (activeAnimations.length > 0) {{
+        const clip = activeAnimations[currentAnimIdx];
+        if (clip && clip.duration > 0) {{
+          animCurrentTime = (parseFloat(val) / 1000.0) * clip.duration;
+        }}
+      }}
+    }}
+
+    function setAnimSpeed(s) {{
+      animSpeed = s;
+    }}
+
+    async function loadAnimatedCharacter(charName) {{
+      showToast(`Загрузка персонажа ${{charName}}...`);
+      try {{
+        const url = `/extracted_models/${{charName}}/${{charName}}.glb`;
+        const res = await fetch(url, {{ cache: 'no-store' }});
+        if (!res.ok) throw new Error(`HTTP ${{res.status}}`);
+        const buf = await res.arrayBuffer();
+        const data = parseGLBBuffer(buf, `${{charName}}.glb`);
+        data.charName = charName;
+        data.glbUrl = url;
+        data.rawGLBBuffer = buf;
+        loadModelData(data);
+        showToast(`✅ ${{data.title}} загружен (${{data.animations ? data.animations.length : 0}} анимаций)!`);
+      }} catch (err) {{
+        showToast(`Ошибка загрузки: ${{err.message}}`);
+      }}
+    }}
+
+    function downloadCurrentGLB() {{
+      const model = currentCombinedModel || currentMesh;
+      if (!model) {{ showToast('Сначала откройте модель или персонажа'); return; }}
+      if (model.glbUrl) {{
+        const link = document.createElement('a');
+        link.href = model.glbUrl;
+        link.download = model.fileName || `${{model.charName || 'model'}}.glb`;
+        link.click();
+        showToast(`Загрузка ${{link.download}}...`);
+        return;
+      }}
+      if (model.charName) {{
+        const link = document.createElement('a');
+        link.href = `/extracted_models/${{model.charName}}/${{model.charName}}.glb`;
+        link.download = `${{model.charName}}.glb`;
+        link.click();
+        showToast(`Загрузка ${{link.download}}...`);
+        return;
+      }}
+      if (model.rawGLBBuffer) {{
+        const blob = new Blob([model.rawGLBBuffer], {{ type: 'model/gltf-binary' }});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = model.fileName || 'model.glb';
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+        showToast(`Загрузка ${{link.download}}...`);
+        return;
+      }}
+      showToast('Для статичной сцены используйте кнопку "Экспорт в Blender + FBX"');
+    }}
+
+    function showToast(msg) {{
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.remove('opacity-0');
+      t.classList.add('opacity-100');
+      setTimeout(() => {{
+        t.classList.remove('opacity-100');
+        t.classList.add('opacity-0');
+      }}, 3000);
+    }}
+
+    // WebGL Context & State
+    const canvas = document.getElementById('glcanvas');
+    const gl = canvas.getContext('webgl', {{ antialias: true, alpha: false }});
+    if (!gl) alert('WebGL не поддерживается браузером!');
+
+    let program, wireProgram;
+    let positionBuffer, normalBuffer, uvBuffer, indexBuffer, wireIndexBuffer;
+    let glTexture;
+    let indexCount = 0, wireIndexCount = 0, indexType = 5123;
+
+    // Cached WebGL Locations for fast rendering
+    let uMvpLoc = null, uModelLoc = null, uCamPosLoc = null, uModeLoc = null, uTexLoc = null;
+    let aPosLoc = -1, aNormLoc = -1, aUvLoc = -1;
+    let wireMvpLoc = null, wirePosLoc = -1;
+
+    // Frustum Culling (High Performance)
+    const frustumPlanes = new Float32Array(24);
+    function updateFrustumPlanes(m) {{
+      // Left
+      frustumPlanes[0] = m[3] + m[0]; frustumPlanes[1] = m[7] + m[4]; frustumPlanes[2] = m[11] + m[8]; frustumPlanes[3] = m[15] + m[12];
+      // Right
+      frustumPlanes[4] = m[3] - m[0]; frustumPlanes[5] = m[7] - m[4]; frustumPlanes[6] = m[11] - m[8]; frustumPlanes[7] = m[15] - m[12];
+      // Bottom
+      frustumPlanes[8] = m[3] + m[1]; frustumPlanes[9] = m[7] + m[5]; frustumPlanes[10] = m[11] + m[9]; frustumPlanes[11] = m[15] + m[13];
+      // Top
+      frustumPlanes[12] = m[3] - m[1]; frustumPlanes[13] = m[7] - m[5]; frustumPlanes[14] = m[11] - m[9]; frustumPlanes[15] = m[15] - m[13];
+      // Near
+      frustumPlanes[16] = m[3] + m[2]; frustumPlanes[17] = m[7] + m[6]; frustumPlanes[18] = m[11] + m[10]; frustumPlanes[19] = m[15] + m[14];
+      // Far
+      frustumPlanes[20] = m[3] - m[2]; frustumPlanes[21] = m[7] - m[6]; frustumPlanes[22] = m[11] - m[10]; frustumPlanes[23] = m[15] - m[14];
+
+      for (let i = 0; i < 24; i += 4) {{
+        const len = Math.hypot(frustumPlanes[i], frustumPlanes[i+1], frustumPlanes[i+2]) || 1.0;
+        frustumPlanes[i] /= len; frustumPlanes[i+1] /= len; frustumPlanes[i+2] /= len; frustumPlanes[i+3] /= len;
+      }}
+    }}
+
+    function isSphereInFrustum(cx, cy, cz, r) {{
+      for (let i = 0; i < 24; i += 4) {{
+        if (frustumPlanes[i] * cx + frustumPlanes[i+1] * cy + frustumPlanes[i+2] * cz + frustumPlanes[i+3] < -r) {{
+          return false;
+        }}
+      }}
+      return true;
+    }}
+
+    // Mouse Inversion & Unreal Navigation Modes
+    // Mode 0: Unreal Natural (Mouse UP looks UP, Mouse RIGHT turns RIGHT)
+    // Mode 1: Inverted Y (Flight sim style)
+    // Mode 2: Inverted X + Y
+    let mouseControlMode = parseInt(localStorage.getItem('tlou_mouse_mode') || '0', 10);
+    if (isNaN(mouseControlMode) || mouseControlMode < 0 || mouseControlMode > 2) mouseControlMode = 0;
+
+    function getMouseModeLabel() {{
+      if (mouseControlMode === 0) return "🎮 Мышь: Unreal";
+      if (mouseControlMode === 1) return "🎮 Мышь: Инверсия Y";
+      return "🎮 Мышь: Инверсия X+Y";
+    }}
+
+    function toggleInvertMouse() {{
+      mouseControlMode = (mouseControlMode + 1) % 3;
+      localStorage.setItem('tlou_mouse_mode', mouseControlMode.toString());
+      updateMouseModeUI();
+      showToast(getMouseModeLabel());
+    }}
+
+    function updateMouseModeUI() {{
+      const b = document.getElementById('btn-invert-mouse');
+      if (b) {{
+        b.innerText = getMouseModeLabel();
+        b.className = (mouseControlMode === 0) 
+          ? "px-2.5 py-1 rounded-lg text-emerald-400 font-medium hover:text-emerald-300 transition flex items-center gap-1"
+          : "px-2.5 py-1 rounded-lg text-amber-400 font-medium hover:text-amber-300 transition flex items-center gap-1";
+      }}
+    }}
+
+    // Camera & Transform (Unreal Engine 6-DOF Fly + Orbit)
+    let camX = 0, camY = 0, camZ = 2.4;
+    let camPitch = 0.25, camYaw = -0.6;
+    let orbitDist = 2.4;
+    let targetX = 0, targetY = 0, targetZ = 0;
+    let isRmbDown = false, isLmbDown = false;
+    let isDragging = false, dragButton = 0;
+    let lastMouseX = 0, lastMouseY = 0;
+    const keysDown = {{}};
+
+    // Shaders Source
+    const vsSource = `
+      attribute vec3 a_pos;
+      attribute vec3 a_norm;
+      attribute vec2 a_uv;
+      uniform mat4 u_mvp;
+      uniform mat4 u_model;
+      varying vec3 v_norm;
+      varying vec2 v_uv;
+      varying vec3 v_worldPos;
+      void main() {{
+        vec4 wpos = u_model * vec4(a_pos, 1.0);
+        v_worldPos = wpos.xyz;
+        v_norm = normalize((u_model * vec4(a_norm, 0.0)).xyz);
+        v_uv = a_uv;
+        gl_Position = u_mvp * vec4(a_pos, 1.0);
+      }}
+    `;
+
+    const fsSource = `
+      precision mediump float;
+      varying vec3 v_norm;
+      varying vec2 v_uv;
+      varying vec3 v_worldPos;
+      uniform sampler2D u_tex;
+      uniform int u_mode;
+      uniform vec3 u_camPos;
+
+      void main() {{
+        vec3 N = normalize(v_norm);
+        if (!gl_FrontFacing) N = -N;
+        
+        vec3 L = normalize(vec3(0.6, 1.0, 0.8));
+        float diff = max(dot(N, L), 0.0) * 0.75 + 0.25;
+
+        vec3 V = normalize(u_camPos - v_worldPos);
+        vec3 H = normalize(L + V);
+        float spec = pow(max(dot(N, H), 0.0), 32.0) * 0.35;
+
+        if (u_mode == 0) {{
+          // Textured PBR Phong
+          vec4 col = texture2D(u_tex, v_uv);
+          gl_FragColor = vec4(col.rgb * diff + spec, 1.0);
+        }} else if (u_mode == 1) {{
+          // Clay Studio
+          vec3 clay = vec3(0.85, 0.83, 0.80);
+          gl_FragColor = vec4(clay * diff + spec, 1.0);
+        }} else if (u_mode == 2) {{
+          // Normals
+          gl_FragColor = vec4(abs(N), 1.0);
+        }} else if (u_mode == 3) {{
+          // UVs
+          gl_FragColor = vec4(fract(v_uv), 0.0, 1.0);
+        }}
+      }}
+    `;
+
+    const wireVs = `
+      attribute vec3 a_pos;
+      uniform mat4 u_mvp;
+      void main() {{
+        gl_Position = u_mvp * vec4(a_pos, 1.0);
+      }}
+    `;
+    const wireFs = `
+      precision mediump float;
+      void main() {{
+        gl_FragColor = vec4(0.0, 1.0, 0.6, 0.8);
+      }}
+    `;
+
+    const boneVs = `
+      attribute vec3 a_pos;
+      uniform mat4 u_mvp;
+      uniform float u_pointSize;
+      void main() {{
+        gl_Position = u_mvp * vec4(a_pos, 1.0);
+        gl_PointSize = u_pointSize;
+      }}
+    `;
+
+    const boneFs = `
+      precision mediump float;
+      uniform vec4 u_color;
+      uniform int u_isPoint;
+      void main() {{
+        if (u_isPoint == 1) {{
+          vec2 coord = gl_PointCoord - vec2(0.5);
+          if (length(coord) > 0.5) discard;
+        }}
+        gl_FragColor = u_color;
+      }}
+    `;
+
+    function createShader(gl, type, source) {{
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {{
+        console.error(gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }}
+      return shader;
+    }}
+
+    function initGL() {{
+      const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+      const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+      program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+
+      const wvs = createShader(gl, gl.VERTEX_SHADER, wireVs);
+      const wfs = createShader(gl, gl.FRAGMENT_SHADER, wireFs);
+      wireProgram = gl.createProgram();
+      gl.attachShader(wireProgram, wvs);
+      gl.attachShader(wireProgram, wfs);
+      gl.linkProgram(wireProgram);
+
+      const bvs = createShader(gl, gl.VERTEX_SHADER, boneVs);
+      const bfs = createShader(gl, gl.FRAGMENT_SHADER, boneFs);
+      boneProgram = gl.createProgram();
+      gl.attachShader(boneProgram, bvs);
+      gl.attachShader(boneProgram, bfs);
+      gl.linkProgram(boneProgram);
+
+      bonePosLoc = gl.getAttribLocation(boneProgram, "a_pos");
+      boneMvpLoc = gl.getUniformLocation(boneProgram, "u_mvp");
+      boneColorLoc = gl.getUniformLocation(boneProgram, "u_color");
+      bonePointSizeLoc = gl.getUniformLocation(boneProgram, "u_pointSize");
+      boneIsPointLoc = gl.getUniformLocation(boneProgram, "u_isPoint");
+
+      boneLineBuffer = gl.createBuffer();
+      bonePointBuffer = gl.createBuffer();
+
+      positionBuffer = gl.createBuffer();
+      normalBuffer = gl.createBuffer();
+      uvBuffer = gl.createBuffer();
+      indexBuffer = gl.createBuffer();
+      wireIndexBuffer = gl.createBuffer();
+      glTexture = gl.createTexture();
+      gl.getExtension('OES_element_index_uint');
+
+      gl.enable(gl.DEPTH_TEST);
+      gl.disable(gl.CULL_FACE);
+
+      // Cache WebGL uniform and attribute locations
+      uMvpLoc = gl.getUniformLocation(program, "u_mvp");
+      uModelLoc = gl.getUniformLocation(program, "u_model");
+      uCamPosLoc = gl.getUniformLocation(program, "u_camPos");
+      uModeLoc = gl.getUniformLocation(program, "u_mode");
+      uTexLoc = gl.getUniformLocation(program, "u_tex");
+
+      aPosLoc = gl.getAttribLocation(program, "a_pos");
+      aNormLoc = gl.getAttribLocation(program, "a_norm");
+      aUvLoc = gl.getAttribLocation(program, "a_uv");
+
+      wireMvpLoc = gl.getUniformLocation(wireProgram, "u_mvp");
+      wirePosLoc = gl.getAttribLocation(wireProgram, "a_pos");
+
+      updateMouseModeUI();
+    }}
+
+    let currentLoadedSubmeshes = null;
+    let currentCombinedModel = null;
+    let currentDrawBatches = [];
+
+    function updateSubmeshSelector(model) {{
+      const container = document.getElementById('submesh-container');
+      const select = document.getElementById('submesh-select');
+      if (model && model.submeshes && model.submeshes.length > 1) {{
+        currentLoadedSubmeshes = model.submeshes;
+        currentCombinedModel = model;
+        select.innerHTML = '';
+        const allOpt = document.createElement('option');
+        allOpt.value = '-1';
+        allOpt.innerText = `Вся сцена целиком (${{model.submeshes.length}} деталей)`;
+        select.appendChild(allOpt);
+
+        model.submeshes.forEach((sm, idx) => {{
+          const opt = document.createElement('option');
+          opt.value = idx;
+          opt.innerText = sm.name || `Деталь #${{idx}} (${{sm.stats.verts}} верш.)`;
+          select.appendChild(opt);
+        }});
+
+        container.classList.remove('hidden');
+      }} else {{
+        container.classList.add('hidden');
+        currentLoadedSubmeshes = null;
+        currentCombinedModel = null;
+      }}
+    }}
+
+    function selectSubmesh(val) {{
+      const idx = parseInt(val);
+      if (idx === -1 && currentCombinedModel) {{
+        loadModelData(currentCombinedModel, false);
+      }} else if (currentLoadedSubmeshes && currentLoadedSubmeshes[idx]) {{
+        const sm = currentLoadedSubmeshes[idx];
+        loadModelData(sm, false);
+        if (sm.texName || sm.texHash) {{
+          fetchHighResTexture(sm.texName, sm.texHash);
+        }}
+      }}
+    }}
+
+    // In-memory cache for loaded high-res textures
+    const hdTextureCache = {{}};
+    const pendingTextureRequests = new Set();
+    const textureRequestQueue = [];
+    let activeTextureFetches = 0;
+    const MAX_CONCURRENT_FETCHES = 3;
+
+    function processTextureQueue() {{
+      if (activeTextureFetches >= MAX_CONCURRENT_FETCHES || textureRequestQueue.length === 0) return;
+      const task = textureRequestQueue.shift();
+      activeTextureFetches++;
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {{
+        hdTextureCache[task.cleanName] = img;
+        pendingTextureRequests.delete(task.cleanName);
+        task.apply(img);
+        activeTextureFetches--;
+        processTextureQueue();
+      }};
+      img.onerror = () => {{
+        pendingTextureRequests.delete(task.cleanName);
+        activeTextureFetches--;
+        processTextureQueue();
+      }};
+      img.src = task.url;
+    }}
+
+    // Asynchronously fetch crystal-clear high-res textures from local server if available
+    function fetchHighResTexture(texName, texHash = '') {{
+      if (!texName && !texHash) return;
+      const cleanName = (texName || '').replace(/\\.(tga|dds|png|ndb)$/i, '').trim();
+      const cleanHash = (texHash || '').toLowerCase().trim();
+      const cacheKey = cleanHash || cleanName;
+      if (!cacheKey || (cleanName.startsWith('tex_') && !cleanHash)) return;
+
+      const requestedMesh = currentMesh;
+      function applyTextureToBatchOrRoot(loadedImg) {{
+        if (currentMesh !== requestedMesh) return;
+        let updatedAnyBatch = false;
+        if (currentDrawBatches && currentDrawBatches.length > 0) {{
+          let sharedTex = null;
+          for (let b = 0; b < currentDrawBatches.length; b++) {{
+            const batch = currentDrawBatches[b];
+            const matchHash = cleanHash && batch.texHash && batch.texHash.toLowerCase() === cleanHash;
+            const matchName = cleanName && batch.texName && (batch.texName === cleanName || batch.texName.toLowerCase() === cleanName.toLowerCase());
+            if (cleanHash ? matchHash : (!batch.texHash && matchName)) {{
+              if (!sharedTex) {{
+                sharedTex = batch.texture || gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, sharedTex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, loadedImg);
+                gl.generateMipmap(gl.TEXTURE_2D);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+              }}
+              batch.texture = sharedTex;
+              updatedAnyBatch = true;
+            }}
+          }}
+        }}
+
+        const isMultiSubmesh = currentMesh && currentMesh.submeshes && currentMesh.submeshes.length > 1;
+        if (!isMultiSubmesh) {{
+          gl.bindTexture(gl.TEXTURE_2D, glTexture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, loadedImg);
+          gl.generateMipmap(gl.TEXTURE_2D);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        }}
+      }}
+
+      if (hdTextureCache[cacheKey]) {{
+        applyTextureToBatchOrRoot(hdTextureCache[cacheKey]);
+        return;
+      }}
+
+      if (pendingTextureRequests.has(cacheKey)) return;
+      pendingTextureRequests.add(cacheKey);
+
+      const host = (window.location.origin && window.location.origin.includes('8080')) 
+        ? window.location.origin 
+        : 'http://127.0.0.1:8080';
+      let url = host + '/api/texture?';
+      if (cleanHash) url += 'hash=' + encodeURIComponent(cleanHash) + '&';
+      if (cleanName) url += 'name=' + encodeURIComponent(cleanName) + '&';
+      url += 'v=' + Date.now();
+
+      textureRequestQueue.push({{ cleanName: cacheKey, url, apply: applyTextureToBatchOrRoot }});
+      processTextureQueue();
+    }}
+
+    function loadModelData(m, updateSubmeshUI = true) {{
+      currentMesh = m;
+      document.getElementById('model-title').innerText = m.title;
+      document.getElementById('model-stats').innerText = 
+        `Полигоны: ${{m.stats.tris.toLocaleString()}} | Вершины: ${{m.stats.verts.toLocaleString()}} | Масштаб: ${{m.size.toFixed(2)}}м`;
+
+      if (updateSubmeshUI) {{
+        updateSubmeshSelector(m);
+        if (m.submeshes && m.submeshes.length > 1) {{
+          const hasTex = m.texture || m.rawTextureRgba || m.submeshes.some(s => s.texture || s.rawTextureRgba);
+          setRenderMode(hasTex ? 0 : 1);
+        }} else if (m.texture || m.rawTextureRgba) {{
+          setRenderMode(0);
+        }} else {{
+          setRenderMode(1);
+        }}
+      }} else {{
+        // When isolating a submesh, switch to Studio Clay if it has no dedicated texture
+        if (!m.texture && !m.rawTextureRgba) {{
+          setRenderMode(1);
+        }}
+      }}
+
+      // Initialize default fallback texture to neutral 1x1 grey
+      gl.bindTexture(gl.TEXTURE_2D, glTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([128, 128, 128, 255]));
+
+      // Upload positions (normalized around 0,0,0)
+      const cx = m.center[0], cy = m.center[1], cz = m.center[2];
+      const scale = 1.0 / (m.size || 1.0);
+      const normPositions = new Float32Array(m.positions.length);
+      for (let i = 0; i < m.positions.length; i += 3) {{
+        normPositions[i] = (m.positions[i] - cx) * scale;
+        normPositions[i+1] = (m.positions[i+1] - cy) * scale;
+        normPositions[i+2] = (m.positions[i+2] - cz) * scale;
+      }}
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, normPositions, gl.DYNAMIC_DRAW);
+
+      currentNormPositions = normPositions;
+      currentModelCenter = [cx, cy, cz];
+      currentModelScale = scale;
+
+      // Initialize Skeletal Nodes & Rigging
+      if (m.gltfNodes && m.gltfNodes.length > 0) {{
+        animGlbNodes = m.gltfNodes;
+        animNodeParents = m.nodeParents;
+        currentSkinData = m.skinData || null;
+      }} else {{
+        animGlbNodes = null;
+        animNodeParents = null;
+        currentSkinData = null;
+      }}
+      evalNodeTRS = null;
+      evalWorldMats = null;
+      boneLineCount = 0;
+      bonePointCount = 0;
+
+      // Initialize Skeletal Animation Player if model supports it
+      if (m.animations && m.animations.length > 0 && m.skinData && m.skinnedPrims && m.skinnedPrims.length > 0) {{
+        activeAnimations = m.animations;
+        currentAnimIdx = 0;
+        animCurrentTime = 0.0;
+        isAnimPlaying = true;
+        currentSkinnedPrims = m.skinnedPrims;
+
+        const animControls = document.getElementById('anim-controls');
+        if (animControls) animControls.classList.remove('hidden');
+
+        const animFilter = document.getElementById('anim-filter-select');
+        if (animFilter) animFilter.value = 'all';
+        currentAnimCategory = 'all';
+        populateAnimationSelect(0);
+        const timeDisplay = document.getElementById('anim-time-display');
+        if (timeDisplay && activeAnimations[0]) {{
+          timeDisplay.innerText = `0.0s / ${{activeAnimations[0].duration.toFixed(1)}}s`;
+        }}
+        const slider = document.getElementById('anim-time-slider');
+        if (slider) slider.value = '0';
+      }} else {{
+        activeAnimations = [];
+        currentSkinnedPrims = null;
+        const animControls = document.getElementById('anim-controls');
+        if (animControls) animControls.classList.add('hidden');
+      }}
+
+      // Upload normals (or calculate flat normals if missing)
+      let normals = m.normals;
+      if (!normals || normals.length !== m.positions.length) {{
+        normals = new Float32Array(m.positions.length);
+        for (let i = 0; i < m.indices.length; i += 3) {{
+          const i0 = m.indices[i] * 3, i1 = m.indices[i+1] * 3, i2 = m.indices[i+2] * 3;
+          const ax = m.positions[i1] - m.positions[i0], ay = m.positions[i1+1] - m.positions[i0+1], az = m.positions[i1+2] - m.positions[i0+2];
+          const bx = m.positions[i2] - m.positions[i0], by = m.positions[i2+1] - m.positions[i0+1], bz = m.positions[i2+2] - m.positions[i0+2];
+          const nx = ay * bz - az * by, ny = az * bx - ax * bz, nz = ax * by - ay * bx;
+          normals[i0] += nx; normals[i0+1] += ny; normals[i0+2] += nz;
+          normals[i1] += nx; normals[i1+1] += ny; normals[i1+2] += nz;
+          normals[i2] += nx; normals[i2+1] += ny; normals[i2+2] += nz;
+        }}
+      }}
+      gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
+
+      // Upload UVs
+      let uvs = m.uvs;
+      if (!uvs || uvs.length !== (m.positions.length / 3) * 2) {{
+        uvs = new Float32Array((m.positions.length / 3) * 2);
+      }}
+      gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvs), gl.STATIC_DRAW);
+
+      // Prepare indices and batch geometry by texture for maximum WebGL performance
+      const numVertsTotal = m.positions.length / 3;
+      const is32Bit = numVertsTotal > 65535;
+      const indexByteSize = is32Bit ? 4 : 2;
+      const srcIndices = (m.indices instanceof Uint32Array || m.indices instanceof Uint16Array)
+        ? m.indices 
+        : (is32Bit ? new Uint32Array(m.indices) : new Uint16Array(m.indices));
+
+      currentDrawBatches = [];
+      let finalIndices = srcIndices;
+
+      if (m.submeshes && m.submeshes.length > 1) {{
+        const groups = new Map();
+        let indexOffset = 0;
+        const batchTexturesByName = {{}};
+
+        for (let s = 0; s < m.submeshes.length; s++) {{
+          const sm = m.submeshes[s];
+          let smTex = null;
+          const texKey = sm.texHash || sm.texName || sm.name || ('sm_' + s);
+
+          if (batchTexturesByName[texKey]) {{
+            smTex = batchTexturesByName[texKey];
+          }} else if (hdTextureCache[texKey] || (sm.texHash && hdTextureCache[sm.texHash]) || (sm.texName && hdTextureCache[sm.texName])) {{
+            const cachedImg = hdTextureCache[texKey] || (sm.texHash && hdTextureCache[sm.texHash]) || (sm.texName && hdTextureCache[sm.texName]);
+            smTex = gl.createTexture();
+            batchTexturesByName[texKey] = smTex;
+            gl.bindTexture(gl.TEXTURE_2D, smTex);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cachedImg);
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          }} else if (sm.texture) {{
+            smTex = gl.createTexture();
+            batchTexturesByName[texKey] = smTex;
+            const img = new Image();
+            img.onload = () => {{
+              gl.bindTexture(gl.TEXTURE_2D, smTex);
+              gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+              gl.generateMipmap(gl.TEXTURE_2D);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            }};
+            img.src = sm.texture;
+          }} else if (sm.rawTextureRgba) {{
+            smTex = gl.createTexture();
+            batchTexturesByName[texKey] = smTex;
+            gl.bindTexture(gl.TEXTURE_2D, smTex);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, sm.rawTexW, sm.rawTexH, 0, gl.RGBA, gl.UNSIGNED_BYTE, sm.rawTextureRgba);
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          }}
+
+          if (!groups.has(texKey)) {{
+            groups.set(texKey, {{
+              texKey: texKey,
+              texture: smTex,
+              texName: sm.texName || '',
+              texHash: sm.texHash || '',
+              slices: [],
+              submeshes: [],
+              totalIndices: 0
+            }});
+          }}
+          const grp = groups.get(texKey);
+          if (!grp.texture && smTex) grp.texture = smTex;
+          grp.slices.push({{ start: indexOffset, count: sm.indices.length }});
+          grp.submeshes.push(sm);
+          grp.totalIndices += sm.indices.length;
+          indexOffset += sm.indices.length;
+        }}
+
+        // Reorder index buffer by texture groups so all geometry sharing a texture is contiguous!
+        const reorderedIndices = is32Bit ? new Uint32Array(srcIndices.length) : new Uint16Array(srcIndices.length);
+        let writePos = 0;
+
+        for (const grp of groups.values()) {{
+          const batchByteOffset = writePos * indexByteSize;
+          for (let sl = 0; sl < grp.slices.length; sl++) {{
+            const slice = grp.slices[sl];
+            reorderedIndices.set(srcIndices.subarray(slice.start, slice.start + slice.count), writePos);
+            writePos += slice.count;
+          }}
+
+          // Combined bounding sphere for frustum culling
+          let minX = Infinity, minY = Infinity, minZ = Infinity;
+          let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+          for (let i = 0; i < grp.submeshes.length; i++) {{
+            const sm = grp.submeshes[i];
+            if (sm.center && sm.size) {{
+              minX = Math.min(minX, sm.center[0] - sm.size * 0.5);
+              maxX = Math.max(maxX, sm.center[0] + sm.size * 0.5);
+              minY = Math.min(minY, sm.center[1] - sm.size * 0.5);
+              maxY = Math.max(maxY, sm.center[1] + sm.size * 0.5);
+              minZ = Math.min(minZ, sm.center[2] - sm.size * 0.5);
+              maxZ = Math.max(maxZ, sm.center[2] + sm.size * 0.5);
+            }}
+          }}
+
+          let batchSphere = null;
+          if (minX !== Infinity) {{
+            const gcx = ((minX + maxX) * 0.5 - cx) * scale;
+            const gcy = ((minY + maxY) * 0.5 - cy) * scale;
+            const gcz = ((minZ + maxZ) * 0.5 - cz) * scale;
+            const gr = Math.max(0.05, Math.max(maxX - minX, maxY - minY, maxZ - minZ) * 0.6 * scale);
+            batchSphere = new Float32Array([gcx, gcy, gcz, gr]);
+          }}
+
+          currentDrawBatches.push({{
+            count: grp.totalIndices,
+            byteOffset: batchByteOffset,
+            texture: grp.texture,
+            texName: grp.texName,
+            texHash: grp.texHash,
+            texKey: grp.texKey,
+            sphere: batchSphere,
+            submeshCount: grp.submeshes.length
+          }});
+        }}
+
+        finalIndices = reorderedIndices;
+
+        // Queue high-res texture fetches for all unique texture items across submeshes
+        const queuedKeys = new Set();
+        for (let s = 0; s < m.submeshes.length; s++) {{
+          const sm = m.submeshes[s];
+          const k = sm.texHash || sm.texName;
+          if (k && !queuedKeys.has(k)) {{
+            queuedKeys.add(k);
+            fetchHighResTexture(sm.texName, sm.texHash);
+          }}
+        }}
+      }} else if (m.texName || m.texHash) {{
+        fetchHighResTexture(m.texName, m.texHash);
+      }}
+
+      // Upload batched indices
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, finalIndices, gl.STATIC_DRAW);
+      indexCount = finalIndices.length;
+      indexType = is32Bit ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+
+      function updateWireBuffer() {{
+        if (!showWireframe || !finalIndices || finalIndices.length === 0) {{
+          wireIndexCount = 0;
+          return;
+        }}
+        const wCount = finalIndices.length * 2;
+        const wData = is32Bit ? new Uint32Array(wCount) : new Uint16Array(wCount);
+        let ptr = 0;
+        for (let i = 0; i < finalIndices.length; i += 3) {{
+          const i0 = finalIndices[i], i1 = finalIndices[i+1], i2 = finalIndices[i+2];
+          wData[ptr++] = i0; wData[ptr++] = i1;
+          wData[ptr++] = i1; wData[ptr++] = i2;
+          wData[ptr++] = i2; wData[ptr++] = i0;
+        }}
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireIndexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, wData, gl.STATIC_DRAW);
+        wireIndexCount = wCount;
+      }}
+      updateWireBuffer();
+
+      // Upload Texture
+      if (m.rawTextureRgba) {{
+        gl.bindTexture(gl.TEXTURE_2D, glTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, m.rawTexW, m.rawTexH, 0, gl.RGBA, gl.UNSIGNED_BYTE, m.rawTextureRgba);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      }} else if (m.texture) {{
+        const img = new Image();
+        img.onload = () => {{
+          gl.bindTexture(gl.TEXTURE_2D, glTexture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+          gl.generateMipmap(gl.TEXTURE_2D);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        }};
+        img.src = m.texture;
+      }} else {{
+        // Fallback default clean neutral studio texture
+        gl.bindTexture(gl.TEXTURE_2D, glTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([220, 220, 220, 255]));
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      }}
+
+      resetCamera();
+    }}
+
+    function switchModel(key) {{
+      currentModelKey = key;
+      const keys = ['cell-phone', 'birthday-card', 'brick', 'freeway', 'sedan', 'ambulance'];
+      keys.forEach(k => {{
+        const b = document.getElementById('btn-' + k);
+        if (b) {{
+          b.className = (k === key) 
+            ? "px-3 py-1.5 text-xs font-medium rounded-lg transition border border-emerald-500/50 bg-emerald-500/20 text-emerald-300"
+            : "px-3 py-1.5 text-xs font-medium rounded-lg transition border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300";
+        }}
+      }});
+      loadModelData(PRELOADED_MODELS[key]);
+    }}
+
+    function setRenderMode(mode) {{
+      renderMode = mode;
+      for (let i = 0; i <= 3; i++) {{
+        const b = document.getElementById(`rmode-${{i}}`);
+        b.className = (i === mode) 
+          ? "px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-medium"
+          : "px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200";
+      }}
+    }}
+
+    function toggleWireframe() {{
+      showWireframe = !showWireframe;
+      if (showWireframe && wireIndexCount === 0 && currentMesh && currentMesh.indices && currentMesh.indices.length > 0) {{
+        const is32 = (currentMesh.positions.length / 3) > 65535;
+        const wCount = currentMesh.indices.length * 2;
+        const wData = is32 ? new Uint32Array(wCount) : new Uint16Array(wCount);
+        let ptr = 0;
+        for (let i = 0; i < currentMesh.indices.length; i += 3) {{
+          const i0 = currentMesh.indices[i], i1 = currentMesh.indices[i+1], i2 = currentMesh.indices[i+2];
+          wData[ptr++] = i0; wData[ptr++] = i1;
+          wData[ptr++] = i1; wData[ptr++] = i2;
+          wData[ptr++] = i2; wData[ptr++] = i0;
+        }}
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireIndexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, wData, gl.STATIC_DRAW);
+        wireIndexCount = wCount;
+      }}
+      const b = document.getElementById('btn-wire');
+      b.innerText = showWireframe ? "Сетка: Вкл" : "Сетка: Выкл";
+      b.className = showWireframe 
+        ? "px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-medium"
+        : "px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200";
+    }}
+
+    function toggleBones() {{
+      showBones = !showBones;
+      const b = document.getElementById('btn-bones');
+      if (b) {{
+        b.innerText = showBones ? "🦴 Кости: Вкл" : "🦴 Кости: Выкл";
+        b.className = showBones 
+          ? "px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 font-medium border border-cyan-500/40"
+          : "px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200";
+      }}
+      const nodeCount = (animGlbNodes && animGlbNodes.length > 0) ? animGlbNodes.length : 0;
+      if (showBones) {{
+        if (nodeCount > 0) {{
+          showToast(`🦴 Скелет: Вкл (${{nodeCount}} узлов/костей)`);
+        }} else {{
+          showToast(`🦴 Скелет: Вкл (в текущей модели нет скелета)`);
+        }}
+      }} else {{
+        showToast(`🦴 Скелет: Выкл`);
+      }}
+    }}
+
+    let cullFaceEnabled = false;
+    function toggleCullFace() {{
+      cullFaceEnabled = !cullFaceEnabled;
+      if (cullFaceEnabled) {{
+        gl.enable(gl.CULL_FACE);
+        gl.cullFace(gl.BACK);
+      }} else {{
+        gl.disable(gl.CULL_FACE);
+      }}
+      const b = document.getElementById('btn-cull');
+      if (b) {{
+        b.innerText = cullFaceEnabled ? "2-стороны: Выкл" : "2-стороны: Вкл";
+        b.className = cullFaceEnabled ? "px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200" : "px-2.5 py-1 rounded-lg text-emerald-400 font-medium";
+      }}
+    }}
+
+    function toggleAutoRotate() {{
+      autoRotate = !autoRotate;
+      const b = document.getElementById('btn-autorotate');
+      b.innerText = autoRotate ? "Вращение: Вкл" : "Вращение: Выкл";
+      b.className = autoRotate ? "px-2.5 py-1 rounded-lg text-emerald-400 font-medium" : "px-2.5 py-1 rounded-lg text-slate-400 hover:text-slate-200";
+    }}
+
+    function updateCamFromOrbit() {{
+      const cp = Math.cos(camPitch), sp = Math.sin(camPitch);
+      const cy = Math.cos(camYaw), sy = Math.sin(camYaw);
+      camX = targetX + sy * cp * orbitDist;
+      camY = targetY + sp * orbitDist;
+      camZ = targetZ + cy * cp * orbitDist;
+    }}
+
+    function resetCamera() {{
+      targetX = 0; targetY = 0; targetZ = 0;
+      orbitDist = (currentMesh && currentMesh.size > 0) ? Math.min(10.0, currentMesh.size * 1.5) : 2.4;
+      camPitch = 0.25;
+      flySpeed = (currentMesh && currentMesh.size > 5.0) ? Math.max(0.5, Math.min(15.0, currentMesh.size * 0.05)) : 0.5;
+      updateFlySpeedUI();
+      updateCamFromOrbit();
+    }}
+
+    // Matrix Mathematics Helpers
+    function mat4Create() {{ return new Float32Array(16); }}
+    function mat4Identity(out) {{
+      out.fill(0);
+      out[0] = out[5] = out[10] = out[15] = 1;
+      return out;
+    }}
+    function mat4Perspective(out, fovy, aspect, near, far) {{
+      const f = 1.0 / Math.tan(fovy / 2);
+      out.fill(0);
+      out[0] = f / aspect;
+      out[5] = f;
+      out[10] = (far + near) / (near - far);
+      out[11] = -1;
+      out[14] = (2 * far * near) / (near - far);
+      return out;
+    }}
+    function mat4Multiply(out, a, b) {{
+      const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
+      const a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
+      const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+      const a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+      for (let i = 0; i < 4; i++) {{
+        const b0 = b[i*4], b1 = b[i*4+1], b2 = b[i*4+2], b3 = b[i*4+3];
+        out[i*4] = a00 * b0 + a10 * b1 + a20 * b2 + a30 * b3;
+        out[i*4+1] = a01 * b0 + a11 * b1 + a21 * b2 + a31 * b3;
+        out[i*4+2] = a02 * b0 + a12 * b1 + a22 * b2 + a32 * b3;
+        out[i*4+3] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
+      }}
+      return out;
+    }}
+
+    const projMat = mat4Create();
+    const viewMat = mat4Create();
+    const modelMat = mat4Create();
+    const mvpMat = mat4Create();
+    const tempMat = mat4Create();
+
+    let lastTime = performance.now();
+    let frameCount = 0;
+    let lastFpsUpdate = performance.now();
+
+    function render(now) {{
+      const dt = Math.min(0.1, (now - lastTime) / 1000.0);
+      lastTime = now;
+
+      if (autoRotate && !isDragging && !isRmbDown) {{
+        camYaw += dt * 0.4;
+        updateCamFromOrbit();
+      }}
+
+      if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {{
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }}
+
+      gl.clearColor(0.03, 0.05, 0.09, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      if (!currentMesh || indexCount === 0) {{
+        requestAnimationFrame(render);
+        return;
+      }}
+
+      // Directions
+      const cp = Math.cos(camPitch), sp = Math.sin(camPitch);
+      const cy = Math.cos(camYaw), sy = Math.sin(camYaw);
+      const fwd = [-sy * cp, -sp, -cy * cp];
+      const rt = [cy, 0, -sy];
+      const up = [-sy * sp, cp, -cy * sp];
+
+      // Unreal Engine WASD Movement (Active while RMB is held)
+      if (isRmbDown) {{
+        let speed = flySpeed;
+        if (keysDown['ShiftLeft'] || keysDown['ShiftRight']) speed *= 2.5;
+        if (keysDown['ControlLeft'] || keysDown['ControlRight'] || keysDown['AltLeft'] || keysDown['AltRight']) speed *= 0.15;
+
+        let moveX = 0, moveY = 0, moveZ = 0;
+        if (keysDown['KeyW'] || keysDown['ArrowUp']) {{
+          moveX += fwd[0]; moveY += fwd[1]; moveZ += fwd[2];
+        }}
+        if (keysDown['KeyS'] || keysDown['ArrowDown']) {{
+          moveX -= fwd[0]; moveY -= fwd[1]; moveZ -= fwd[2];
+        }}
+        if (keysDown['KeyD'] || keysDown['ArrowRight']) {{
+          moveX += rt[0]; moveY += rt[1]; moveZ += rt[2];
+        }}
+        if (keysDown['KeyA'] || keysDown['ArrowLeft']) {{
+          moveX -= rt[0]; moveY -= rt[1]; moveZ -= rt[2];
+        }}
+        if (keysDown['KeyE'] || keysDown['Space']) {{
+          moveY += 1.0;
+        }}
+        if (keysDown['KeyQ'] || keysDown['KeyC']) {{
+          moveY -= 1.0;
+        }}
+
+        const moveLen = Math.hypot(moveX, moveY, moveZ);
+        if (moveLen > 0.0001) {{
+          camX += (moveX / moveLen) * speed * dt;
+          camY += (moveY / moveLen) * speed * dt;
+          camZ += (moveZ / moveLen) * speed * dt;
+          targetX = camX + fwd[0] * orbitDist;
+          targetY = camY + fwd[1] * orbitDist;
+          targetZ = camZ + fwd[2] * orbitDist;
+        }}
+      }}
+
+      // Skeletal Animation Update, Forward Kinematics & Bone Buffers
+      if (animGlbNodes && animGlbNodes.length > 0) {{
+        const numNodes = animGlbNodes.length;
+
+        // Initialize / re-init evaluated TRS
+        if (!evalNodeTRS || evalNodeTRS.length !== numNodes) {{
+          evalNodeTRS = new Array(numNodes);
+          for (let i = 0; i < numNodes; i++) {{
+            evalNodeTRS[i] = {{
+              t: [0, 0, 0],
+              r: [0, 0, 0, 1],
+              s: [1, 1, 1]
+            }};
+          }}
+        }}
+
+        // Reset to rest pose TRS
+        for (let i = 0; i < numNodes; i++) {{
+          const nd = animGlbNodes[i];
+          const et = evalNodeTRS[i];
+          const restT = nd.translation || [0, 0, 0];
+          const restR = nd.rotation || [0, 0, 0, 1];
+          const restS = nd.scale || [1, 1, 1];
+          et.t[0] = restT[0]; et.t[1] = restT[1]; et.t[2] = restT[2];
+          et.r[0] = restR[0]; et.r[1] = restR[1]; et.r[2] = restR[2]; et.r[3] = restR[3];
+          et.s[0] = restS[0]; et.s[1] = restS[1]; et.s[2] = restS[2];
+        }}
+
+        let isAnimated = false;
+        if (activeAnimations.length > 0) {{
+          const clip = activeAnimations[currentAnimIdx];
+          if (clip && clip.duration > 0) {{
+            isAnimated = true;
+            if (isAnimPlaying) {{
+              animCurrentTime += dt * animSpeed;
+              if (animCurrentTime > clip.duration) {{
+                animCurrentTime = animCurrentTime % clip.duration;
+              }}
+              const slider = document.getElementById('anim-time-slider');
+              if (slider && !isDraggingTimeSlider) {{
+                slider.value = Math.round((animCurrentTime / clip.duration) * 1000);
+              }}
+              const timeDisplay = document.getElementById('anim-time-display');
+              if (timeDisplay) {{
+                timeDisplay.innerText = `${{animCurrentTime.toFixed(1)}}s / ${{clip.duration.toFixed(1)}}s`;
+              }}
+            }}
+
+            // Evaluate animation channels at animCurrentTime
+            for (let c = 0; c < clip.channels.length; c++) {{
+              const ch = clip.channels[c];
+              const targetNode = ch.node;
+              if (targetNode >= numNodes) continue;
+              const sampler = clip.samplers[ch.sampler];
+              if (!sampler || sampler.times.length === 0) continue;
+
+              const times = sampler.times;
+              const vals = sampler.values;
+              const count = times.length;
+              const compCount = sampler.compCount;
+
+              let k0 = 0, k1 = 0;
+              if (animCurrentTime <= times[0]) {{
+                k0 = k1 = 0;
+              }} else if (animCurrentTime >= times[count - 1]) {{
+                k0 = k1 = count - 1;
+              }} else {{
+                let low = 0, high = count - 1;
+                while (low <= high) {{
+                  const mid = (low + high) >> 1;
+                  if (times[mid] <= animCurrentTime) {{
+                    k0 = mid;
+                    low = mid + 1;
+                  }} else {{
+                    high = mid - 1;
+                  }}
+                }}
+                k1 = Math.min(count - 1, k0 + 1);
+              }}
+
+              const t0 = times[k0], t1 = times[k1];
+              const alpha = (k0 === k1 || t1 === t0) ? 0.0 : (animCurrentTime - t0) / (t1 - t0);
+
+              const targetTRS = evalNodeTRS[targetNode];
+              if (ch.path === 'rotation') {{
+                const q0 = [vals[k0 * 4], vals[k0 * 4 + 1], vals[k0 * 4 + 2], vals[k0 * 4 + 3]];
+                const q1 = [vals[k1 * 4], vals[k1 * 4 + 1], vals[k1 * 4 + 2], vals[k1 * 4 + 3]];
+                slerpQuat(targetTRS.r, q0, q1, alpha);
+              }} else if (ch.path === 'translation') {{
+                targetTRS.t[0] = vals[k0 * 3] * (1.0 - alpha) + vals[k1 * 3] * alpha;
+                targetTRS.t[1] = vals[k0 * 3 + 1] * (1.0 - alpha) + vals[k1 * 3 + 1] * alpha;
+                targetTRS.t[2] = vals[k0 * 3 + 2] * (1.0 - alpha) + vals[k1 * 3 + 2] * alpha;
+              }} else if (ch.path === 'scale') {{
+                targetTRS.s[0] = vals[k0 * 3] * (1.0 - alpha) + vals[k1 * 3] * alpha;
+                targetTRS.s[1] = vals[k0 * 3 + 1] * (1.0 - alpha) + vals[k1 * 3 + 1] * alpha;
+                targetTRS.s[2] = vals[k0 * 3 + 2] * (1.0 - alpha) + vals[k1 * 3 + 2] * alpha;
+              }}
+            }}
+          }}
+        }}
+
+        // Compute world matrices for nodes (memoized topological traversal)
+        if (!evalWorldMats || evalWorldMats.length !== numNodes) {{
+          evalWorldMats = new Array(numNodes);
+          for (let i = 0; i < numNodes; i++) evalWorldMats[i] = mat4Create();
+        }}
+
+        const worldMatComputed = new Uint8Array(numNodes);
+        function computeNodeWorldMat(nodeIdx) {{
+          if (worldMatComputed[nodeIdx]) return evalWorldMats[nodeIdx];
+          const trs = evalNodeTRS[nodeIdx];
+          const localM = getTRSMatrix(trs.t, trs.r, trs.s);
+          const parentIdx = animNodeParents ? animNodeParents[nodeIdx] : -1;
+          if (parentIdx >= 0 && parentIdx < numNodes && parentIdx !== nodeIdx) {{
+            const parentM = computeNodeWorldMat(parentIdx);
+            mat4Multiply(evalWorldMats[nodeIdx], parentM, localM);
+          }} else {{
+            evalWorldMats[nodeIdx].set(localM);
+          }}
+          worldMatComputed[nodeIdx] = 1;
+          return evalWorldMats[nodeIdx];
+        }}
+
+        for (let i = 0; i < numNodes; i++) {{
+          computeNodeWorldMat(i);
+        }}
+
+        // CPU Vertex Skinning (if animated and skinned)
+        if (isAnimated && currentSkinnedPrims && currentSkinData) {{
+          const joints = currentSkinData.joints;
+          const numJoints = joints.length;
+          const ibm = currentSkinData.ibm;
+          if (!skinMatricesFlat || skinMatricesFlat.length !== numJoints * 16) {{
+            skinMatricesFlat = new Float32Array(numJoints * 16);
+          }}
+
+          const tempSkinM = mat4Create();
+          for (let j = 0; j < numJoints; j++) {{
+            const jNode = joints[j];
+            const wm = (jNode < numNodes) ? evalWorldMats[jNode] : null;
+            if (wm && ibm) {{
+              const ibmSlice = ibm.subarray(j * 16, (j + 1) * 16);
+              mat4Multiply(tempSkinM, wm, ibmSlice);
+              skinMatricesFlat.set(tempSkinM, j * 16);
+            }} else if (wm) {{
+              skinMatricesFlat.set(wm, j * 16);
+            }} else {{
+              for (let k = 0; k < 16; k++) skinMatricesFlat[j * 16 + k] = (k % 5 === 0) ? 1.0 : 0.0;
+            }}
+          }}
+
+          const cx = currentModelCenter[0], cy = currentModelCenter[1], cz = currentModelCenter[2];
+          const scl = currentModelScale;
+          const mats = skinMatricesFlat;
+
+          for (let p = 0; p < currentSkinnedPrims.length; p++) {{
+            const prim = currentSkinnedPrims[p];
+            const count = prim.count;
+            const vOff = prim.vertOffset;
+            const bPos = prim.basePositions;
+            const jArr = prim.joints;
+            const wArr = prim.weights;
+
+            for (let i = 0; i < count; i++) {{
+              const px = bPos[i * 3], py = bPos[i * 3 + 1], pz = bPos[i * 3 + 2];
+              const j0 = jArr[i * 4] * 16, j1 = jArr[i * 4 + 1] * 16, j2 = jArr[i * 4 + 2] * 16, j3 = jArr[i * 4 + 3] * 16;
+              const w0 = wArr[i * 4], w1 = wArr[i * 4 + 1], w2 = wArr[i * 4 + 2], w3 = wArr[i * 4 + 3];
+
+              const tx = (mats[j0] * px + mats[j0 + 4] * py + mats[j0 + 8] * pz + mats[j0 + 12]) * w0
+                       + (mats[j1] * px + mats[j1 + 4] * py + mats[j1 + 8] * pz + mats[j1 + 12]) * w1
+                       + (mats[j2] * px + mats[j2 + 4] * py + mats[j2 + 8] * pz + mats[j2 + 12]) * w2
+                       + (mats[j3] * px + mats[j3 + 4] * py + mats[j3 + 8] * pz + mats[j3 + 12]) * w3;
+
+              const ty = (mats[j0 + 1] * px + mats[j0 + 5] * py + mats[j0 + 9] * pz + mats[j0 + 13]) * w0
+                       + (mats[j1 + 1] * px + mats[j1 + 5] * py + mats[j1 + 9] * pz + mats[j1 + 13]) * w1
+                       + (mats[j2 + 1] * px + mats[j2 + 5] * py + mats[j2 + 9] * pz + mats[j2 + 13]) * w2
+                       + (mats[j3 + 1] * px + mats[j3 + 5] * py + mats[j3 + 9] * pz + mats[j3 + 13]) * w3;
+
+              const tz = (mats[j0 + 2] * px + mats[j0 + 6] * py + mats[j0 + 10] * pz + mats[j0 + 14]) * w0
+                       + (mats[j1 + 2] * px + mats[j1 + 6] * py + mats[j1 + 10] * pz + mats[j1 + 14]) * w1
+                       + (mats[j2 + 2] * px + mats[j2 + 6] * py + mats[j2 + 10] * pz + mats[j2 + 14]) * w2
+                       + (mats[j3 + 2] * px + mats[j3 + 6] * py + mats[j3 + 10] * pz + mats[j3 + 14]) * w3;
+
+              const dst = (vOff + i) * 3;
+              currentNormPositions[dst]     = (tx - cx) * scl;
+              currentNormPositions[dst + 1] = (ty - cy) * scl;
+              currentNormPositions[dst + 2] = (tz - cz) * scl;
+            }}
+          }}
+
+          // Upload deformed positions to GPU
+          gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+          gl.bufferSubData(gl.ARRAY_BUFFER, 0, currentNormPositions);
+        }}
+
+        // Update Bone Geometry when showBones is enabled
+        if (showBones) {{
+          const cx = currentModelCenter[0], cy = currentModelCenter[1], cz = currentModelCenter[2];
+          const scl = currentModelScale;
+          const jointSet = (currentSkinData && currentSkinData.joints) ? new Set(currentSkinData.joints) : null;
+
+          const lineVerts = [];
+          const pointVerts = [];
+
+          for (let i = 0; i < numNodes; i++) {{
+            if (jointSet && !jointSet.has(i)) {{
+              const isParentOfJoint = animGlbNodes[i].children && animGlbNodes[i].children.some(c => jointSet.has(c));
+              if (!isParentOfJoint) continue;
+            }}
+
+            const wm = evalWorldMats[i];
+            if (!wm) continue;
+
+            const x = (wm[12] - cx) * scl;
+            const y = (wm[13] - cy) * scl;
+            const z = (wm[14] - cz) * scl;
+
+            pointVerts.push(x, y, z);
+
+            const pIdx = animNodeParents ? animNodeParents[i] : -1;
+            if (pIdx >= 0 && pIdx < numNodes && pIdx !== i) {{
+              const pwm = evalWorldMats[pIdx];
+              if (pwm) {{
+                const px = (pwm[12] - cx) * scl;
+                const py = (pwm[13] - cy) * scl;
+                const pz = (pwm[14] - cz) * scl;
+
+                const distSq = (x - px)*(x - px) + (y - py)*(y - py) + (z - pz)*(z - pz);
+                if (distSq > 1e-8) {{
+                  lineVerts.push(px, py, pz, x, y, z);
+                }}
+              }}
+            }}
+          }}
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, boneLineBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineVerts), gl.DYNAMIC_DRAW);
+          boneLineCount = lineVerts.length / 3;
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, bonePointBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pointVerts), gl.DYNAMIC_DRAW);
+          bonePointCount = pointVerts.length / 3;
+        }}
+      }}
+
+      const aspect = canvas.width / canvas.height;
+      mat4Perspective(projMat, camFovDeg * Math.PI / 180.0, aspect, camNear, 2000.0);
+
+      // View Matrix
+      const rx = rt[0], ry = rt[1], rz = rt[2];
+      const ux = up[0], uy = up[1], uz = up[2];
+      const dx = -fwd[0], dy = -fwd[1], dz = -fwd[2];
+
+      viewMat[0] = rx; viewMat[1] = ux; viewMat[2] = dx; viewMat[3] = 0;
+      viewMat[4] = ry; viewMat[5] = uy; viewMat[6] = dy; viewMat[7] = 0;
+      viewMat[8] = rz; viewMat[9] = uz; viewMat[10] = dz; viewMat[11] = 0;
+      viewMat[12] = -(rx * camX + ry * camY + rz * camZ);
+      viewMat[13] = -(ux * camX + uy * camY + uz * camZ);
+      viewMat[14] = -(dx * camX + dy * camY + dz * camZ);
+      viewMat[15] = 1.0;
+
+      // Model Matrix is Identity
+      mat4Identity(modelMat);
+
+      // MVP = Proj * View
+      mat4Multiply(mvpMat, projMat, viewMat);
+
+      // Update Frustum Culling Planes
+      updateFrustumPlanes(mvpMat);
+
+      // Draw Solid Mesh
+      gl.useProgram(program);
+      gl.uniformMatrix4fv(uMvpLoc, false, mvpMat);
+      gl.uniformMatrix4fv(uModelLoc, false, modelMat);
+      gl.uniform3f(uCamPosLoc, camX, camY, camZ);
+      gl.uniform1i(uModeLoc, renderMode);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, glTexture);
+      gl.uniform1i(uTexLoc, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.enableVertexAttribArray(aPosLoc);
+      gl.vertexAttribPointer(aPosLoc, 3, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+      gl.enableVertexAttribArray(aNormLoc);
+      gl.vertexAttribPointer(aNormLoc, 3, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+      gl.enableVertexAttribArray(aUvLoc);
+      gl.vertexAttribPointer(aUvLoc, 2, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+      let drawnBatchesCount = 0;
+      if (currentDrawBatches && currentDrawBatches.length > 0) {{
+        let lastTex = glTexture;
+        for (let b = 0; b < currentDrawBatches.length; b++) {{
+          const batch = currentDrawBatches[b];
+          if (batch.sphere && !isSphereInFrustum(batch.sphere[0], batch.sphere[1], batch.sphere[2], batch.sphere[3])) {{
+            continue; // Frustum culled!
+          }}
+          drawnBatchesCount++;
+          if (renderMode === 0) {{
+            const tex = batch.texture || glTexture;
+            if (tex !== lastTex) {{
+              gl.bindTexture(gl.TEXTURE_2D, tex);
+              lastTex = tex;
+            }}
+          }}
+          gl.drawElements(gl.TRIANGLES, batch.count, indexType, batch.byteOffset);
+        }}
+      }} else {{
+        gl.drawElements(gl.TRIANGLES, indexCount, indexType, 0);
+        drawnBatchesCount = 1;
+      }}
+
+      // Wireframe overlay
+      if (showWireframe && wireIndexCount > 0) {{
+        gl.useProgram(wireProgram);
+        gl.uniformMatrix4fv(wireMvpLoc, false, mvpMat);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.enableVertexAttribArray(wirePosLoc);
+        gl.vertexAttribPointer(wirePosLoc, 3, gl.FLOAT, false, 0, 0);
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireIndexBuffer);
+        gl.drawElements(gl.LINES, wireIndexCount, indexType, 0);
+        gl.disable(gl.BLEND);
+      }}
+
+      // Skeleton Bone Overlay (Dual-pass X-Ray + Visible Depth Aware Rendering)
+      if (showBones && (boneLineCount > 0 || bonePointCount > 0)) {{
+        gl.useProgram(boneProgram);
+        gl.uniformMatrix4fv(boneMvpLoc, false, mvpMat);
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.depthMask(false);
+
+        // PASS 1: X-Ray pass through mesh (depth test disabled)
+        gl.disable(gl.DEPTH_TEST);
+
+        // Draw translucent X-ray lines
+        if (boneLineCount > 0) {{
+          gl.bindBuffer(gl.ARRAY_BUFFER, boneLineBuffer);
+          gl.enableVertexAttribArray(bonePosLoc);
+          gl.vertexAttribPointer(bonePosLoc, 3, gl.FLOAT, false, 0, 0);
+          gl.uniform1i(boneIsPointLoc, 0);
+          gl.uniform4f(boneColorLoc, 0.06, 0.73, 0.83, 0.35); // translucent cyan
+          gl.drawArrays(gl.LINES, 0, boneLineCount);
+        }}
+
+        // Draw translucent X-ray joint dots
+        if (bonePointCount > 0) {{
+          gl.bindBuffer(gl.ARRAY_BUFFER, bonePointBuffer);
+          gl.enableVertexAttribArray(bonePosLoc);
+          gl.vertexAttribPointer(bonePosLoc, 3, gl.FLOAT, false, 0, 0);
+          gl.uniform1i(boneIsPointLoc, 1);
+          gl.uniform1f(bonePointSizeLoc, 6.0);
+          gl.uniform4f(boneColorLoc, 0.96, 0.62, 0.15, 0.4); // translucent amber
+          gl.drawArrays(gl.POINTS, 0, bonePointCount);
+        }}
+
+        // PASS 2: Visible pass in front of mesh (depth test enabled)
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+
+        // Draw bright solid bone lines
+        if (boneLineCount > 0) {{
+          gl.bindBuffer(gl.ARRAY_BUFFER, boneLineBuffer);
+          gl.enableVertexAttribArray(bonePosLoc);
+          gl.vertexAttribPointer(bonePosLoc, 3, gl.FLOAT, false, 0, 0);
+          gl.uniform1i(boneIsPointLoc, 0);
+          gl.uniform4f(boneColorLoc, 0.13, 0.83, 0.93, 0.95); // bright cyan
+          gl.drawArrays(gl.LINES, 0, boneLineCount);
+        }}
+
+        // Draw bright solid joint dots
+        if (bonePointCount > 0) {{
+          gl.bindBuffer(gl.ARRAY_BUFFER, bonePointBuffer);
+          gl.enableVertexAttribArray(bonePosLoc);
+          gl.vertexAttribPointer(bonePosLoc, 3, gl.FLOAT, false, 0, 0);
+          gl.uniform1i(boneIsPointLoc, 1);
+          gl.uniform1f(bonePointSizeLoc, 8.0);
+          gl.uniform4f(boneColorLoc, 0.98, 0.75, 0.14, 1.0); // bright gold
+          gl.drawArrays(gl.POINTS, 0, bonePointCount);
+        }}
+
+        gl.depthMask(true);
+        gl.disable(gl.BLEND);
+      }}
+
+      // Update FPS & Batch Count HUD (every 400ms)
+      frameCount++;
+      if (now - lastFpsUpdate >= 400) {{
+        const fps = Math.round((frameCount * 1000) / (now - lastFpsUpdate));
+        frameCount = 0;
+        lastFpsUpdate = now;
+        const fpsEl = document.getElementById('fps-val');
+        if (fpsEl) fpsEl.innerText = fps;
+        const drawEl = document.getElementById('draw-stats');
+        if (drawEl) {{
+          if (currentDrawBatches && currentDrawBatches.length > 0) {{
+            const totalSub = (currentMesh && currentMesh.submeshes) ? currentMesh.submeshes.length : currentDrawBatches.length;
+            if (renderMode === 0) {{
+              drawEl.innerText = `${{drawnBatchesCount}} / ${{currentDrawBatches.length}} батчей (${{totalSub}} дет.)`;
+            }} else {{
+              drawEl.innerText = `1 батч (${{totalSub}} дет.)`;
+            }}
+          }} else {{
+            drawEl.innerText = `${{(indexCount / 3).toLocaleString()}} полигонов`;
+          }}
+          if (showBones && animGlbNodes && animGlbNodes.length > 0) {{
+            drawEl.innerText += ` | 🦴 ${{animGlbNodes.length}} костей`;
+          }}
+        }}
+      }}
+
+      requestAnimationFrame(render);
+    }}
+
+    // Controls (Unreal Engine Style: RMB + WASD / QE, LMB Orbit, MMB Pan)
+    canvas.addEventListener('mousedown', (e) => {{
+      if (e.button === 2) {{
+        isRmbDown = true;
+        autoRotate = false;
+        canvas.style.cursor = 'crosshair';
+      }} else if (e.button === 0) {{
+        isLmbDown = true;
+        autoRotate = false;
+      }}
+      isDragging = true;
+      dragButton = e.button;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+    }});
+
+    window.addEventListener('mouseup', (e) => {{
+      if (e.button === 2) {{
+        isRmbDown = false;
+        canvas.style.cursor = 'default';
+        const cp = Math.cos(camPitch), sp = Math.sin(camPitch);
+        const cy = Math.cos(camYaw), sy = Math.sin(camYaw);
+        const fwd = [-sy * cp, -sp, -cy * cp];
+        targetX = camX + fwd[0] * orbitDist;
+        targetY = camY + fwd[1] * orbitDist;
+        targetZ = camZ + fwd[2] * orbitDist;
+      }}
+      if (e.button === 0) {{
+        isLmbDown = false;
+      }}
+      if (!isRmbDown && !isLmbDown) {{
+        isDragging = false;
+      }}
+    }});
+
+    canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    canvas.addEventListener('mousemove', (e) => {{
+      if (!isDragging) return;
+      const dx = e.clientX - lastMouseX;
+      const dy = e.clientY - lastMouseY;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+
+      if (isRmbDown) {{
+        // Unreal Engine Free Look
+        // Default (Mode 0 Unreal):
+        // dy < 0 (Mouse UP) -> camPitch += dy * 0.0035 -> camPitch decreases -> fwd[1] increases (Looks UP!)
+        // dx > 0 (Mouse RIGHT) -> camYaw -= dx * 0.0035 -> camYaw decreases -> fwd[0] increases (Looks RIGHT!)
+        const invertY = (mouseControlMode === 1 || mouseControlMode === 2);
+        const invertX = (mouseControlMode === 2);
+        const ySign = invertY ? -1 : 1;
+        const xSign = invertX ? -1 : 1;
+
+        camPitch += dy * 0.0035 * ySign;
+        camYaw -= dx * 0.0035 * xSign;
+        camPitch = Math.max(-1.52, Math.min(1.52, camPitch));
+      }} else if (isLmbDown) {{
+        // Natural Orbit around target
+        // Default (Mode 0 Unreal):
+        // dy < 0 (Drag UP) -> camPitch increases -> camera orbits higher (views from above)
+        // dx > 0 (Drag RIGHT) -> camYaw decreases -> camera orbits right (rotates object right)
+        const invertY = (mouseControlMode === 1 || mouseControlMode === 2);
+        const invertX = (mouseControlMode === 2);
+        const ySign = invertY ? -1 : 1;
+        const xSign = invertX ? -1 : 1;
+
+        camPitch -= dy * 0.008 * ySign;
+        camYaw -= dx * 0.008 * xSign;
+        camPitch = Math.max(-1.52, Math.min(1.52, camPitch));
+        updateCamFromOrbit();
+      }} else if (dragButton === 1) {{
+        // MMB Pan
+        const cp = Math.cos(camPitch), sp = Math.sin(camPitch);
+        const cy = Math.cos(camYaw), sy = Math.sin(camYaw);
+        const rt = [cy, 0, -sy];
+        const up = [-sy * sp, cp, -cy * sp];
+        const panFactor = (e.altKey || e.ctrlKey ? 0.0004 : (e.shiftKey ? 0.006 : 0.002)) * orbitDist;
+        targetX -= (rt[0] * dx - up[0] * dy) * panFactor;
+        targetY -= (rt[1] * dx - up[1] * dy) * panFactor;
+        targetZ -= (rt[2] * dx - up[2] * dy) * panFactor;
+        updateCamFromOrbit();
+      }}
+    }});
+
+    canvas.addEventListener('wheel', (e) => {{
+      e.preventDefault();
+      if (isRmbDown) {{
+        // Adjust flight speed like Unreal Engine (supports micro-speed down to 0.001x)
+        if (e.deltaY < 0) flySpeed *= 1.25;
+        else flySpeed *= 0.8;
+        flySpeed = Math.max(0.001, Math.min(100.0, flySpeed));
+        const speedTxt = flySpeed < 0.01 ? flySpeed.toFixed(4) : (flySpeed < 0.1 ? flySpeed.toFixed(3) : (flySpeed < 1.0 ? flySpeed.toFixed(2) : flySpeed.toFixed(1)));
+        showToast("Скорость камеры: " + speedTxt + "x");
+        updateFlySpeedUI();
+      }} else {{
+        // Zoom in orbit mode (hold Alt/Ctrl for ultra-fine micro-zoom)
+        const zoomFactor = (e.altKey || e.ctrlKey) ? 0.0004 : (e.shiftKey ? 0.006 : 0.002);
+        orbitDist += e.deltaY * zoomFactor * (orbitDist / 2.0);
+        orbitDist = Math.max(0.002, Math.min(500.0, orbitDist));
+        updateCamFromOrbit();
+      }}
+    }}, {{ passive: false }});
+
+    window.addEventListener('keydown', (e) => {{
+      keysDown[e.code] = true;
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) return;
+      if (e.code === 'KeyI' && !e.ctrlKey && !e.altKey && !e.metaKey) {{
+        toggleInvertMouse();
+      }}
+      if (e.code === 'KeyB' && !e.ctrlKey && !e.altKey && !e.metaKey) {{
+        toggleBones();
+      }}
+      if (e.code === 'Space' && !e.ctrlKey && !e.altKey && !e.metaKey) {{
+        e.preventDefault();
+        togglePlayAnimation();
+      }}
+    }});
+
+    window.addEventListener('keyup', (e) => {{
+      keysDown[e.code] = false;
+    }});
+
+    // File Drag & Drop
+    window.addEventListener('dragover', (e) => {{
+      e.preventDefault();
+      document.getElementById('drop-zone').classList.remove('hidden');
+    }});
+
+    window.addEventListener('dragleave', (e) => {{
+      if (e.relatedTarget === null) {{
+        document.getElementById('drop-zone').classList.add('hidden');
+      }}
+    }});
+
+    window.addEventListener('drop', (e) => {{
+      e.preventDefault();
+      document.getElementById('drop-zone').classList.add('hidden');
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {{
+        loadFiles(e.dataTransfer.files);
+      }}
+    }});
+
+    async function exportSceneFBX() {{
+      const model = currentCombinedModel || currentMesh;
+      if (!model) {{ showToast('Сначала откройте уровень или ассет'); return; }}
+      const button = document.getElementById('export-fbx');
+      button.disabled = true;
+      const status = document.getElementById('export-status');
+      status.textContent = 'Подготовка экспорта…';
+      try {{
+        const isAnimated = Boolean(model.charName || (model.animations && model.animations.length > 0) || (model.fileName && model.fileName.endsWith('.glb')));
+        if (isAnimated) {{
+          status.textContent = 'Экспорт в Blender (скелет, меши, анимации)...';
+          const tokens = [];
+          if (model.exportSources) {{
+            for (const file of model.exportSources) {{
+              const res = await fetch('/api/export-source?name='+encodeURIComponent(file.name), {{
+                method: 'POST', headers: {{ 'Content-Type': 'application/octet-stream' }}, body: file
+              }});
+              const r = await res.json();
+              if (res.ok && r.token) tokens.push(r.token);
+            }}
+          }}
+          const charId = model.charName || (model.fileName ? model.fileName.replace(/\.glb$/i, '') : 'character');
+          const payload = {{
+            character: charId,
+            charName: charId,
+            sources: tokens
+          }};
+          const response = await fetch('/api/export-fbx', {{
+            method: 'POST',
+            headers: {{ 'Content-Type': 'application/json' }},
+            body: JSON.stringify(payload)
+          }});
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error);
+          while (true) {{
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const poll = await fetch('/api/export-status?job=' + result.job);
+            const job = await poll.json();
+            if (!poll.ok) throw new Error(job.error);
+            status.textContent = job.message;
+            if (job.state === 'error') throw new Error(job.message);
+            if (job.state === 'done') {{
+              const link = document.createElement('a');
+              link.href = job.url;
+              link.download = `${{charId}}-blender-fbx.zip`;
+              link.textContent = 'Скачать сцену Blender + FBX';
+              link.className = 'text-emerald-300 underline font-semibold';
+              status.textContent = job.message + ' · ';
+              status.appendChild(link);
+              if (job.report && job.report.warnings && job.report.warnings.length) {{
+                status.appendChild(document.createTextNode(' · Предупреждений: ' + job.report.warnings.length));
+              }}
+              link.click();
+              break;
+            }}
+          }}
+          return;
+        }}
+
+        const tokens = [];
+        for (const file of (model.exportSources || [])) {{
+          if (!file.name.toLowerCase().endsWith('.pak')) continue;
+          status.textContent = 'Чтение данных уровня: ' + file.name;
+          const response = await fetch('/api/export-source?name='+encodeURIComponent(file.name), {{
+            method:'POST', headers:{{'Content-Type':'application/octet-stream'}}, body:file
+          }});
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error);
+          tokens.push(result.token);
+        }}
+        const init=await fetch('/api/export-mesh-init',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:'{{}}'}});
+        const upload=await init.json(); if(!init.ok) throw new Error(upload.error);
+        const parts=model.submeshes && model.submeshes.length ? model.submeshes : [model];
+        for (let i=0;i<parts.length;i++) {{
+          const sm=parts[i];
+          status.textContent='Передача геометрии: '+(i+1)+' / '+parts.length;
+          let texture = sm.texture || '';
+          if (sm.rawTextureRgba && sm.rawTexW && sm.rawTexH) {{
+            const canvas = document.createElement('canvas'); canvas.width=sm.rawTexW; canvas.height=sm.rawTexH;
+            canvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(sm.rawTextureRgba),sm.rawTexW,sm.rawTexH),0,0);
+            texture=canvas.toDataURL('image/png');
+          }}
+          const mesh={{name:sm.name||sm.title||('Mesh_'+i), positions:Array.from(sm.positions),
+            indices:Array.from(sm.indices), normals:Array.from(sm.normals||[]), uvs:Array.from(sm.uvs||[]),
+            sourceFile:sm.sourceFile||'',texName:sm.texName||'',texHash:sm.texHash||'',texture:texture.startsWith('data:image/')?texture:''}};
+          const sent=await fetch('/api/export-mesh?upload='+encodeURIComponent(upload.token),{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify(mesh)}});
+          if(!sent.ok) throw new Error((await sent.json()).error);
+        }}
+        const response=await fetch('/api/export-fbx',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify({{meshUpload:upload.token,sources:tokens}})}});
+        const result=await response.json(); if(!response.ok) throw new Error(result.error);
+        while(true) {{
+          await new Promise(resolve=>setTimeout(resolve,1000));
+          const poll=await fetch('/api/export-status?job='+result.job);
+          const job=await poll.json(); if(!poll.ok) throw new Error(job.error);
+          status.textContent=job.message;
+          if(job.state==='error') throw new Error(job.message);
+          if(job.state==='done') {{
+            const link=document.createElement('a'); link.href=job.url; link.download='tlou-scene-fbx.zip';
+            link.textContent='Скачать сцену Blender + FBX'; link.className='text-emerald-300 underline';
+            status.textContent=job.message+' · '; status.appendChild(link);
+            if(job.report.warnings.length) status.appendChild(document.createTextNode(' · Предупреждений: '+job.report.warnings.length+' (report.json)'));
+            link.click(); break;
+          }}
+        }}
+      }} catch(error) {{ status.textContent='Ошибка экспорта: '+error.message; }}
+      finally {{ button.disabled=false; }}
+    }}
+
+    function handleFileSelect(e) {{
+      if (e.target.files && e.target.files.length > 0) {{
+        loadFiles(e.target.files);
+        e.target.value = '';
+      }}
+    }}
+
+    function readFileBuffer(file) {{
+      return new Promise((resolve, reject) => {{
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsArrayBuffer(file);
+      }});
+    }}
+
+    async function loadFiles(fileList) {{
+      if (!fileList || fileList.length === 0) return;
+      const files = Array.from(fileList);
+
+      if (files.length === 1) {{
+        const file = files[0];
+        const name = file.name.toLowerCase();
+        showToast("Загрузка: " + file.name + "...");
+        try {{
+          const buffer = await readFileBuffer(file);
+          let model = null;
+          if (name.endsWith('.pak')) {{
+            model = parsePAKBuffer(buffer, file.name, null);
+          }} else if (name.endsWith('.glb') || name.endsWith('.gltf')) {{
+            model = parseGLBBuffer(buffer, file.name);
+          }} else {{
+            alert("Поддерживаются только файлы .PAK и .GLB");
+            return;
+          }}
+          for (const sm of (model.submeshes || [model])) sm.sourceFile = file.name;
+          model.exportSources = files;
+          loadModelData(model);
+          showToast(`Загружен: ${{file.name}} (${{model.stats.tris.toLocaleString()}} полигонов)`);
+        }} catch (err) {{
+          console.error(err);
+          alert("Ошибка при загрузке " + file.name + ": " + err.message);
+        }}
+        return;
+      }}
+
+      // Multi-file loading & assembly in world space
+      showToast(`Загрузка и объединение ${{files.length}} файлов...`);
+      const parsedModels = [];
+      const errors = [];
+      // Shared texture dictionary: maps texName.toLowerCase() -> texObj
+      // Built from any TEXTURE_DICTIONARY PAKs dropped alongside geometry PAKs
+      let sharedTexDict = {{}};
+
+      // First pass: identify and parse texture dictionary PAKs
+      for (const file of files) {{
+        const name = file.name.toLowerCase();
+        if (!name.endsWith('.pak')) continue;
+        try {{
+          const buffer = await readFileBuffer(file);
+          const result = parsePAKBuffer(buffer, file.name, null);
+          if (result && result.isTexDict) {{
+            // Merge texture dictionary into shared map
+            Object.assign(sharedTexDict, result.texturesMap);
+            showToast(`Загружен словарь текстур: ${{file.name}} (${{Object.keys(result.texturesMap).length}} текстур)`);
+          }}
+        }} catch (err) {{
+          // Silently skip - might be parsed in next pass
+        }}
+      }}
+
+      // Second pass: parse geometry PAKs using the shared texture dictionary
+      for (const file of files) {{
+        const name = file.name.toLowerCase();
+        if (!name.endsWith('.pak') && !name.endsWith('.glb') && !name.endsWith('.gltf')) {{
+          continue;
+        }}
+        try {{
+          const buffer = await readFileBuffer(file);
+          let model = null;
+          if (name.endsWith('.pak')) {{
+            model = parsePAKBuffer(buffer, file.name, sharedTexDict);
+            if (model && model.isTexDict) continue; // skip tex-dict-only files
+          }} else {{
+            model = parseGLBBuffer(buffer, file.name);
+          }}
+          if (model && model.positions.length > 0) {{
+            for (const sm of (model.submeshes || [model])) sm.sourceFile = file.name;
+            parsedModels.push(model);
+          }}
+        }} catch (err) {{
+          console.warn("Не удалось прочитать " + file.name + ":", err);
+          errors.push(file.name + ": " + err.message);
+        }}
+      }}
+
+      if (parsedModels.length === 0) {{
+        alert("Не удалось загрузить 3D геометрию из выбранных файлов.\\n" + errors.join('\\n'));
+        return;
+      }}
+
+      if (parsedModels.length === 1) {{
+        parsedModels[0].exportSources = files;
+        loadModelData(parsedModels[0]);
+        showToast(`Загружен 1 файл из ${{files.length}}: ${{parsedModels[0].fileName}}`);
+        return;
+      }}
+
+      let totalVerts = 0;
+      let totalIndicesCount = 0;
+      for (const m of parsedModels) {{
+        totalVerts += m.positions.length / 3;
+        totalIndicesCount += m.indices.length;
+      }}
+
+      const combinedPositions = new Float32Array(totalVerts * 3);
+      const combinedNormals = new Float32Array(totalVerts * 3);
+      const combinedUvs = new Float32Array(totalVerts * 2);
+      const is32Bit = totalVerts > 65535;
+      const combinedIndices = is32Bit ? new Uint32Array(totalIndicesCount) : new Uint16Array(totalIndicesCount);
+
+      let posOffset = 0, uvOffset = 0, idxOffset = 0;
+      let globalVertOffset = 0;
+      const combinedSubmeshes = [];
+
+      for (const m of parsedModels) {{
+        const fileBase = m.fileName.replace(/\\.(pak|glb|gltf)$/i, "");
+        if (m.submeshes && m.submeshes.length > 0) {{
+          for (const sm of m.submeshes) {{
+            combinedSubmeshes.push({{
+              ...sm,
+              title: `[${{fileBase}}] ${{sm.title}}`,
+              name: `[${{fileBase}}] ${{sm.name}}`
+            }});
+          }}
+        }} else {{
+          combinedSubmeshes.push({{
+            title: `[${{fileBase}}] ${{m.title}}`,
+            name: `[${{fileBase}}] Весь файл (${{m.stats.verts}} верш.)`,
+            positions: m.positions,
+            normals: m.normals,
+            uvs: m.uvs,
+            indices: m.indices,
+            texture: m.texture || '',
+            texName: m.texName || '',
+            texHash: m.texHash || '',
+            sourceFile: m.sourceFile || m.fileName || '',
+            center: m.center,
+            size: m.size,
+            stats: m.stats
+          }});
+        }}
+
+        combinedPositions.set(m.positions, posOffset);
+        combinedNormals.set(m.normals, posOffset);
+        posOffset += m.positions.length;
+
+        combinedUvs.set(m.uvs, uvOffset);
+        uvOffset += m.uvs.length;
+
+        for (let i = 0; i < m.indices.length; i++) {{
+          combinedIndices[idxOffset++] = m.indices[i] + globalVertOffset;
+        }}
+
+        globalVertOffset += (m.positions.length / 3);
+      }}
+
+      const min_b = [Infinity, Infinity, Infinity];
+      const max_b = [-Infinity, -Infinity, -Infinity];
+      for (let i = 0; i < combinedPositions.length; i += 3) {{
+        for (let c = 0; c < 3; c++) {{
+          const v = combinedPositions[i+c];
+          if (v < min_b[c]) min_b[c] = v;
+          if (v > max_b[c]) max_b[c] = v;
+        }}
+      }}
+      const center = [(min_b[0] + max_b[0])/2, (min_b[1] + max_b[1])/2, (min_b[2] + max_b[2])/2];
+      const size = Math.max(max_b[0] - min_b[0], max_b[1] - min_b[1], max_b[2] - min_b[2]);
+
+      const multiScene = {{
+        fileName: `${{parsedModels.length}} файлов`,
+        title: `Объединенная сцена (${{parsedModels.length}} файлов)`,
+        positions: combinedPositions,
+        normals: combinedNormals,
+        uvs: combinedUvs,
+        indices: combinedIndices,
+        rawTextureRgba: null,
+        center: center,
+        size: size || 1.0,
+        stats: {{
+          verts: combinedPositions.length / 3,
+          tris: combinedIndices.length / 3
+        }},
+        submeshes: combinedSubmeshes
+      }};
+
+      multiScene.exportSources = files;
+      loadModelData(multiScene);
+      showToast(`Объединено ${{parsedModels.length}} файлов: ${{multiScene.stats.tris.toLocaleString()}} полигонов, ${{multiScene.stats.verts.toLocaleString()}} вершин!`);
+    }}
+
+    // ==========================================
+    // Pure JavaScript PAK Parser (In-Browser!)
+    // ==========================================
+    // Bake PS4 instance-local pose palettes before the instance world matrix.
+    function bakePropPalette(raw, instAddr, view, readPtr) {{
+      const count = view.getUint32(instAddr + 0x24, true);
+      const ptr = readPtr(instAddr + 0x38);
+      if (!count || !ptr || !raw.skinPtr) return raw;
+      if (ptr + count * 48 > view.byteLength) throw new Error('Truncated prop palette');
+      const skin = raw.skinPtr;
+      const total = view.getUint32(skin + 4, true);
+      const counts = readPtr(skin + 8), offsets = readPtr(skin + 16);
+      const joints = readPtr(skin + 24), weights = readPtr(skin + 32);
+      const vertices = raw.positions.length / 3;
+      if (!counts || !offsets || !joints || !weights || counts + vertices*2 > view.byteLength ||
+          offsets + vertices*2 > view.byteLength || joints + total*2 > view.byteLength ||
+          weights + total*4 > view.byteLength) throw new Error('Invalid prop skin');
+      const positions = new Float32Array(raw.positions.length);
+      const normals = new Float32Array(raw.normals.length);
+      for (let v = 0; v < vertices; v++) {{
+        const n = Math.min(view.getUint16(counts + v*2, true), 4);
+        const start = view.getUint16(offsets + v*2, true);
+        const m = new Float64Array(12);
+        let sum = 0;
+        for (let k = 0; k < n; k++) {{
+          if (start + k >= total) throw new Error('Invalid prop influence offset');
+          const weight = view.getFloat32(weights + (start+k)*4, true);
+          if (weight === 0) continue;
+          const joint = view.getUint16(joints + (start+k)*2, true);
+          if (joint >= count) throw new Error('Prop joint outside palette');
+          for (let j = 0; j < 12; j++) m[j] += weight * view.getFloat32(ptr + joint*48 + j*4, true);
+          sum += weight;
+        }}
+        if (sum <= 1e-6) throw new Error('Empty prop influences');
+        for (let j = 0; j < 12; j++) m[j] /= sum;
+        const x = raw.positions[v*3], y = raw.positions[v*3+1], z = raw.positions[v*3+2];
+        for (let j = 0; j < 3; j++) positions[v*3+j] = m[j*4]*x + m[j*4+1]*y + m[j*4+2]*z + m[j*4+3];
+        if (normals.length) {{
+          // Inverse transpose of the blended linear transform.
+          const a=m[0], b=m[1], c=m[2], d=m[4], e=m[5], f=m[6], g=m[8], h=m[9], i=m[10];
+          const det=a*(e*i-f*h)-b*(d*i-f*g)+c*(d*h-e*g);
+          if (Math.abs(det) < 1e-12) throw new Error('Singular prop transform');
+          const nx=raw.normals[v*3], ny=raw.normals[v*3+1], nz=raw.normals[v*3+2];
+          const tx=((e*i-f*h)*nx+(f*g-d*i)*ny+(d*h-e*g)*nz)/det;
+          const ty=((c*h-b*i)*nx+(a*i-c*g)*ny+(b*g-a*h)*nz)/det;
+          const tz=((b*f-c*e)*nx+(c*d-a*f)*ny+(a*e-b*d)*nz)/det;
+          const length=Math.hypot(tx,ty,tz)||1;
+          normals.set([tx/length,ty/length,tz/length],v*3);
+        }}
+      }}
+      return {{ ...raw, positions, normals }};
+    }}
+
+    function parsePAKBuffer(buffer, fileName, sharedTexDict) {{
+      const view = new DataView(buffer);
+      const u8 = new Uint8Array(buffer);
+
+      if (buffer.byteLength < 0x2C) {{
+        throw new Error("Файл слишком мал для архива PAK");
+      }}
+
+          const magic = view.getUint32(0, true);
+          if (magic !== 2681 && magic !== 2685 && magic !== 68217 && magic !== 68221) {{
+            throw new Error("Неизвестный magic PAK: " + magic);
+          }}
+          const isPC = (magic === 2685 || magic === 68221);
+
+          const pageCt = view.getUint32(16, true);
+          const pPageEntryTable = view.getUint32(20, true);
+          const pfTblOffs = view.getUint32(28, true);
+
+          const pages = [];
+          for (let i = 0; i < pageCt; i++) {{
+            pages.push({{
+              offset: view.getUint32(pPageEntryTable + i * 12, true),
+              size: view.getUint32(pPageEntryTable + i * 12 + 4, true)
+            }});
+          }}
+          const rawDataStart = pages[pages.length - 1].offset + pages[pages.length - 1].size;
+
+          // Pointer Fixups Map
+          const pfDataOffs = view.getUint32(pfTblOffs + 4, true);
+          const pfCount = view.getUint32(pfTblOffs + 8, true);
+          const pointerMap = new Map();
+          for (let i = 0; i < pfCount; i++) {{
+            const p1 = view.getUint16(pfDataOffs + i * 8, true);
+            const p2 = view.getUint16(pfDataOffs + i * 8 + 2, true);
+            const ptrOffs = view.getUint32(pfDataOffs + i * 8 + 4, true);
+            if (p1 < pages.length && p2 < pages.length) {{
+              pointerMap.set(ptrOffs + pages[p1].offset, p2);
+            }}
+          }}
+
+          function readPtr(addr) {{
+            if (addr + 8 > buffer.byteLength || addr < 0) return 0;
+            const low = view.getUint32(addr, true);
+            const high = view.getInt32(addr + 4, true);
+            const val = high * 4294967296 + low;
+            if (val === 0) return 0;
+            if (pointerMap.has(addr)) {{
+              const p2Idx = pointerMap.get(addr);
+              return val + pages[p2Idx].offset;
+            }}
+            return val;
+          }}
+
+          function readStr(offset, maxLen = 256) {{
+            if (offset < 0 || offset >= buffer.byteLength) return "";
+            let end = offset;
+            while (end < buffer.byteLength && end < offset + maxLen && u8[end] !== 0) end++;
+            return new TextDecoder('ascii').decode(u8.subarray(offset, end)).trim();
+          }}
+
+          // Find GEOMETRY_1 and all VRAM_DESC items
+          let geoItem = null;
+          let vramItems = [];
+
+          if (isPC) {{
+            const loginTblIdx = view.getUint32(8, true);
+            const loginTblOffs = view.getUint32(12, true);
+            if (loginTblIdx < pages.length) {{
+              const loginStart = pages[loginTblIdx].offset + loginTblOffs;
+              const resPadding = 48;
+              if (loginStart + resPadding + 4 <= buffer.byteLength) {{
+                const loginCnt = view.getUint32(loginStart + resPadding, true);
+                for (let i = 0; i < loginCnt; i++) {{
+                  const entryAddr = loginStart + 56 + i * 8;
+                  if (entryAddr + 8 > buffer.byteLength) break;
+                  const pIdx = view.getUint32(entryAddr, true);
+                  const pOff = view.getUint32(entryAddr + 4, true);
+                  if (pIdx >= pages.length) continue;
+                  const resAbs = pages[pIdx].offset + pOff;
+                  if (resAbs + 40 > buffer.byteLength) continue;
+                  const typeIdLow = view.getUint32(resAbs + 32, true);
+                  const typeIdHigh = view.getUint32(resAbs + 36, true);
+
+                  if (typeIdLow === 0x792F45C1 && typeIdHigh === 0x349D779A) {{
+                    if (!geoItem) geoItem = {{ resAbs, name: fileName }};
+                  }} else if ((typeIdLow === 0xA5D2CE2B && typeIdHigh === 0xA2481DA1) ||
+                             (typeIdLow === 0xFB7F3991 && typeIdHigh === 0x36125D3C)) {{
+                    if (resAbs + resPadding + 32 <= buffer.byteLength) {{
+                      const numTex = view.getUint32(resAbs + resPadding, true);
+                      const listStart = readPtr(resAbs + resPadding + 24);
+                      if (listStart > 0) {{
+                        for (let t = 0; t < numTex; t++) {{
+                          const tAddr = listStart + t * 8;
+                          if (tAddr + 8 > buffer.byteLength) break;
+                          const rawPtrLow = view.getUint32(tAddr, true);
+                          const rawPtrHigh = view.getInt32(tAddr + 4, true);
+                          const rawPtrVal = rawPtrHigh * 4294967296 + rawPtrLow;
+                          let vramAbs = rawPtrVal - 32;
+                          if (pointerMap.has(tAddr)) {{
+                            const p2 = pointerMap.get(tAddr);
+                            vramAbs = rawPtrVal + pages[p2].offset - 32;
+                          }}
+                          if (vramAbs > 0 && vramAbs + 80 <= buffer.byteLength) {{
+                            let texPath = readStr(vramAbs + 112, 300) || readStr(vramAbs + 96, 300);
+                            let tName = '';
+                            let hexH = '';
+                            if (texPath) {{
+                              const p = texPath.replace(/\\\\/g, '/').split('/');
+                              let cand = p[p.length - 1];
+                              if (cand.toLowerCase().endsWith('.ndb') && p.length >= 2) cand = p[p.length - 2];
+                              tName = cand.replace(/\\.(tga|dds|ndb)$/i, '');
+                              const mH = texPath.match(/([0-9a-fA-F]{{16}})/);
+                              if (mH) hexH = mH[1].toLowerCase();
+                            }}
+                            vramItems.push({{ resAbs: vramAbs, name: tName || `tex_${{vramItems.length}}`, hexHash: hexH }});
+                          }}
+                        }}
+                      }}
+                    }}
+                  }} else if (typeIdLow === 0x3131B309 && typeIdHigh === 0xCE3ADE69) {{
+                    let texPath = readStr(resAbs + 112, 300) || readStr(resAbs + 96, 300);
+                    let tName = '';
+                    let hexH = '';
+                    if (texPath) {{
+                      const p = texPath.replace(/\\\\/g, '/').split('/');
+                      let cand = p[p.length - 1];
+                      if (cand.toLowerCase().endsWith('.ndb') && p.length >= 2) cand = p[p.length - 2];
+                      tName = cand.replace(/\\.(tga|dds|ndb)$/i, '');
+                      const mH = texPath.match(/([0-9a-fA-F]{{16}})/);
+                      if (mH) hexH = mH[1].toLowerCase();
+                    }}
+                    vramItems.push({{ resAbs: resAbs, name: tName || `tex_${{vramItems.length}}`, hexHash: hexH }});
+                  }}
+                }}
+              }}
+            }}
+          }} else {{
+            for (let pIdx = 0; pIdx < pages.length; pIdx++) {{
+              const pOffs = pages[pIdx].offset;
+              if (pOffs + 20 > buffer.byteLength) continue;
+              const numEntries = view.getUint16(pOffs + 18, true);
+              let cur = pOffs + 20;
+              for (let e = 0; e < numEntries; e++) {{
+                if (cur + 16 > buffer.byteLength) break;
+                const nameOffs = Number(view.getBigUint64(cur, true));
+                const resItemOffs = view.getUint32(cur + 8, true);
+                cur += 16;
+                const resAbs = resItemOffs + pOffs;
+                if (resAbs + 16 > buffer.byteLength) continue;
+                const itemTypeOffs = Number(view.getBigUint64(resAbs + 8, true));
+                const itemType = readStr(itemTypeOffs + pOffs);
+                if (itemType === 'GEOMETRY_1' && !geoItem) {{
+                  geoItem = {{ resAbs, name: readStr(nameOffs + pOffs) }};
+                }} else if (itemType === 'VRAM_DESC') {{
+                  const inlinePath = readStr(resAbs + 0x60, 300);
+                  let texName = readStr(nameOffs + pOffs);
+                  const fb96 = readStr(resAbs + 96, 300);
+                  const fb112 = readStr(resAbs + 112, 300);
+                  const allStr = (inlinePath + ' ' + (fb96 || '') + ' ' + (fb112 || ''));
+                  const mH = allStr.match(/([0-9a-fA-F]{{16}})/);
+                  const hexHash = mH ? mH[1].toLowerCase() : '';
+
+                  if (!texName && inlinePath) {{
+                    const parts = inlinePath.replace(/\\\\/g, '/').split('/');
+                    let candidate = parts[parts.length - 1];
+                    if (candidate.toLowerCase().endsWith('.ndb') && parts.length >= 2) {{
+                      candidate = parts[parts.length - 2];
+                    }}
+                    texName = candidate.replace(/\\.(tga|dds|ndb)$/i, '');
+                    if (!texName || texName.length < 2) texName = `tex_${{vramItems.length}}`;
+                  }}
+                  if (!inlinePath || !texName || texName.startsWith('tex_')) {{
+                    const fb = fb96 || fb112;
+                    if (fb) {{
+                      const fbParts = fb.replace(/\\\\/g, '/').split('/');
+                      let fbCandidate = fbParts[fbParts.length - 1];
+                      if (fbCandidate.toLowerCase().endsWith('.ndb') && fbParts.length >= 2) fbCandidate = fbParts[fbParts.length - 2];
+                      const fbName = fbCandidate.replace(/\\.(tga|dds|ndb)$/i, '');
+                      if (fbName && fbName.length > 2) texName = fbName;
+                    }}
+                  }}
+                  vramItems.push({{ resAbs, name: texName || `tex_${{vramItems.length}}`, hexHash }});
+                }}
+              }}
+            }}
+          }}
+
+          // Textures map
+          const texturesMap = {{}};
+          let primaryDiffuseTex = null;
+
+          // If this is a pure texture dictionary PAK (no 3D geometry),
+          // register all textures with lazy decoding so 2,000+ textures take 0 memory
+          if (!geoItem) {{
+            for (let v = 0; v < vramItems.length; v++) {{
+              const vi = vramItems[v];
+              const vRes = vi.resAbs;
+              if (vRes + 80 > buffer.byteLength) continue;
+              const pakOffset = view.getUint32(vRes + 40, true);
+              const vramSize = view.getUint32(vRes + 48, true);
+              const tw = isPC ? view.getUint32(vRes + 84, true) : view.getUint32(vRes + 72, true);
+              const th = isPC ? view.getUint32(vRes + 88, true) : view.getUint32(vRes + 76, true);
+              const texDataStart = rawDataStart + pakOffset;
+              const fmtId = isPC ? view.getUint32(vRes + 72, true) : ((vRes + 64 <= buffer.byteLength) ? view.getUint32(vRes + 60, true) : 0);
+
+              if (tw > 0 && th > 0 && tw <= 4096 && th <= 4096 && texDataStart >= 0 && texDataStart + vramSize <= buffer.byteLength) {{
+                const texKey = vi.name.toLowerCase();
+                const existing = texturesMap[texKey];
+                const texEntry = {{
+                  w: tw,
+                  h: th,
+                  name: vi.name,
+                  hexHash: vi.hexHash || '',
+                  fmtId: fmtId,
+                  get rgba() {{
+                    if (!this._rgba) {{
+                      const isBC3 = fmtId === 77 || (fmtId >= 0x4C && fmtId <= 0x4E);
+                      const isBC5 = fmtId === 83 || (fmtId >= 0x52 && fmtId <= 0x54);
+                      const isBC4 = fmtId === 80 || (fmtId >= 0x4F && fmtId <= 0x51);
+                      const isBC7 = (fmtId >= 0x55 && fmtId <= 0x57) || (fmtId >= 0x61 && fmtId <= 0x63);
+                      if (isBC3) this._rgba = decodeDXT5(u8, texDataStart, tw, th, isPC);
+                      else if (isBC5) this._rgba = decodeBC5(u8, texDataStart, tw, th, isPC);
+                      else if (isBC4) this._rgba = decodeBC4(u8, texDataStart, tw, th, isPC);
+                      else if (isBC7) this._rgba = decodeBC7(u8, texDataStart, tw, th);
+                      else this._rgba = decodeDXT1(u8, texDataStart, tw, th, isPC);
+                    }}
+                    return this._rgba;
+                  }}
+                }};
+                if (!existing || tw > existing.w) {{
+                  texturesMap[texKey] = texEntry;
+                }}
+                if (vi.hexHash) {{
+                  texturesMap[vi.hexHash] = texEntry;
+                  texturesMap[vi.hexHash.toUpperCase()] = texEntry;
+                }}
+              }}
+            }}
+            if (Object.keys(texturesMap).length > 0) {{
+              return {{ isTexDict: true, texturesMap, fileName }};
+            }}
+            throw new Error("В файле " + fileName + " не найдена 3D геометрия (GEOMETRY_1). Возможно, это файл только с анимацией или звуком.");
+          }}
+
+          for (let v = 0; v < vramItems.length; v++) {{
+            const vi = vramItems[v];
+            const vRes = vi.resAbs;
+            if (vRes + 80 > buffer.byteLength) continue;
+            const pakOffset = view.getUint32(vRes + 40, true);
+            const vramSize = view.getUint32(vRes + 48, true);
+            const tw = isPC ? view.getUint32(vRes + 84, true) : view.getUint32(vRes + 72, true);
+            const th = isPC ? view.getUint32(vRes + 88, true) : view.getUint32(vRes + 76, true);
+            const texDataStart = rawDataStart + pakOffset;
+
+            const fmtId = isPC ? view.getUint32(vRes + 72, true) : ((vRes + 64 <= buffer.byteLength) ? view.getUint32(vRes + 60, true) : 0);
+            const isBC3 = fmtId === 77 || (fmtId >= 0x4C && fmtId <= 0x4E);
+            const isBC5 = fmtId === 83 || (fmtId >= 0x52 && fmtId <= 0x54);
+            const isBC4 = fmtId === 80 || (fmtId >= 0x4F && fmtId <= 0x51);
+            const isBC7 = (fmtId >= 0x55 && fmtId <= 0x57) || (fmtId >= 0x61 && fmtId <= 0x63);
+
+            if (tw > 0 && th > 0 && tw <= 4096 && th <= 4096 && texDataStart >= 0 && texDataStart + vramSize <= buffer.byteLength) {{
+              let rgba;
+              if (isBC3) {{
+                rgba = decodeDXT5(u8, texDataStart, tw, th, isPC);
+              }} else if (isBC5) {{
+                rgba = decodeBC5(u8, texDataStart, tw, th, isPC);
+              }} else if (isBC4) {{
+                rgba = decodeBC4(u8, texDataStart, tw, th, isPC);
+              }} else if (isBC7) {{
+                rgba = decodeBC7(u8, texDataStart, tw, th);
+              }} else {{
+                rgba = decodeDXT1(u8, texDataStart, tw, th, isPC);
+              }}
+              const texObj = {{ rgba, w: tw, h: th, name: vi.name, hexHash: vi.hexHash || '', fmtId }};
+              texturesMap[vi.name.toLowerCase()] = texObj;
+              if (vi.hexHash) {{
+                texturesMap[vi.hexHash] = texObj;
+                texturesMap[vi.hexHash.toUpperCase()] = texObj;
+              }}
+
+              const nameLower = vi.name.toLowerCase();
+              // BC4/BC5 are masks/normals — never use as diffuse
+              const isDataTex = isBC4 || isBC5;
+              const isDiffuse = !isDataTex
+                && (nameLower.includes('color') || nameLower.includes('diffuse') || nameLower.includes('alb'))
+                && !nameLower.includes('mask') && !nameLower.includes('normal') && !nameLower.includes('spec')
+                && !nameLower.includes('reflection') && !nameLower.includes('overlay') && !nameLower.includes('noise')
+                && !nameLower.includes('incad') && !nameLower.includes('missing');
+              if (isDiffuse) {{
+                // Prioritize textures whose name matches the PAK filename
+                const fileBase = fileName.replace(/\\.(pak|bin|glb)$/i,'').replace(/-tstrm$/i,'').toLowerCase();
+                const fileWords = fileBase.split(/[-_]/);
+                // Count how many words from filename appear in texture name
+                const matchScore = fileWords.filter(w => w.length > 2 && nameLower.includes(w)).length;
+                const prevScore = primaryDiffuseTex
+                  ? fileWords.filter(w => w.length > 2 && primaryDiffuseTex.name.toLowerCase().includes(w)).length
+                  : -1;
+                if (!primaryDiffuseTex || matchScore > prevScore || (matchScore === prevScore && tw > primaryDiffuseTex.w)) {{
+                  primaryDiffuseTex = texObj;
+                }}
+              }}
+            }}
+          }}
+
+          // Merge sharedTexDict (high-res texture dictionary) into texturesMap
+          // High-res versions override low-res mipmaps from actor PAK
+          if (sharedTexDict && Object.keys(sharedTexDict).length > 0) {{
+            for (const k in sharedTexDict) {{
+              const hiRes = sharedTexDict[k];
+              const existing = texturesMap[k];
+              // Prefer higher resolution
+              if (!existing || hiRes.w > existing.w || hiRes.h > existing.h) {{
+                texturesMap[k] = hiRes;
+              }}
+            }}
+            // Re-select primaryDiffuseTex from merged map using full filename match scoring
+            primaryDiffuseTex = null;
+            const fileBase2 = fileName.replace(/\\.(pak|bin|glb)$/i,'').replace(/-tstrm$/i,'').toLowerCase();
+            const fileWords2 = fileBase2.split(/[-_]/);
+            for (const k in texturesMap) {{
+              const texObj = texturesMap[k];
+              const nameLower2 = k.toLowerCase();
+              const fId = texObj.fmtId || 0;
+              const isDataTex2 = (fId >= 0x4F && fId <= 0x54);
+              const isDiff2 = !isDataTex2
+                && (nameLower2.includes('color') || nameLower2.includes('diffuse') || nameLower2.includes('alb'))
+                && !nameLower2.includes('mask') && !nameLower2.includes('normal') && !nameLower2.includes('spec')
+                && !nameLower2.includes('reflection') && !nameLower2.includes('overlay') && !nameLower2.includes('noise')
+                && !nameLower2.includes('incad') && !nameLower2.includes('missing');
+              if (isDiff2) {{
+                const matchScore2 = fileWords2.filter(w => w.length > 2 && nameLower2.includes(w)).length;
+                const prevScore2 = primaryDiffuseTex
+                  ? fileWords2.filter(w => w.length > 2 && primaryDiffuseTex.name.toLowerCase().includes(w)).length : -1;
+                if (!primaryDiffuseTex || matchScore2 > prevScore2 || (matchScore2 === prevScore2 && texObj.w > primaryDiffuseTex.w)) {{
+                  primaryDiffuseTex = texObj;
+                }}
+              }}
+            }}
+          }}
+
+          if (!primaryDiffuseTex && Object.keys(texturesMap).length > 0) {{
+            for (const k in texturesMap) {{
+              if (!k.includes('mask') && !k.includes('normal') && !k.includes('spec')) {{
+                primaryDiffuseTex = texturesMap[k];
+                break;
+              }}
+            }}
+            if (!primaryDiffuseTex) primaryDiffuseTex = Object.values(texturesMap)[0];
+          }}
+
+          // Parse GEOMETRY_1
+          const resAbs = geoItem.resAbs;
+          let submeshesOffs = 0;
+          let numSubmeshes = 0;
+          const xforms = new Map();
+
+          if (isPC) {{
+            const resPadding = 48;
+            numSubmeshes = view.getUint32(resAbs + resPadding + 8, true);
+            submeshesOffs = readPtr(resAbs + resPadding + 40);
+            const numMaterials = view.getUint32(resAbs + resPadding + 16, true);
+            const papTransform = readPtr(resAbs + resPadding + 56);
+            if (papTransform > 0 && numMaterials > 0) {{
+              for (let i = 0; i < numMaterials; i++) {{
+                const off = readPtr(papTransform + 8 * i);
+                if (off > 0 && off + 64 <= buffer.byteLength) {{
+                  const matFloats = new Float32Array(16);
+                  for (let m = 0; m < 16; m++) {{
+                    matFloats[m] = view.getFloat32(off + m * 4, true);
+                  }}
+                  const submeshXformsOffs = readPtr(off + 152);
+                  const numSubmeshXforms = (off + 216 <= buffer.byteLength) ? view.getUint32(off + 212, true) : 0;
+                  if (submeshXformsOffs > 0 && numSubmeshXforms > 0) {{
+                    for (let j = 0; j < numSubmeshXforms; j++) {{
+                      const smOff = readPtr(submeshXformsOffs + j * 112 + 64);
+                      if (smOff > 0) {{
+                        if (!xforms.has(smOff)) xforms.set(smOff, []);
+                        xforms.get(smOff).push(matFloats);
+                      }}
+                    }}
+                  }}
+                }}
+              }}
+            }}
+          }} else {{
+            submeshesOffs = readPtr(resAbs + 0x30) || readPtr(resAbs + 0x40);
+            numSubmeshes = view.getUint32(resAbs + 0x28, true);
+            if (numSubmeshes === 0 || numSubmeshes > 5000) numSubmeshes = 1;
+          }}
+
+          if (!submeshesOffs) {{
+            throw new Error("Не найден список сабмешей в " + fileName);
+          }}
+
+          const shaderMaterials = {{}};
+          if (!isPC && resAbs + 0x78 <= buffer.byteLength) {{
+            const p5Cnt = view.getUint32(resAbs + 0x68, true);
+            const p5Ptr = readPtr(resAbs + 0x70);
+            if (p5Cnt > 0 && p5Ptr > 0 && p5Ptr < buffer.byteLength) {{
+              for (let i = 0; i < p5Cnt; i++) {{
+                const shAddr = p5Ptr + i * 72;
+                if (shAddr + 72 > buffer.byteLength) break;
+                const matPtr = readPtr(shAddr);
+                const matStr = matPtr > 0 ? readStr(matPtr) : '';
+                const pTexHdr = readPtr(shAddr + 0x28);
+                const texCount = (shAddr + 0x3C <= buffer.byteLength) ? view.getUint32(shAddr + 0x38, true) : 0;
+
+                let diffH = '', normH = '';
+                const hashes = [];
+                if (pTexHdr > 0 && texCount > 0 && texCount < 64) {{
+                  for (let t = 0; t < texCount; t++) {{
+                    const thAddr = pTexHdr + t * 40;
+                    if (thAddr + 40 > buffer.byteLength) break;
+                    const slotPtr = readPtr(thAddr);
+                    const slotName = slotPtr > 0 ? readStr(slotPtr) : '';
+                    const pathPtr = readPtr(thAddr + 0x10);
+                    const tPath = pathPtr > 0 ? readStr(pathPtr) : '';
+                    const m = tPath.match(/([0-9a-fA-F]{{16}})/);
+                    const h = m ? m[1].toLowerCase() : '';
+                    if (h) {{
+                      hashes.push(h);
+                      const sLow = slotName.toLowerCase();
+                      if (!sLow.includes('light') && !sLow.includes('g_tlm') && (sLow === 'g_tndfetchcolor1map' || sLow.includes('diffuse') || sLow.includes('albedo') || sLow.includes('basecolor'))) {{
+                        diffH = h;
+                      }} else if (sLow === 'g_tndfetchnormal1map' || (sLow.includes('normal') && !normH)) {{
+                        normH = h;
+                      }}
+                    }}
+                  }}
+                }}
+                if (matStr) {{
+                  shaderMaterials[matStr] = {{ diffuseHash: diffH, normalHash: normH, hashes }};
+                }}
+              }}
+            }}
+          }}
+
+          let p2Cnt = 0, p2Ptr = 0, p3Cnt = 0, p3Ptr = 0;
+          const collectionsByName = new Map();
+          if (!isPC && resAbs + 0x58 <= buffer.byteLength) {{
+            p2Cnt = view.getUint32(resAbs + 0x38, true);
+            p2Ptr = readPtr(resAbs + 0x40);
+            p3Cnt = view.getUint32(resAbs + 0x48, true);
+            p3Ptr = readPtr(resAbs + 0x50);
+            if (p2Cnt > 0 && p2Ptr > 0 && p2Ptr < buffer.byteLength) {{
+              let curSm = 0;
+              for (let c = 0; c < p2Cnt; c++) {{
+                let cAddr = readPtr(p2Ptr + c * 8);
+                if (!cAddr || cAddr >= buffer.byteLength) cAddr = p2Ptr + c * 120;
+                if (cAddr + 20 > buffer.byteLength) break;
+                const smCount = view.getUint32(cAddr + 4, true);
+                const namePtr = readPtr(cAddr + 0x10);
+                const cName = namePtr > 0 ? readStr(namePtr) : `collection_${{c}}`;
+                collectionsByName.set(cName, {{ startSm: curSm, smCount: smCount }});
+                curSm += smCount;
+              }}
+            }}
+          }}
+
+          function BitReaderMSB(dataU8, startByte) {{
+            this.u8 = dataU8;
+            this.bitPos = startByte * 8;
+            this.len = dataU8.length;
+          }}
+          BitReaderMSB.prototype.readBits = function(n) {{
+            if (n <= 0) return 0;
+            let val = 0;
+            for (let i = 0; i < n; i++) {{
+              const byteIdx = this.bitPos >> 3;
+              const bitIdx = 7 - (this.bitPos & 7);
+              if (byteIdx < this.len) {{
+                const bit = (this.u8[byteIdx] >> bitIdx) & 1;
+                val = (val << 1) | bit;
+              }}
+              this.bitPos++;
+            }}
+            return val;
+          }};
+
+          const rawSubmeshes = new Array(numSubmeshes).fill(null);
+          let allPositions = [];
+          let allNormals = [];
+          let allUvs = [];
+          let allIndices = [];
+          let submeshList = [];
+          let vertexOffset = 0;
+          let validSubmeshesCount = 0;
+
+          for (let s = 0; s < numSubmeshes; s++) {{
+            const smAddr = isPC ? (submeshesOffs + s * 176) : (submeshesOffs + s * 136);
+            if (smAddr + (isPC ? 140 : 0x48) > buffer.byteLength || smAddr < 0) break;
+
+            const smNamePtr = isPC ? readPtr(smAddr + 32) : readPtr(smAddr + 0x08);
+            const smRawName = smNamePtr > 0 ? readStr(smNamePtr) : '';
+
+            const numVerts = isPC ? view.getUint32(smAddr + 128, true) : view.getUint32(smAddr + 0x1C, true);
+            const numIndices = isPC ? view.getUint32(smAddr + 132, true) : view.getUint32(smAddr + 0x20, true);
+            const numStreams = isPC ? view.getUint32(smAddr + 136, true) : view.getUint32(smAddr + 0x24, true);
+
+            if (numVerts === 0 || numIndices === 0 || numVerts > 200000 || numIndices > 800000) continue;
+            if (numStreams === 0 || numStreams > 16) continue;
+
+            const pStreams = isPC ? readPtr(smAddr + 48) : readPtr(smAddr + 0x30);
+            const pIndices = isPC ? readPtr(smAddr + 64) : readPtr(smAddr + 0x40);
+            const pMat = isPC ? readPtr(smAddr + 72) : readPtr(smAddr + 0x48);
+
+            if (pIndices <= 0 || pIndices + numIndices * 2 > buffer.byteLength) continue;
+            const streamStride = isPC ? 64 : 24;
+            if (pStreams <= 0 || pStreams + numStreams * streamStride > buffer.byteLength) continue;
+
+            const curIndices = new Uint16Array(numIndices);
+            for (let i = 0; i < numIndices; i++) {{
+              curIndices[i] = view.getUint16(pIndices + i * 2, true);
+            }}
+
+            let rawPositions = new Float32Array(numVerts * 3);
+            let rawNormals = new Float32Array(numVerts * 3);
+            let rawUvs = new Float32Array(numVerts * 2);
+            let hasPrimaryUvs = false;
+            let hasPos = false;
+
+            if (isPC) {{
+              for (let st = 0; st < numStreams; st++) {{
+                const stAddr = pStreams + st * 64;
+                if (stAddr + 64 > buffer.byteLength) break;
+                const bufPtr = readPtr(stAddr);
+                if (bufPtr <= 0 || bufPtr >= buffer.byteLength) continue;
+                const compType = u8[stAddr + 20];
+                const sizes = [u8[stAddr + 24], u8[stAddr + 25], u8[stAddr + 26], u8[stAddr + 27]];
+                const qScale = [
+                  view.getFloat32(stAddr + 32, true),
+                  view.getFloat32(stAddr + 36, true),
+                  view.getFloat32(stAddr + 40, true),
+                  view.getFloat32(stAddr + 44, true)
+                ];
+                const qOffs = [
+                  view.getFloat32(stAddr + 48, true),
+                  view.getFloat32(stAddr + 52, true),
+                  view.getFloat32(stAddr + 56, true),
+                  view.getFloat32(stAddr + 60, true)
+                ];
+
+                if (compType === 64) {{
+                  const r = new BitReaderMSB(u8, bufPtr);
+                  for (let v = 0; v < numVerts; v++) {{
+                    rawPositions[v*3]     = r.readBits(sizes[0]) * qScale[0] + qOffs[0];
+                    rawPositions[v*3 + 1] = r.readBits(sizes[1]) * qScale[1] + qOffs[1];
+                    rawPositions[v*3 + 2] = r.readBits(sizes[2]) * qScale[2] + qOffs[2];
+                  }}
+                  hasPos = true;
+                }} else if (compType === 65 || compType === 75 || compType === 76) {{
+                  const r = new BitReaderMSB(u8, bufPtr);
+                  for (let v = 0; v < numVerts; v++) {{
+                    rawUvs[v*2]     = r.readBits(sizes[0]) * qScale[0] + qOffs[0];
+                    rawUvs[v*2 + 1] = r.readBits(sizes[1]) * qScale[1] + qOffs[1];
+                  }}
+                }} else if ((compType === 2 || compType === 130) && bufPtr + numVerts * 4 <= buffer.byteLength) {{
+                  for (let v = 0; v < numVerts; v++) {{
+                    const u32 = view.getUint32(bufPtr + v * 4, true);
+                    let nx = u32 & 0x3FF; if (nx & 0x200) nx -= 0x400;
+                    let ny = (u32 >> 10) & 0x3FF; if (ny & 0x200) ny -= 0x400;
+                    let nz = (u32 >> 20) & 0x3FF; if (nz & 0x200) nz -= 0x400;
+                    const nlen = Math.hypot(nx, ny, nz) || 1.0;
+                    rawNormals[v*3]     = nx / nlen;
+                    rawNormals[v*3 + 1] = ny / nlen;
+                    rawNormals[v*3 + 2] = nz / nlen;
+                  }}
+                }}
+              }}
+            }} else {{
+              for (let st = 0; st < numStreams; st++) {{
+                const stAddr = pStreams + st * 24;
+                const compInfoPtr = readPtr(stAddr + 8);
+                const bufPtr = readPtr(stAddr + 16);
+                const stride = view.getUint16(stAddr + 2, true);
+
+                if (bufPtr <= 0 || bufPtr + numVerts * stride > buffer.byteLength) continue;
+
+                const attrIdx = (compInfoPtr > 0 && compInfoPtr + 4 <= buffer.byteLength)
+                  ? view.getUint8(compInfoPtr)
+                  : st;
+
+                if (attrIdx === 0 && stride >= 12) {{
+                  for (let v = 0; v < numVerts; v++) {{
+                    rawPositions[v*3] = view.getFloat32(bufPtr + v * stride, true);
+                    rawPositions[v*3+1] = view.getFloat32(bufPtr + v * stride + 4, true);
+                    rawPositions[v*3+2] = view.getFloat32(bufPtr + v * stride + 8, true);
+                  }}
+                  hasPos = true;
+                }} else if (attrIdx === 1 || (attrIdx === 12 && !hasPrimaryUvs)) {{
+                  if (attrIdx === 1) hasPrimaryUvs = true;
+                  if (stride >= 8) {{
+                    for (let v = 0; v < numVerts; v++) {{
+                      rawUvs[v*2] = view.getFloat32(bufPtr + v * stride, true);
+                      rawUvs[v*2+1] = view.getFloat32(bufPtr + v * stride + 4, true);
+                    }}
+                  }} else if (stride >= 4) {{
+                    for (let v = 0; v < numVerts; v++) {{
+                      const u16_u = view.getUint16(bufPtr + v * stride, true);
+                      const u16_v = view.getUint16(bufPtr + v * stride + 2, true);
+                      rawUvs[v*2] = decodeHalf(u16_u);
+                      rawUvs[v*2+1] = decodeHalf(u16_v);
+                    }}
+                  }}
+                }} else if (attrIdx === 2 && stride >= 12) {{
+                  for (let v = 0; v < numVerts; v++) {{
+                    rawNormals[v*3] = view.getFloat32(bufPtr + v * stride, true);
+                    rawNormals[v*3+1] = view.getFloat32(bufPtr + v * stride + 4, true);
+                    rawNormals[v*3+2] = view.getFloat32(bufPtr + v * stride + 8, true);
+                  }}
+                }}
+              }}
+            }}
+
+            if (!hasPos) continue;
+
+            let matStr = '';
+            if (pMat > 0) {{
+              if (isPC) {{
+                const pInner = readPtr(pMat);
+                if (pInner > 0) matStr = readStr(pInner);
+                if (!matStr || !/[a-zA-Z0-9]/.test(matStr)) matStr = readStr(pMat);
+              }} else {{
+                matStr = readStr(pMat);
+                if (!matStr || matStr.length < 2) {{
+                  const pInner = readPtr(pMat);
+                  if (pInner > 0) matStr = readStr(pInner);
+                }}
+              }}
+            }}
+
+            const smNameLower = (smRawName || '').toLowerCase();
+            const matLower = (matStr || '').toLowerCase();
+            if (smNameLower.includes('shadowproxy') || smNameLower.includes('shadow_geo') || smNameLower.includes('shadow_lod') || matLower.includes('shadowblocker') || smNameLower.includes('collision') || smNameLower.includes('col_lod')) {{
+              continue;
+            }}
+
+            let smDiffuseHash = '';
+            let smNormalHash = '';
+            if (matStr && shaderMaterials[matStr]) {{
+              smDiffuseHash = shaderMaterials[matStr].diffuseHash;
+              smNormalHash = shaderMaterials[matStr].normalHash;
+            }}
+
+            const matParts = matStr.split(':');
+            const matBase = matParts[0] ? matParts[0].split('/').pop() : '';
+            const matClean = matBase.toLowerCase();
+            const smLower = smRawName.toLowerCase();
+            const parts = smRawName.split('|').filter(Boolean);
+            const smLeaf = (parts.length > 0 ? parts[parts.length - 1] : smRawName).toLowerCase();
+            const smCategory = (parts.length > 1 ? parts[parts.length - 2] : '').toLowerCase();
+            let smAsset = '';
+            if (parts.length > 0 && parts[0].includes('.ma')) {{
+              smAsset = parts[0].split('/').pop().replace(/\\.ma$/i, '').toLowerCase();
+            }}
+
+            let baseCleanName = `Деталь #${{s+1}}`;
+            if (smRawName) {{
+              let mainPart = parts.length > 1 ? parts[parts.length - 1] : parts[0] || '';
+              mainPart = mainPart.replace(/_shader\\d+.*$/i, '').replace(/Shape\\d*$/i, '');
+              let assetPrefix = '';
+              if (parts[0] && parts[0].includes('.ma')) {{
+                const maName = parts[0].split('/').pop().replace(/\\.ma$/i, '');
+                if (maName) assetPrefix = maName;
+              }}
+              if (assetPrefix && mainPart) {{
+                baseCleanName = `${{assetPrefix}} — ${{mainPart}}`;
+              }} else {{
+                let category = parts.length > 2 ? parts[parts.length - 2] : '';
+                if (category && !category.toLowerCase().startsWith('polysurface') && !category.toLowerCase().startsWith('group')) {{
+                  baseCleanName = `${{category}} - ${{mainPart}}`;
+                }} else {{
+                  baseCleanName = mainPart || `Деталь #${{s+1}}`;
+                }}
+              }}
+            }} else if (matClean && matClean !== 'default') {{
+              baseCleanName = matClean;
+            }} else if (numVerts === 798) baseCleanName = 'Банкомат (ATM)';
+            else if (numVerts === 428) baseCleanName = 'Здание госпиталя';
+            else if (numVerts === 497) baseCleanName = 'Торговый центр';
+            else if (numVerts === 1152) baseCleanName = 'Полотно дороги (Развилка)';
+            else if (numVerts === 48) baseCleanName = 'Дорожная разметка';
+            else if (numVerts === 112) baseCleanName = 'Мусорный бак';
+            else if (numVerts === 148) baseCleanName = 'Съезд на трассу (On-ramp)';
+            else if (numVerts === 104) baseCleanName = 'Дорожный знак';
+            else if (numVerts === 184) baseCleanName = 'Стекла хэтчбека';
+            else if (numVerts === 757) baseCleanName = 'Пикап';
+            else if (numVerts === 136) baseCleanName = 'Внедорожник SUV';
+            else if (numVerts === 542) baseCleanName = 'Основное полотно шоссе';
+
+            // Intelligent Material & Texture matching for each submesh
+            let smTex = null;
+            let smTexName = '';
+
+            if (smDiffuseHash) {{
+              if (texturesMap[smDiffuseHash]) {{
+                smTex = texturesMap[smDiffuseHash];
+                smTexName = smTex.name || smDiffuseHash;
+              }} else {{
+                smTexName = smDiffuseHash;
+              }}
+            }}
+
+            if (!smTex && !smDiffuseHash && !shaderMaterials[matStr]) {{
+              const isPartB = /([-_]b|part[-_]?b|body[-_]?b|[-_]2)(?:[^a-z0-9]|$)/i.test(matClean) || /([-_]b|part[-_]?b|body[-_]?b|[-_]2)(?:[^a-z0-9]|$)/i.test(smLeaf);
+
+              // Filter out non-discriminative stop words (level prefixes, generic tokens)
+              const STOP_WORDS = new Set([
+                'hom', 'hun', 'sub', 'bos', 'uni', 'qzt', 'pit', 'dam', 'lak', 'tow', 'mil', 'lab', 'mus',
+                'main', 'room', 'living', 'level', 'levels', 'stuff', 'object', 'objects', 'poly', 'surface',
+                'shape', 'shader', 'merged', 'partition', 'default', 'dirty', 'clean', 'shared', 'color',
+                'diffuse', 'texture', 'textures', 'common', 'world', 'prop', 'props', 'mod', 't1', 'set01',
+                'set02', 'house', 'model', 'asset', 'assets'
+              ]);
+              const rawMatWords = (matClean + ' ' + smLeaf + ' ' + smAsset).match(/[a-z0-9]+/g) || [];
+              const sigWords = rawMatWords.filter(w => w.length > 2 && !STOP_WORDS.has(w));
+              const normSigWords = sigWords.map(w => (w.endsWith('s') && w.length > 3) ? w.slice(0, -1) : w);
+              const combinedWords = rawMatWords;
+
+              const isWheelMesh = /wheel|tire|rim/i.test(matClean) || /wheel|tire|rim/i.test(smLeaf) || /wheel|tire|rim/i.test(smCategory);
+              const isGlassMesh = /glass|window|windshield/i.test(matClean) || /glass|window|windshield/i.test(smLeaf) || /glass|window|windshield/i.test(smCategory);
+              const isRotorMesh = /rotor|propeller|prop/i.test(matClean) || /rotor|propeller|prop/i.test(smLeaf) || /rotor|propeller|prop/i.test(smCategory);
+              const isSearchlightMesh = /searchlight|spotlight/i.test(matClean) || /searchlight|spotlight/i.test(smLeaf);
+              const isDecalMesh = /decal|label|emblem/i.test(matClean) || /decal|label|emblem/i.test(smLeaf);
+              const isSpecialMesh = isWheelMesh || isGlassMesh || isRotorMesh || isSearchlightMesh || isDecalMesh;
+
+              // Candidate diffuse textures
+              const diffTexList = Object.keys(texturesMap).filter(k => {{
+                const texObj = texturesMap[k];
+                const fId = texObj.fmtId || 0;
+                const isData = (fId >= 0x4F && fId <= 0x54);
+                return !isData && (k.includes('color') || k.includes('diffuse') || k.includes('alb') || k.includes('decal'))
+                  && !k.includes('mask') && !k.includes('normal') && !k.includes('spec')
+                  && !k.includes('overlay') && !k.includes('reflection') && !k.includes('noise') && !k.includes('incad');
+              }});
+
+              let bestTexKey = null;
+              let bestScore = -1;
+
+              for (const k of diffTexList) {{
+                const texWords = (k.match(/[a-z0-9]+/g) || []).filter(w => !STOP_WORDS.has(w));
+                let score = 0;
+                for (const w of texWords) {{
+                  const nw = (w.endsWith('s') && w.length > 3) ? w.slice(0, -1) : w;
+                  if (nw.length > 2) {{
+                    if (sigWords.includes(w) || normSigWords.includes(nw)) {{
+                      score += nw.length * 10;
+                    }} else if (normSigWords.some(cw => cw.startsWith(nw) || nw.startsWith(cw))) {{
+                      score += Math.min(nw.length, 5) * 5;
+                    }}
+                  }}
+                }}
+
+                const isWheelTex = /wheel|tire|rim/i.test(k);
+                const isGlassTex = /glass|window|windshield/i.test(k);
+                const isRotorTex = /rotor|propeller|prop|blur/i.test(k);
+                const isSearchlightTex = /searchlight|spotlight/i.test(k);
+                const isDecalTex = /decal|label|emblem/i.test(k);
+
+                if (isWheelMesh && isWheelTex) score += 60;
+                if (isGlassMesh && isGlassTex) score += 60;
+                if (isRotorMesh && isRotorTex) score += 60;
+                if (isSearchlightMesh && isSearchlightTex) score += 60;
+                if (isDecalMesh && isDecalTex) score += 60;
+
+                // Penalize mismatched special textures
+                if (!isWheelMesh && isWheelTex) score -= 50;
+                if (!isGlassMesh && isGlassTex) score -= 50;
+                if (!isRotorMesh && isRotorTex) score -= 50;
+                if (!isSearchlightMesh && isSearchlightTex) score -= 50;
+                if (!isDecalMesh && isDecalTex) score -= 50;
+
+                if (k.includes('box')) {{
+                  if (combinedWords.includes('box')) score += 25;
+                  else score -= 25;
+                }}
+
+                if (!isSpecialMesh) {{
+                  if (isPartB) {{
+                    if (k.includes('02') || k.includes('-b') || k.includes('_b')) score += 25;
+                  }} else {{
+                    if (k.includes('01') || k.includes('-a') || k.includes('_a')) score += 25;
+                  }}
+                  if ((matClean.includes('body') || smLeaf.includes('body')) && !matClean.includes('body-b') && (k.includes('color') && !k.includes('decal'))) {{
+                    score += 30;
+                  }}
+                }}
+
+                if (k.includes('color') || k.includes('diffuse') || k.includes('alb')) {{
+                  score += 5;
+                }}
+
+                if (score > bestScore) {{
+                  bestScore = score;
+                  bestTexKey = k;
+                }}
+              }}
+
+              if (bestScore >= 12 && bestTexKey) {{
+                smTex = texturesMap[bestTexKey];
+                smTexName = smTex.name || bestTexKey;
+              }} else {{
+                if (matClean && matClean !== 'default' && !matClean.startsWith('lambert')) {{
+                  smTexName = matClean;
+                }} else if (smAsset && smAsset.length > 2) {{
+                  smTexName = smAsset;
+                }} else if (primaryDiffuseTex && numSubmeshes <= 8) {{
+                  smTex = primaryDiffuseTex;
+                  smTexName = primaryDiffuseTex.name || '';
+                }}
+              }}
+            }}
+
+            rawSubmeshes[s] = {{
+              skinPtr: isPC ? 0 : readPtr(smAddr + 0x60),
+              smAddr,
+              baseCleanName,
+              positions: rawPositions,
+              normals: rawNormals,
+              uvs: rawUvs,
+              indices: curIndices,
+              smTex,
+              texName: smTexName,
+              texHash: smDiffuseHash || ''
+            }};
+          }}
+
+          if (isPC) {{
+            for (let s = 0; s < rawSubmeshes.length; s++) {{
+              const raw = rawSubmeshes[s];
+              if (!raw || !raw.positions || !raw.indices) continue;
+              const instMatrices = xforms.has(raw.smAddr) ? xforms.get(raw.smAddr) : [null];
+              for (let instIdx = 0; instIdx < instMatrices.length; instIdx++) {{
+                const M = instMatrices[instIdx];
+                let curPositions = raw.positions;
+                let curNormals = raw.normals;
+                const numVerts = raw.positions.length / 3;
+
+                if (M !== null) {{
+                  curPositions = new Float32Array(numVerts * 3);
+                  curNormals = new Float32Array(numVerts * 3);
+                  for (let v = 0; v < numVerts; v++) {{
+                    const px = raw.positions[v*3], py = raw.positions[v*3+1], pz = raw.positions[v*3+2];
+                    curPositions[v*3]     = M[0] * px + M[4] * py + M[8] * pz + M[12];
+                    curPositions[v*3 + 1] = M[1] * px + M[5] * py + M[9] * pz + M[13];
+                    curPositions[v*3 + 2] = M[2] * px + M[6] * py + M[10] * pz + M[14];
+
+                    if (raw.normals.length > 0) {{
+                      const nx = raw.normals[v*3], ny = raw.normals[v*3+1], nz = raw.normals[v*3+2];
+                      let tnx = M[0] * nx + M[4] * ny + M[8] * nz;
+                      let tny = M[1] * nx + M[5] * ny + M[9] * nz;
+                      let tnz = M[2] * nx + M[6] * ny + M[10] * nz;
+                      const nlen = Math.hypot(tnx, tny, tnz) || 1.0;
+                      curNormals[v*3]     = tnx / nlen;
+                      curNormals[v*3 + 1] = tny / nlen;
+                      curNormals[v*3 + 2] = tnz / nlen;
+                    }}
+                  }}
+                }}
+
+                const smMin = [Infinity, Infinity, Infinity];
+                const smMax = [-Infinity, -Infinity, -Infinity];
+                for (let i = 0; i < curPositions.length; i += 3) {{
+                  for (let c = 0; c < 3; c++) {{
+                    smMin[c] = Math.min(smMin[c], curPositions[i+c]);
+                    smMax[c] = Math.max(smMax[c], curPositions[i+c]);
+                  }}
+                }}
+                const smCenter = [(smMin[0] + smMax[0]) / 2, (smMin[1] + smMax[1]) / 2, (smMin[2] + smMax[2]) / 2];
+                const smSize = Math.max(smMax[0] - smMin[0], smMax[1] - smMin[1], smMax[2] - smMin[2]) || 1.0;
+
+                const cleanName = (instIdx > 0) ? `${{raw.baseCleanName}} #${{instIdx + 1}}` : raw.baseCleanName;
+
+                submeshList.push({{
+                  title: `${{cleanName}} — ${{fileName}}`,
+                  name: `${{cleanName}} (${{numVerts}} верш.)`,
+                  positions: curPositions,
+                  normals: curNormals,
+                  uvs: raw.uvs,
+                  indices: raw.indices,
+                  texture: '',
+                  texName: raw.texName,
+                  texHash: raw.texHash || '',
+                  rawTextureRgba: raw.smTex ? raw.smTex.rgba : null,
+                  rawTexW: raw.smTex ? raw.smTex.w : 0,
+                  rawTexH: raw.smTex ? raw.smTex.h : 0,
+                  center: smCenter,
+                  size: smSize,
+                  stats: {{ verts: numVerts, tris: raw.indices.length / 3 }}
+                }});
+
+                for (let i = 0; i < curPositions.length; i++) allPositions.push(curPositions[i]);
+                for (let i = 0; i < curNormals.length; i++) allNormals.push(curNormals[i]);
+                for (let i = 0; i < raw.uvs.length; i++) allUvs.push(raw.uvs[i]);
+                for (let i = 0; i < raw.indices.length; i++) allIndices.push(raw.indices[i] + vertexOffset);
+
+                vertexOffset += numVerts;
+                validSubmeshesCount++;
+              }}
+            }}
+          }} else if (p3Cnt > 0 && p3Ptr > 0 && collectionsByName.size > 0) {{
+            for (let instIdx = 0; instIdx < p3Cnt; instIdx++) {{
+              const instAddr = readPtr(p3Ptr + instIdx * 8);
+              if (!instAddr || instAddr + 0xC0 > buffer.byteLength) continue;
+              const protoPtr = readPtr(instAddr + 8);
+              const protoName = protoPtr > 0 ? readStr(protoPtr) : '';
+              const M = new Float32Array(16);
+              for (let m = 0; m < 16; m++) {{
+                M[m] = view.getFloat32(instAddr + 0x80 + m * 4, true);
+              }}
+
+              if (collectionsByName.has(protoName)) {{
+                const coll = collectionsByName.get(protoName);
+                const cleanProto = protoName.replace(/\\\\/g, '/').split('/').pop().replace(/\\.ma$/i, '');
+                for (let sOff = 0; sOff < coll.smCount; sOff++) {{
+                  const sIdx = coll.startSm + sOff;
+                  if (sIdx >= rawSubmeshes.length) continue;
+                  let raw = rawSubmeshes[sIdx];
+                  if (!raw || !raw.positions || !raw.indices) continue;
+                  raw = bakePropPalette(raw, instAddr, view, readPtr);
+
+                  const numVerts = raw.positions.length / 3;
+                  const curPositions = new Float32Array(numVerts * 3);
+                  const curNormals = new Float32Array(numVerts * 3);
+
+                  for (let v = 0; v < numVerts; v++) {{
+                    const px = raw.positions[v*3], py = raw.positions[v*3+1], pz = raw.positions[v*3+2];
+                    curPositions[v*3]     = M[0] * px + M[4] * py + M[8] * pz + M[12];
+                    curPositions[v*3 + 1] = M[1] * px + M[5] * py + M[9] * pz + M[13];
+                    curPositions[v*3 + 2] = M[2] * px + M[6] * py + M[10] * pz + M[14];
+
+                    if (raw.normals.length > 0) {{
+                      const nx = raw.normals[v*3], ny = raw.normals[v*3+1], nz = raw.normals[v*3+2];
+                      let tnx = M[0] * nx + M[4] * ny + M[8] * nz;
+                      let tny = M[1] * nx + M[5] * ny + M[9] * nz;
+                      let tnz = M[2] * nx + M[6] * ny + M[10] * nz;
+                      const nlen = Math.hypot(tnx, tny, tnz) || 1.0;
+                      curNormals[v*3]     = tnx / nlen;
+                      curNormals[v*3 + 1] = tny / nlen;
+                      curNormals[v*3 + 2] = tnz / nlen;
+                    }}
+                  }}
+
+                  const smMin = [Infinity, Infinity, Infinity];
+                  const smMax = [-Infinity, -Infinity, -Infinity];
+                  for (let i = 0; i < curPositions.length; i += 3) {{
+                    for (let c = 0; c < 3; c++) {{
+                      smMin[c] = Math.min(smMin[c], curPositions[i+c]);
+                      smMax[c] = Math.max(smMax[c], curPositions[i+c]);
+                    }}
+                  }}
+                  const smCenter = [(smMin[0] + smMax[0]) / 2, (smMin[1] + smMax[1]) / 2, (smMin[2] + smMax[2]) / 2];
+                  const smSize = Math.max(smMax[0] - smMin[0], smMax[1] - smMin[1], smMax[2] - smMin[2]) || 1.0;
+
+                  const cleanName = (instIdx > 0) ? `${{cleanProto}}_${{raw.baseCleanName}} #${{instIdx + 1}}` : `${{cleanProto}}_${{raw.baseCleanName}}`;
+
+                  submeshList.push({{
+                    title: `${{cleanName}} — ${{fileName}}`,
+                    name: `${{cleanName}} (${{numVerts}} верш.)`,
+                    positions: curPositions,
+                    normals: curNormals,
+                    uvs: raw.uvs,
+                    indices: raw.indices,
+                    texture: '',
+                    texName: raw.texName,
+                    texHash: raw.texHash || '',
+                    rawTextureRgba: raw.smTex ? raw.smTex.rgba : null,
+                    rawTexW: raw.smTex ? raw.smTex.w : 0,
+                    rawTexH: raw.smTex ? raw.smTex.h : 0,
+                    center: smCenter,
+                    size: smSize,
+                    stats: {{ verts: numVerts, tris: raw.indices.length / 3 }}
+                  }});
+
+                  for (let i = 0; i < curPositions.length; i++) allPositions.push(curPositions[i]);
+                  for (let i = 0; i < curNormals.length; i++) allNormals.push(curNormals[i]);
+                  for (let i = 0; i < raw.uvs.length; i++) allUvs.push(raw.uvs[i]);
+                  for (let i = 0; i < raw.indices.length; i++) allIndices.push(raw.indices[i] + vertexOffset);
+
+                  vertexOffset += numVerts;
+                  validSubmeshesCount++;
+                }}
+              }}
+            }}
+          }} else {{
+            // Standalone model without instances (e.g. single prop/actor)
+            for (let s = 0; s < rawSubmeshes.length; s++) {{
+              const raw = rawSubmeshes[s];
+              if (!raw || !raw.positions || !raw.indices) continue;
+              const numVerts = raw.positions.length / 3;
+
+              const smMin = [Infinity, Infinity, Infinity];
+              const smMax = [-Infinity, -Infinity, -Infinity];
+              for (let i = 0; i < raw.positions.length; i += 3) {{
+                for (let c = 0; c < 3; c++) {{
+                  smMin[c] = Math.min(smMin[c], raw.positions[i+c]);
+                  smMax[c] = Math.max(smMax[c], raw.positions[i+c]);
+                }}
+              }}
+              const smCenter = [(smMin[0] + smMax[0]) / 2, (smMin[1] + smMax[1]) / 2, (smMin[2] + smMax[2]) / 2];
+              const smSize = Math.max(smMax[0] - smMin[0], smMax[1] - smMin[1], smMax[2] - smMin[2]) || 1.0;
+
+              submeshList.push({{
+                title: `${{raw.baseCleanName}} — ${{fileName}}`,
+                name: `${{raw.baseCleanName}} (${{numVerts}} верш.)`,
+                positions: raw.positions,
+                normals: raw.normals,
+                uvs: raw.uvs,
+                indices: raw.indices,
+                texture: '',
+                texName: raw.texName,
+                texHash: raw.texHash || '',
+                rawTextureRgba: raw.smTex ? raw.smTex.rgba : null,
+                rawTexW: raw.smTex ? raw.smTex.w : 0,
+                rawTexH: raw.smTex ? raw.smTex.h : 0,
+                center: smCenter,
+                size: smSize,
+                stats: {{ verts: numVerts, tris: raw.indices.length / 3 }}
+              }});
+
+              for (let i = 0; i < raw.positions.length; i++) allPositions.push(raw.positions[i]);
+              for (let i = 0; i < raw.normals.length; i++) allNormals.push(raw.normals[i]);
+              for (let i = 0; i < raw.uvs.length; i++) allUvs.push(raw.uvs[i]);
+              for (let i = 0; i < raw.indices.length; i++) allIndices.push(raw.indices[i] + vertexOffset);
+
+              vertexOffset += numVerts;
+              validSubmeshesCount++;
+            }}
+          }}
+
+          if (validSubmeshesCount === 0) {{
+            throw new Error("Не удалось декодировать вершины сабмешей в " + fileName);
+          }}
+
+          const min_b = [Infinity, Infinity, Infinity];
+          const max_b = [-Infinity, -Infinity, -Infinity];
+          for (let i = 0; i < allPositions.length; i += 3) {{
+            for (let c = 0; c < 3; c++) {{
+              min_b[c] = Math.min(min_b[c], allPositions[i+c]);
+              max_b[c] = Math.max(max_b[c], allPositions[i+c]);
+            }}
+          }}
+          const center = [(min_b[0] + max_b[0])/2, (min_b[1] + max_b[1])/2, (min_b[2] + max_b[2])/2];
+          const size = Math.max(max_b[0] - min_b[0], max_b[1] - min_b[1], max_b[2] - min_b[2]);
+
+          return {{
+            fileName: fileName,
+            title: fileName.replace(/\\.pak$/i, "") + (validSubmeshesCount > 1 ? ` (${{validSubmeshesCount}} сабмешей)` : ""),
+            positions: allPositions,
+            normals: allNormals,
+            uvs: allUvs,
+            indices: allIndices,
+            texName: primaryDiffuseTex ? (primaryDiffuseTex.name || '') : '',
+            texHash: primaryDiffuseTex ? (primaryDiffuseTex.hexHash || '') : '',
+            rawTextureRgba: primaryDiffuseTex ? primaryDiffuseTex.rgba : null,
+            rawTexW: primaryDiffuseTex ? primaryDiffuseTex.w : 0,
+            rawTexH: primaryDiffuseTex ? primaryDiffuseTex.h : 0,
+            center: center,
+            size: size || 1.0,
+            stats: {{ verts: vertexOffset, tris: allIndices.length / 3 }},
+            submeshes: submeshList
+          }};
+    }}
+
+    function decodeHalf(h) {{
+      const s = (h & 0x8000) >> 15;
+      const e = (h & 0x7C00) >> 10;
+      const f = h & 0x03FF;
+      if (e === 0) return (s ? -1 : 1) * Math.pow(2, -14) * (f / 1024);
+      if (e === 31) return f ? NaN : ((s ? -1 : 1) * Infinity);
+      return (s ? -1 : 1) * Math.pow(2, e - 15) * (1 + f / 1024);
+    }}
+
+    // PS4 GCN Morton Tile / Deswizzle Helper (bypassed for PC textures)
+    function getPS4BlockOffset(bx, by, numBlocksX, numBlocksY, bpb, baseOffset, isPC) {{
+      if (!isPC && (numBlocksX & 7) === 0 && (numBlocksY & 7) === 0 && numBlocksX >= 8 && numBlocksY >= 8) {{
+        const tilesX = numBlocksX >> 3;
+        const tx = bx >> 3;
+        const ty = by >> 3;
+        const lx = bx & 7;
+        const ly = by & 7;
+        const tileIdx = ty * tilesX + tx;
+        const morton = (lx & 1) | ((ly & 1) << 1) | ((lx & 2) << 1) | ((ly & 2) << 2) | ((lx & 4) << 2) | ((ly & 4) << 3);
+        return baseOffset + (tileIdx * 64 + morton) * bpb;
+      }}
+      return baseOffset + (by * numBlocksX + bx) * bpb;
+    }}
+
+    // DXT1/BC1 Decompressor with PS4 Deswizzle
+    function decodeDXT1(u8, offset, width, height, isPC) {{
+      const rgba = new Uint8Array(width * height * 4);
+      const numBlocksX = Math.floor((width + 3) / 4);
+      const numBlocksY = Math.floor((height + 3) / 4);
+
+      for (let by = 0; by < numBlocksY; by++) {{
+        for (let bx = 0; bx < numBlocksX; bx++) {{
+          const src = getPS4BlockOffset(bx, by, numBlocksX, numBlocksY, 8, offset, isPC);
+          if (src + 8 > u8.length) continue;
+          const c0 = u8[src] | (u8[src + 1] << 8);
+          const c1 = u8[src + 2] | (u8[src + 3] << 8);
+          const code = u8[src + 4] | (u8[src + 5] << 8) | (u8[src + 6] << 16) | (u8[src + 7] << 24);
+
+          const r0 = ((c0 >> 11) & 31) * 255 / 31;
+          const g0 = ((c0 >> 5) & 63) * 255 / 63;
+          const b0 = (c0 & 31) * 255 / 31;
+
+          const r1 = ((c1 >> 11) & 31) * 255 / 31;
+          const g1 = ((c1 >> 5) & 63) * 255 / 63;
+          const b1 = (c1 & 31) * 255 / 31;
+
+          const colors = [
+            [r0, g0, b0, 255],
+            [r1, g1, b1, 255],
+            c0 > c1
+              ? [(2*r0 + r1)/3, (2*g0 + g1)/3, (2*b0 + b1)/3, 255]
+              : [(r0 + r1)/2, (g0 + g1)/2, (b0 + b1)/2, 255],
+            c0 > c1
+              ? [(r0 + 2*r1)/3, (g0 + 2*g1)/3, (b0 + 2*b1)/3, 255]
+              : [0, 0, 0, 255]
+          ];
+
+          for (let py = 0; py < 4; py++) {{
+            for (let px = 0; px < 4; px++) {{
+              const x = bx * 4 + px;
+              const y = by * 4 + py;
+              if (x < width && y < height) {{
+                const shift = (py * 4 + px) * 2;
+                const ci = (code >> shift) & 3;
+                const col = colors[ci];
+                const dst = (y * width + x) * 4;
+                rgba[dst] = col[0];
+                rgba[dst + 1] = col[1];
+                rgba[dst + 2] = col[2];
+                rgba[dst + 3] = col[3];
+              }}
+            }}
+          }}
+        }}
+      }}
+      return rgba;
+    }}
+
+    // DXT5/BC3 Decompressor with PS4 Deswizzle
+    function decodeDXT5(u8, offset, width, height, isPC) {{
+      const rgba = new Uint8Array(width * height * 4).fill(255);
+      const numBlocksX = Math.ceil(width / 4);
+      const numBlocksY = Math.ceil(height / 4);
+
+      for (let by = 0; by < numBlocksY; by++) {{
+        for (let bx = 0; bx < numBlocksX; bx++) {{
+          let src = getPS4BlockOffset(bx, by, numBlocksX, numBlocksY, 16, offset, isPC);
+          if (src + 16 > u8.length) continue;
+
+          // Alpha block (8 bytes)
+          const a0 = u8[src];
+          const a1 = u8[src + 1];
+          const alphaTable = new Array(8);
+          alphaTable[0] = a0; alphaTable[1] = a1;
+          if (a0 > a1) {{
+            for (let i = 2; i < 8; i++) alphaTable[i] = Math.round(((8-i)*a0 + (i-1)*a1) / 7);
+          }} else {{
+            for (let i = 2; i < 6; i++) alphaTable[i] = Math.round(((6-i)*a0 + (i-1)*a1) / 5);
+            alphaTable[6] = 0; alphaTable[7] = 255;
+          }}
+          const b0=u8[src+2],b1=u8[src+3],b2=u8[src+4],b3=u8[src+5],b4=u8[src+6],b5=u8[src+7];
+          const alphaBits = [
+            b0 & 7, (b0>>3)&7, (b0>>6)|((b1&1)<<2), (b1>>1)&7,
+            (b1>>4)&7, (b1>>7)|((b2&3)<<1), (b2>>2)&7, (b2>>5)&7,
+            b3&7, (b3>>3)&7, (b3>>6)|((b4&1)<<2), (b4>>1)&7,
+            (b4>>4)&7, (b4>>7)|((b5&3)<<1), (b5>>2)&7, (b5>>5)&7
+          ];
+          src += 8;
+
+          // Color block (8 bytes)
+          const c0 = u8[src] | (u8[src+1] << 8);
+          const c1 = u8[src+2] | (u8[src+3] << 8);
+          const code = u8[src+4]|(u8[src+5]<<8)|(u8[src+6]<<16)|(u8[src+7]<<24);
+
+          const r0=((c0>>11)&31)*255/31, g0=((c0>>5)&63)*255/63, b_0=(c0&31)*255/31;
+          const r1=((c1>>11)&31)*255/31, g1=((c1>>5)&63)*255/63, b_1=(c1&31)*255/31;
+          const colors = [
+            [r0,g0,b_0],[r1,g1,b_1],
+            [(2*r0+r1)/3,(2*g0+g1)/3,(2*b_0+b_1)/3],
+            [(r0+2*r1)/3,(g0+2*g1)/3,(b_0+2*b_1)/3]
+          ];
+
+          for (let py = 0; py < 4; py++) {{
+            for (let px = 0; px < 4; px++) {{
+              const x = bx*4+px, y = by*4+py;
+              if (x < width && y < height) {{
+                const pi = py*4+px;
+                const ci = (code >> (pi*2)) & 3;
+                const col = colors[ci];
+                const dst = (y*width+x)*4;
+                rgba[dst]   = col[0];
+                rgba[dst+1] = col[1];
+                rgba[dst+2] = col[2];
+                rgba[dst+3] = alphaTable[alphaBits[pi]];
+              }}
+            }}
+          }}
+        }}
+      }}
+      return rgba;
+    }}
+
+    // BC4 Decompressor with PS4 Deswizzle
+    function decodeBC4(u8, offset, width, height, isPC) {{
+      const rgba = new Uint8Array(width * height * 4).fill(255);
+      const numBlocksX = Math.ceil(width / 4);
+      const numBlocksY = Math.ceil(height / 4);
+      for (let by = 0; by < numBlocksY; by++) {{
+        for (let bx = 0; bx < numBlocksX; bx++) {{
+          const src = getPS4BlockOffset(bx, by, numBlocksX, numBlocksY, 8, offset, isPC);
+          if (src + 8 > u8.length) continue;
+          const r0=u8[src], r1=u8[src+1];
+          const rTable = new Array(8);
+          rTable[0]=r0; rTable[1]=r1;
+          if (r0 > r1) {{
+            for (let i=2;i<8;i++) rTable[i]=Math.round(((8-i)*r0+(i-1)*r1)/7);
+          }} else {{
+            for (let i=2;i<6;i++) rTable[i]=Math.round(((6-i)*r0+(i-1)*r1)/5);
+            rTable[6]=0; rTable[7]=255;
+          }}
+          const b0=u8[src+2],b1=u8[src+3],b2=u8[src+4],b3=u8[src+5],b4=u8[src+6],b5=u8[src+7];
+          const indices=[
+            b0&7,(b0>>3)&7,(b0>>6)|((b1&1)<<2),(b1>>1)&7,
+            (b1>>4)&7,(b1>>7)|((b2&3)<<1),(b2>>2)&7,(b2>>5)&7,
+            b3&7,(b3>>3)&7,(b3>>6)|((b4&1)<<2),(b4>>1)&7,
+            (b4>>4)&7,(b4>>7)|((b5&3)<<1),(b5>>2)&7,(b5>>5)&7
+          ];
+          for (let py=0;py<4;py++) for (let px=0;px<4;px++) {{
+            const x=bx*4+px, y=by*4+py;
+            if (x<width && y<height) {{
+              const v=rTable[indices[py*4+px]];
+              const dst=(y*width+x)*4;
+              rgba[dst]=v; rgba[dst+1]=v; rgba[dst+2]=v; rgba[dst+3]=255;
+            }}
+          }}
+        }}
+      }}
+      return rgba;
+    }}
+
+    // BC5 Decompressor with PS4 Deswizzle
+    function decodeBC5(u8, offset, width, height, isPC) {{
+      const rgba = new Uint8Array(width * height * 4).fill(255);
+      const numBlocksX = Math.ceil(width / 4);
+      const numBlocksY = Math.ceil(height / 4);
+      function decodeChannel(u8, src) {{
+        const v0=u8[src], v1=u8[src+1];
+        const tbl=new Array(8); tbl[0]=v0; tbl[1]=v1;
+        if (v0>v1) {{ for(let i=2;i<8;i++) tbl[i]=Math.round(((8-i)*v0+(i-1)*v1)/7); }}
+        else {{ for(let i=2;i<6;i++) tbl[i]=Math.round(((6-i)*v0+(i-1)*v1)/5); tbl[6]=0; tbl[7]=255; }}
+        const b=u8.slice(src+2,src+8);
+        return {{ tbl, idx:[
+          b[0]&7,(b[0]>>3)&7,(b[0]>>6)|((b[1]&1)<<2),(b[1]>>1)&7,
+          (b[1]>>4)&7,(b[1]>>7)|((b[2]&3)<<1),(b[2]>>2)&7,(b[2]>>5)&7,
+          b[3]&7,(b[3]>>3)&7,(b[3]>>6)|((b[4]&1)<<2),(b[4]>>1)&7,
+          (b[4]>>4)&7,(b[4]>>7)|((b[5]&3)<<1),(b[5]>>2)&7,(b[5]>>5)&7
+        ]}};
+      }}
+      for (let by=0;by<numBlocksY;by++) {{
+        for (let bx=0;bx<numBlocksX;bx++) {{
+          let src = getPS4BlockOffset(bx, by, numBlocksX, numBlocksY, 16, offset, isPC);
+          if (src+16>u8.length) continue;
+          const rCh=decodeChannel(u8,src); src+=8;
+          const gCh=decodeChannel(u8,src); src+=8;
+          for (let py=0;py<4;py++) for (let px=0;px<4;px++) {{
+            const x=bx*4+px, y=by*4+py;
+            if (x<width && y<height) {{
+              const pi=py*4+px;
+              const rV=rCh.tbl[rCh.idx[pi]], gV=gCh.tbl[gCh.idx[pi]];
+              const nx=rV/127.5-1, ny=gV/127.5-1;
+              const nz2=1-nx*nx-ny*ny;
+              const bV=nz2>0 ? Math.round((Math.sqrt(nz2)+1)*127.5) : 128;
+              const dst=(y*width+x)*4;
+              rgba[dst]=rV; rgba[dst+1]=gV; rgba[dst+2]=bV; rgba[dst+3]=255;
+            }}
+          }}
+        }}
+      }}
+      return rgba;
+    }}
+
+    // BC7 Decompressor (simplified — show as flat color placeholder)
+    function decodeBC7(u8, offset, width, height) {{
+      // BC7 is complex; return a distinctive magenta checkerboard so it's obvious
+      const rgba = new Uint8Array(width * height * 4);
+      for (let y=0;y<height;y++) for (let x=0;x<width;x++) {{
+        const dst=(y*width+x)*4;
+        const c=((x>>3)+(y>>3))&1;
+        rgba[dst]=c?220:60; rgba[dst+1]=0; rgba[dst+2]=c?60:220; rgba[dst+3]=255;
+      }}
+      return rgba;
+    }}
+
+    // Helper to compute local matrix from glTF node
+    function getGLTFNodeMatrix(node) {{
+      if (node.matrix && node.matrix.length === 16) {{
+        return new Float32Array(node.matrix);
+      }}
+      const m = mat4Create();
+      mat4Identity(m);
+      const t = node.translation || [0, 0, 0];
+      const r = node.rotation || [0, 0, 0, 1];
+      const s = node.scale || [1, 1, 1];
+
+      const x = r[0], y = r[1], z = r[2], w = r[3];
+      const x2 = x + x, y2 = y + y, z2 = z + z;
+      const xx = x * x2, xy = x * y2, xz = x * z2;
+      const yy = y * y2, yz = y * z2, zz = z * z2;
+      const wx = w * x2, wy = w * y2, wz = w * z2;
+      const sx = s[0], sy = s[1], sz = s[2];
+
+      m[0] = (1 - (yy + zz)) * sx;
+      m[1] = (xy + wz) * sx;
+      m[2] = (xz - wy) * sx;
+      m[3] = 0;
+
+      m[4] = (xy - wz) * sy;
+      m[5] = (1 - (xx + zz)) * sy;
+      m[6] = (yz + wx) * sy;
+      m[7] = 0;
+
+      m[8] = (xz + wy) * sz;
+      m[9] = (yz - wx) * sz;
+      m[10] = (1 - (xx + yy)) * sz;
+      m[11] = 0;
+
+      m[12] = t[0];
+      m[13] = t[1];
+      m[14] = t[2];
+      m[15] = 1;
+
+      return m;
+    }}
+
+    // Standalone GLB/GLTF Binary Parser with Node Transforms and Preallocated TypedArrays
+    function parseGLBBuffer(buffer, fileName) {{
+      const view = new DataView(buffer);
+      const magic = view.getUint32(0, true);
+      if (magic !== 0x46546C67) {{
+        throw new Error('Файл должен быть в формате бинарного glTF (.glb)');
+      }}
+      const jsonLen = view.getUint32(12, true);
+      const jsonBytes = new Uint8Array(buffer, 20, jsonLen);
+      const jsonText = new TextDecoder('utf-8').decode(jsonBytes);
+      const gltf = JSON.parse(jsonText);
+
+      const binChunkOffset = 20 + jsonLen + 8;
+      const binData = buffer.slice(binChunkOffset);
+
+      // Collect mesh instances from node hierarchy
+      const meshInstances = [];
+      const identityMat = mat4Create();
+      mat4Identity(identityMat);
+
+      if (gltf.nodes && gltf.nodes.length > 0) {{
+        const childSet = new Set();
+        for (const n of gltf.nodes) {{
+          if (n.children) {{
+            for (const c of n.children) childSet.add(c);
+          }}
+        }}
+
+        function traverseNode(nodeIdx, parentMat) {{
+          const node = gltf.nodes[nodeIdx];
+          if (!node) return;
+          const localMat = getGLTFNodeMatrix(node);
+          const worldMat = mat4Create();
+          mat4Multiply(worldMat, parentMat, localMat);
+
+          if (node.mesh !== undefined && gltf.meshes && gltf.meshes[node.mesh]) {{
+            meshInstances.push({{
+              meshIdx: node.mesh,
+              worldMat: worldMat,
+              nodeName: node.name || ''
+            }});
+          }}
+
+          if (node.children) {{
+            for (const cIdx of node.children) {{
+              traverseNode(cIdx, worldMat);
+            }}
+          }}
+        }}
+
+        const scene = (gltf.scenes && gltf.scenes[gltf.scene || 0]) ? gltf.scenes[gltf.scene || 0] : null;
+        const rootNodes = (scene && scene.nodes) ? scene.nodes : [];
+        if (rootNodes.length > 0) {{
+          for (const r of rootNodes) traverseNode(r, identityMat);
+        }} else {{
+          for (let i = 0; i < gltf.nodes.length; i++) {{
+            if (!childSet.has(i)) traverseNode(i, identityMat);
+          }}
+        }}
+      }}
+
+      // Fallback if no mesh instances were placed by nodes
+      if (meshInstances.length === 0 && gltf.meshes) {{
+        for (let m = 0; m < gltf.meshes.length; m++) {{
+          meshInstances.push({{
+            meshIdx: m,
+            worldMat: identityMat,
+            nodeName: gltf.meshes[m].name || ''
+          }});
+        }}
+      }}
+
+      function isShadowProxyPrim(inst, mesh, prim) {{
+        const nameLower = (inst.nodeName || mesh.name || '').toLowerCase();
+        const mat = (prim.material !== undefined && gltf.materials && gltf.materials[prim.material]) ? gltf.materials[prim.material] : null;
+        const matLower = (mat && mat.name) ? mat.name.toLowerCase() : '';
+        if (nameLower.includes('shadowproxy') || nameLower.includes('shadow_geo') || nameLower.includes('shadow_lod') || matLower.includes('shadowblocker') || nameLower.includes('collision') || nameLower.includes('col_lod')) {{
+          return true;
+        }}
+        return false;
+      }}
+
+      // First pass: calculate total vertices and indices across all primitives
+      let totalVerts = 0;
+      let totalIndices = 0;
+      for (const inst of meshInstances) {{
+        const mesh = gltf.meshes[inst.meshIdx];
+        if (!mesh || !mesh.primitives) continue;
+        for (const prim of mesh.primitives) {{
+          if (isShadowProxyPrim(inst, mesh, prim)) continue;
+          if (prim.attributes && prim.attributes.POSITION !== undefined) {{
+            const posAcc = gltf.accessors[prim.attributes.POSITION];
+            if (posAcc) totalVerts += posAcc.count;
+          }}
+          if (prim.indices !== undefined) {{
+            const idxAcc = gltf.accessors[prim.indices];
+            if (idxAcc) totalIndices += idxAcc.count;
+          }}
+        }}
+      }}
+
+      // Preallocate typed arrays for maximum performance and zero viewport lag
+      const allPos = new Float32Array(totalVerts * 3);
+      const allNorm = new Float32Array(totalVerts * 3);
+      const allUv = new Float32Array(totalVerts * 2);
+      const allIdx = (totalVerts > 65535) ? new Uint32Array(totalIndices) : new Uint16Array(totalIndices);
+
+      let vertWritePtr = 0;
+      let idxWritePtr = 0;
+      let glbVertOffset = 0;
+      const submeshList = [];
+      let primaryTexName = '';
+
+      // Helper to extract embedded or URI texture
+      function getPrimTexture(prim) {{
+        if (prim.material === undefined || !gltf.materials || !gltf.materials[prim.material]) {{
+          return {{ texName: '', blobUrl: '', texHash: '' }};
+        }}
+        const mat = gltf.materials[prim.material];
+        let texName = '';
+        let blobUrl = '';
+        let texHash = '';
+        if (mat.extras && (mat.extras.nd_diffuse_hash || mat.extras.diffuse_hash)) {{
+          texHash = (mat.extras.nd_diffuse_hash || mat.extras.diffuse_hash).toString().toLowerCase().trim();
+        }}
+        if (mat.pbrMetallicRoughness && mat.pbrMetallicRoughness.baseColorTexture !== undefined) {{
+          const texIdx = mat.pbrMetallicRoughness.baseColorTexture.index;
+          if (gltf.textures && gltf.textures[texIdx] !== undefined) {{
+            const tex = gltf.textures[texIdx];
+            const imgIdx = tex.source;
+            if (gltf.images && gltf.images[imgIdx] !== undefined) {{
+              const img = gltf.images[imgIdx];
+              if (img.uri) {{
+                const p = img.uri.split('/');
+                texName = p[p.length - 1].replace(/\\.(png|dds|tga|jpg|jpeg)$/i, '');
+              }} else if (img.bufferView !== undefined && gltf.bufferViews[img.bufferView]) {{
+                try {{
+                  const bv = gltf.bufferViews[img.bufferView];
+                  const imgSlice = new Uint8Array(binData, (bv.byteOffset || 0), bv.byteLength);
+                  const mime = img.mimeType || 'image/png';
+                  const blob = new Blob([imgSlice], {{ type: mime }});
+                  blobUrl = URL.createObjectURL(blob);
+                }} catch (e) {{}}
+              }}
+            }}
+          }}
+        }}
+        if (!texName && mat.name) {{
+          texName = mat.name.replace(/\\.(png|dds|tga|jpg|jpeg)$/i, '');
+        }}
+        return {{ texName, blobUrl, texHash }};
+      }}
+
+      const skinnedPrims = [];
+
+      for (let instIdx = 0; instIdx < meshInstances.length; instIdx++) {{
+        const inst = meshInstances[instIdx];
+        const mesh = gltf.meshes[inst.meshIdx];
+        if (!mesh || !mesh.primitives) continue;
+        const M = inst.worldMat;
+
+        for (let pIdx = 0; pIdx < mesh.primitives.length; pIdx++) {{
+          const prim = mesh.primitives[pIdx];
+          if (isShadowProxyPrim(inst, mesh, prim)) continue;
+          const posAcc = gltf.accessors[prim.attributes.POSITION];
+          if (!posAcc) continue;
+          const posView = gltf.bufferViews[posAcc.bufferView];
+          const posData = new Float32Array(binData, (posView.byteOffset || 0) + (posAcc.byteOffset || 0), posAcc.count * 3);
+
+          let normData = null;
+          if (prim.attributes.NORMAL !== undefined) {{
+            const normAcc = gltf.accessors[prim.attributes.NORMAL];
+            const normView = gltf.bufferViews[normAcc.bufferView];
+            normData = new Float32Array(binData, (normView.byteOffset || 0) + (normAcc.byteOffset || 0), normAcc.count * 3);
+          }}
+
+          let uvData = null;
+          if (prim.attributes.TEXCOORD_0 !== undefined) {{
+            const uvAcc = gltf.accessors[prim.attributes.TEXCOORD_0];
+            const uvView = gltf.bufferViews[uvAcc.bufferView];
+            uvData = new Float32Array(binData, (uvView.byteOffset || 0) + (uvAcc.byteOffset || 0), uvAcc.count * 2);
+          }}
+
+          let jointsData = null;
+          let weightsData = null;
+          if (prim.attributes.JOINTS_0 !== undefined && prim.attributes.WEIGHTS_0 !== undefined) {{
+            const jAcc = gltf.accessors[prim.attributes.JOINTS_0];
+            const jView = gltf.bufferViews[jAcc.bufferView];
+            const isJShort = (jAcc.componentType === 5123);
+            jointsData = isJShort
+              ? new Uint16Array(binData, (jView.byteOffset || 0) + (jAcc.byteOffset || 0), jAcc.count * 4)
+              : new Uint8Array(binData, (jView.byteOffset || 0) + (jAcc.byteOffset || 0), jAcc.count * 4);
+
+            const wAcc = gltf.accessors[prim.attributes.WEIGHTS_0];
+            const wView = gltf.bufferViews[wAcc.bufferView];
+            weightsData = new Float32Array(binData, (wView.byteOffset || 0) + (wAcc.byteOffset || 0), wAcc.count * 4);
+          }}
+
+          const idxAcc = gltf.accessors[prim.indices];
+          const idxView = gltf.bufferViews[idxAcc.bufferView];
+          const isIdx32 = (idxAcc.componentType === 5125);
+          const idxData = isIdx32
+            ? new Uint32Array(binData, (idxView.byteOffset || 0) + (idxAcc.byteOffset || 0), idxAcc.count)
+            : new Uint16Array(binData, (idxView.byteOffset || 0) + (idxAcc.byteOffset || 0), idxAcc.count);
+
+          const smPositions = new Float32Array(posAcc.count * 3);
+          const smNormals = new Float32Array(posAcc.count * 3);
+          const smUvs = uvData ? new Float32Array(uvData) : new Float32Array(posAcc.count * 2);
+          const smIndices = new Uint32Array(idxAcc.count);
+
+          const smMin = [Infinity, Infinity, Infinity];
+          const smMax = [-Infinity, -Infinity, -Infinity];
+
+          // Transform positions and normals by node's world transform matrix
+          for (let i = 0; i < posAcc.count; i++) {{
+            const px = posData[i * 3];
+            const py = posData[i * 3 + 1];
+            const pz = posData[i * 3 + 2];
+
+            const tx = M[0] * px + M[4] * py + M[8] * pz + M[12];
+            const ty = M[1] * px + M[5] * py + M[9] * pz + M[13];
+            const tz = M[2] * px + M[6] * py + M[10] * pz + M[14];
+
+            smPositions[i * 3]     = tx;
+            smPositions[i * 3 + 1] = ty;
+            smPositions[i * 3 + 2] = tz;
+
+            allPos[vertWritePtr * 3]     = tx;
+            allPos[vertWritePtr * 3 + 1] = ty;
+            allPos[vertWritePtr * 3 + 2] = tz;
+
+            smMin[0] = Math.min(smMin[0], tx); smMax[0] = Math.max(smMax[0], tx);
+            smMin[1] = Math.min(smMin[1], ty); smMax[1] = Math.max(smMax[1], ty);
+            smMin[2] = Math.min(smMin[2], tz); smMax[2] = Math.max(smMax[2], tz);
+
+            if (normData) {{
+              const nx = normData[i * 3];
+              const ny = normData[i * 3 + 1];
+              const nz = normData[i * 3 + 2];
+              let tnx = M[0] * nx + M[4] * ny + M[8] * nz;
+              let tny = M[1] * nx + M[5] * ny + M[9] * nz;
+              let tnz = M[2] * nx + M[6] * ny + M[10] * nz;
+              const nlen = Math.hypot(tnx, tny, tnz);
+              if (nlen > 1e-6) {{ tnx /= nlen; tny /= nlen; tnz /= nlen; }}
+              smNormals[i * 3]     = tnx;
+              smNormals[i * 3 + 1] = tny;
+              smNormals[i * 3 + 2] = tnz;
+
+              allNorm[vertWritePtr * 3]     = tnx;
+              allNorm[vertWritePtr * 3 + 1] = tny;
+              allNorm[vertWritePtr * 3 + 2] = tnz;
+            }} else {{
+              allNorm[vertWritePtr * 3 + 1] = 1.0;
+              smNormals[i * 3 + 1] = 1.0;
+            }}
+
+            if (uvData) {{
+              allUv[vertWritePtr * 2]     = uvData[i * 2];
+              allUv[vertWritePtr * 2 + 1] = uvData[i * 2 + 1];
+            }}
+
+            vertWritePtr++;
+          }}
+
+          for (let i = 0; i < idxAcc.count; i++) {{
+            smIndices[i] = idxData[i];
+            allIdx[idxWritePtr++] = idxData[i] + glbVertOffset;
+          }}
+
+          const smCenter = [(smMin[0] + smMax[0]) / 2, (smMin[1] + smMax[1]) / 2, (smMin[2] + smMax[2]) / 2];
+          const smSize = Math.max(smMax[0] - smMin[0], smMax[1] - smMin[1], smMax[2] - smMin[2]) || 1.0;
+
+          const texInfo = getPrimTexture(prim);
+          let smTexName = texInfo.texName;
+          let smTexHash = texInfo.texHash || '';
+          if (!smTexName && inst.nodeName) {{
+            const cNode = inst.nodeName.split('_')[0];
+            if (cNode && !cNode.startsWith('simple-actor-') && !cNode.startsWith('actor_')) {{
+              smTexName = cNode;
+            }}
+          }}
+          if (!primaryTexName && smTexName) primaryTexName = smTexName;
+
+          const smName = inst.nodeName || mesh.name || `Примитив ${{instIdx}}_${{pIdx}}`;
+          submeshList.push({{
+            title: `${{smName}} — ${{fileName}}`,
+            name: `${{smName}} (${{posAcc.count}} верш.)`,
+            positions: smPositions,
+            normals: smNormals,
+            uvs: smUvs,
+            indices: smIndices,
+            texture: texInfo.blobUrl || '',
+            texName: smTexName,
+            texHash: smTexHash,
+            center: smCenter,
+            size: smSize,
+            stats: {{ verts: posAcc.count, tris: idxAcc.count / 3 }}
+          }});
+
+          if (jointsData && weightsData) {{
+            skinnedPrims.push({{
+              vertOffset: glbVertOffset,
+              count: posAcc.count,
+              joints: jointsData,
+              weights: weightsData,
+              basePositions: new Float32Array(posData),
+              baseNormals: normData ? new Float32Array(normData) : null
+            }});
+          }}
+
+          glbVertOffset += posAcc.count;
+        }}
+      }}
+
+      // Parse Skins
+      let skinData = null;
+      if (gltf.skins && gltf.skins.length > 0) {{
+        const s0 = gltf.skins[0];
+        let ibmArr = null;
+        if (s0.inverseBindMatrices !== undefined && gltf.accessors[s0.inverseBindMatrices]) {{
+          const ibmAcc = gltf.accessors[s0.inverseBindMatrices];
+          const ibmView = gltf.bufferViews[ibmAcc.bufferView];
+          ibmArr = new Float32Array(binData, (ibmView.byteOffset || 0) + (ibmAcc.byteOffset || 0), ibmAcc.count * 16);
+        }}
+        skinData = {{
+          joints: s0.joints || [],
+          ibm: ibmArr
+        }};
+      }}
+
+      // Parse Animations
+      const animations = [];
+      if (gltf.animations && gltf.animations.length > 0) {{
+        for (let aIdx = 0; aIdx < gltf.animations.length; aIdx++) {{
+          const a = gltf.animations[aIdx];
+          const clip = {{
+            name: a.name || `Анимация ${{aIdx + 1}}`,
+            duration: 0.0,
+            samplers: [],
+            channels: []
+          }};
+          if (a.samplers) {{
+            for (let sIdx = 0; sIdx < a.samplers.length; sIdx++) {{
+              const s = a.samplers[sIdx];
+              const inAcc = gltf.accessors[s.input];
+              const inView = gltf.bufferViews[inAcc.bufferView];
+              const times = new Float32Array(binData, (inView.byteOffset || 0) + (inAcc.byteOffset || 0), inAcc.count);
+
+              const outAcc = gltf.accessors[s.output];
+              const outView = gltf.bufferViews[outAcc.bufferView];
+              const compCount = (outAcc.type === 'VEC4') ? 4 : ((outAcc.type === 'VEC3') ? 3 : 1);
+              const values = new Float32Array(binData, (outView.byteOffset || 0) + (outAcc.byteOffset || 0), outAcc.count * compCount);
+
+              const maxT = times[times.length - 1] || 0.0;
+              if (maxT > clip.duration) clip.duration = maxT;
+
+              clip.samplers.push({{ times, values, compCount }});
+            }}
+          }}
+          if (a.channels) {{
+            for (let cIdx = 0; cIdx < a.channels.length; cIdx++) {{
+              const ch = a.channels[cIdx];
+              clip.channels.push({{
+                sampler: ch.sampler,
+                node: ch.target.node,
+                path: ch.target.path
+              }});
+            }}
+          }}
+          if (clip.channels.length > 0) {{
+            animations.push(clip);
+          }}
+        }}
+      }}
+
+      // Compute node parents
+      const gltfNodes = gltf.nodes || [];
+      const nodeParents = new Int32Array(gltfNodes.length).fill(-1);
+      for (let i = 0; i < gltfNodes.length; i++) {{
+        if (gltfNodes[i].children) {{
+          for (const c of gltfNodes[i].children) {{
+            if (c < nodeParents.length) nodeParents[c] = i;
+          }}
+        }}
+      }}
+
+      const min_b = [Infinity, Infinity, Infinity];
+      const max_b = [-Infinity, -Infinity, -Infinity];
+      for (let i = 0; i < allPos.length; i += 3) {{
+        for (let c = 0; c < 3; c++) {{
+          min_b[c] = Math.min(min_b[c], allPos[i+c]);
+          max_b[c] = Math.max(max_b[c], allPos[i+c]);
+        }}
+      }}
+      const center = [(min_b[0] + max_b[0])/2, (min_b[1] + max_b[1])/2, (min_b[2] + max_b[2])/2];
+      const size = Math.max(max_b[0] - min_b[0], max_b[1] - min_b[1], max_b[2] - min_b[2]);
+
+      return {{
+        fileName: fileName,
+        title: fileName,
+        rawGLBBuffer: buffer,
+        positions: allPos,
+        normals: allNorm,
+        uvs: allUv,
+        indices: allIdx,
+        texture: '',
+        texName: primaryTexName || '',
+        center: center,
+        size: size || 1.0,
+        stats: {{ verts: glbVertOffset, tris: allIdx.length / 3 }},
+        submeshes: submeshList,
+        animations: animations,
+        skinnedPrims: skinnedPrims,
+        skinData: skinData,
+        gltfNodes: gltfNodes,
+        nodeParents: nodeParents
+      }};
+    }}
+
+    // Boot
+    initGL();
+    if (PRELOADED_MODELS['cell-phone']) switchModel('cell-phone');
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>
+"""
+
+# Write to workspace
+with open("viewer.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("Wrote workspace viewer.html (", len(html_content), "bytes )")
+

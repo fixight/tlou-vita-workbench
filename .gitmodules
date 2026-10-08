@@ -1,0 +1,10 @@
+[submodule "glm"]
+	path = engine/Engine/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "vitaGL"]
+	path = dependencies/vitaGL
+	url = https://github.com/Rinnegatamante/vitaGL.git
+[submodule "vdpm"]
+	path = dependencies/vdpm
+	url = https://github.com/vitasdk/vdpm.git
+

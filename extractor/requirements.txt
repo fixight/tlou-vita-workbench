@@ -1,0 +1,4 @@
+numpy
+Pillow
+
+# Optional: capstone (native disassembly), pyswizzle (PS4 texture deswizzling).

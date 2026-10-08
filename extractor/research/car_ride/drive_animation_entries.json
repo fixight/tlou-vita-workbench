@@ -1,0 +1,3830 @@
+[
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-ambulance-depart--ambulance",
+    "offset": 1873280,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1872400,
+      "sample_offset": 1872416,
+      "flags": "0x01fe",
+      "frame_count": 401,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -21.557270050048828,
+          0.12920591235160828,
+          -16.623720169067383
+        ],
+        "rotation_xyzw": [
+          2.374355218605378e-19,
+          0.24174809066004696,
+          -9.530289929506992e-19,
+          0.9703390441810645
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          11.238458956213641,
+          -0.12920591235160822,
+          24.794374453889564
+        ],
+        "rotation_xyzw": [
+          -2.374355218605378e-19,
+          -0.24174809066004696,
+          9.530289929506992e-19,
+          0.9703390441810645
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1713632,
+    "ac_header": "020143418c44359610260000010091010000000030000000082600000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-highway-civilians--car",
+    "offset": 1873432,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1871440,
+      "sample_offset": 1871456,
+      "flags": "0x01fe",
+      "frame_count": 331,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          3.640026569366455,
+          16.710525512695312,
+          354.25628662109375
+        ],
+        "rotation_xyzw": [
+          0.0014945212559500155,
+          -0.7961341636354567,
+          -0.0019662487067832637,
+          0.6051151078635457
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -340.27199618782595,
+          -18.46017399998738,
+          98.30665619959353
+        ],
+        "rotation_xyzw": [
+          -0.0014945212559500155,
+          0.7961341636354567,
+          0.0019662487067832637,
+          0.6051151078635457
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1817472,
+    "ac_header": "020143414179ab25a00f000001004b010000000030000000900f00000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-highway-civilians--rv",
+    "offset": 1873520,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1520736,
+      "sample_offset": 1520752,
+      "flags": "0x01e2",
+      "frame_count": 331,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          12.712340354919434,
+          18.296401977539062,
+          352.3763427734375
+        ],
+        "rotation_xyzw": [
+          0.003525322991180346,
+          -0.7887068367382951,
+          0.0022318665803138043,
+          0.6147553306410997
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -338.55819142894586,
+          -18.4769688320125,
+          98.50076907389212
+        ],
+        "rotation_xyzw": [
+          -0.003525322991180346,
+          0.7887068367382951,
+          -0.0022318665803138043,
+          0.6147553306410997
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1869488,
+    "ac_header": "020143412b7aa7d88001000001004b010000000030000000700100000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-console--civ-kid",
+    "offset": 1873608,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1693104,
+      "sample_offset": 1693120,
+      "flags": "0x01fa",
+      "frame_count": 633,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -1.432360291481018,
+          27.830900192260742,
+          0.655090868473053
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.08715573510115823,
+          0.0,
+          0.9961946987607275
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          1.2968441983628392,
+          -27.830900192260742,
+          -0.8938653006695197
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          0.08715573510115823,
+          -0.0,
+          0.9961946987607275
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878096,
+    "ac_header": "02014341a3b558e240000000020079020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-sarah-car-lean-look-1-add",
+    "offset": 1873696,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1859352,
+      "sample_offset": 1859368,
+      "flags": "0x01fe",
+      "frame_count": 90,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.018648911267518997,
+          0.0,
+          0.4522106647491455
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.018648911267518997,
+          0.0,
+          -0.4522106647491455
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1801216,
+    "ac_header": "020143411a1403c24010000002005a000000000030000000341000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-bridge-attack--civic",
+    "offset": 1873784,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1871632,
+      "sample_offset": 1871648,
+      "flags": "0x01fe",
+      "frame_count": 1003,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -3.9225077629089355,
+          -0.4896853268146515,
+          -17.41012191772461
+        ],
+        "rotation_xyzw": [
+          -0.06323773920110438,
+          0.25725465092028765,
+          -0.016873536119535102,
+          0.9641246375336733
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -5.229929092492479,
+          -1.7886152953974226,
+          16.976068481011275
+        ],
+        "rotation_xyzw": [
+          0.06323773920110438,
+          -0.25725465092028765,
+          0.016873536119535102,
+          0.9641246375336733
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1765456,
+    "ac_header": "0201434195206b12b01600000100eb030000000030000000a81600000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-console--civ-fem",
+    "offset": 1873872,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1703408,
+      "sample_offset": 1703424,
+      "flags": "0x01fa",
+      "frame_count": 633,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -5.157237529754639,
+          27.830900192260742,
+          0.2750914692878723
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.08715573510115823,
+          0.0,
+          0.9961946987607275
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          5.031118389001107,
+          -27.830900192260742,
+          -1.1664570333448163
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          0.08715573510115823,
+          -0.0,
+          0.9961946987607275
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878160,
+    "ac_header": "0201434117e2d1dc40000000010079020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-sarah-car-lean-look-1-part",
+    "offset": 1873960,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1857720,
+      "sample_offset": 1857736,
+      "flags": "0x01fe",
+      "frame_count": 90,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.018648911267518997,
+          0.0,
+          0.4522106647491455
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.018648911267518997,
+          0.0,
+          -0.4522106647491455
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1759120,
+    "ac_header": "020143411a1403c2c018000002005a000000000030000000b01800000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-drive--car",
+    "offset": 1874048,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1028880,
+      "sample_offset": 1028896,
+      "flags": "0x01e2",
+      "frame_count": 461,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.5618007779121399,
+          -0.2930183708667755,
+          -8.96047592163086
+        ],
+        "rotation_xyzw": [
+          -3.2858931738495468e-18,
+          0.11524224566666871,
+          2.832295273398456e-17,
+          0.9933374174034235
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -2.5983693095480476,
+          0.29301837086677557,
+          8.593848136160418
+        ],
+        "rotation_xyzw": [
+          3.2858931738495468e-18,
+          -0.11524224566666871,
+          -2.832295273398456e-17,
+          0.9933374174034235
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1832672,
+    "ac_header": "02014341b6ddcd40900d00000100cd010000000030000000800d00000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-sarah-car-small-bump-add",
+    "offset": 1874136,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1865648,
+      "sample_offset": 1865664,
+      "flags": "0x01fe",
+      "frame_count": 28,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.018648911267518997,
+          0.0,
+          0.4522106647491455
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.018648911267518997,
+          0.0,
+          -0.4522106647491455
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1851840,
+    "ac_header": "020143411a1403c2e007000002001c000000000030000000d40700000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-console--civ-a",
+    "offset": 1874224,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1629328,
+      "sample_offset": 1629344,
+      "flags": "0x01ea",
+      "frame_count": 633,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          4.531169414520264,
+          -0.26757097244262695,
+          6.723750114440918
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.08715573510115823,
+          0.0,
+          0.9961946987607275
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -5.629897634519807,
+          0.26757097244262695,
+          -5.834772016913467
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          0.08715573510115823,
+          -0.0,
+          0.9961946987607275
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878672,
+    "ac_header": "02014341d7d69fd640000000010079020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-sarah-car-small-bump-part",
+    "offset": 1874312,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1864888,
+      "sample_offset": 1864904,
+      "flags": "0x01fe",
+      "frame_count": 28,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.018648911267518997,
+          0.0,
+          0.4522106647491455
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.018648911267518997,
+          0.0,
+          -0.4522106647491455
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1846320,
+    "ac_header": "020143411a1403c2800b000002001c000000000030000000700b00000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-flee-home--civ",
+    "offset": 1874400,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1751184,
+      "sample_offset": 1751200,
+      "flags": "0x01ea",
+      "frame_count": 327,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          6.2447710037231445,
+          -0.06193307787179947,
+          0.021034197881817818
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -2.7755575615628914e-17,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -6.2447710037231445,
+          0.06193307787179947,
+          -0.02103419788181747
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          2.7755575615628914e-17,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878416,
+    "ac_header": "02014341d7d69fd640000000010047010000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-console--bag2",
+    "offset": 1874664,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1163936,
+      "sample_offset": 1163952,
+      "flags": "0x01e2",
+      "frame_count": 633,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -1.3017055988311768,
+          0.21238300204277039,
+          1.1951431035995483
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9656854890562838,
+          0.0,
+          0.25971433581172576
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.5266120793881008,
+          -0.21238300204277039,
+          1.686856313368905
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9656854890562838,
+          -0.0,
+          0.25971433581172576
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878224,
+    "ac_header": "020143411cd2f2d140000000010079020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-police-car-2",
+    "offset": 1874840,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1681152,
+      "sample_offset": 1681168,
+      "flags": "0x01e2",
+      "frame_count": 211,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -91.22899627685547,
+          -1.7648457288742065,
+          91.38143157958984
+        ],
+        "rotation_xyzw": [
+          -0.0018154457859700303,
+          -0.5770631638573965,
+          0.0012827613848992768,
+          0.816696494175602
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -55.65582058661806,
+          2.171092352236556,
+          -116.5080532516647
+        ],
+        "rotation_xyzw": [
+          0.0018154457859700303,
+          0.5770631638573965,
+          -0.0012827613848992768,
+          0.816696494175602
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1861904,
+    "ac_header": "02014341c3614653100400000100d3000000000030000000000400000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-family--daughter",
+    "offset": 1874928,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1576144,
+      "sample_offset": 1576160,
+      "flags": "0x01e2",
+      "frame_count": 314,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -22.005155563354492,
+          -1.469398021697998,
+          -4.697732925415039
+        ],
+        "rotation_xyzw": [
+          4.483530324676835e-19,
+          -0.23089889958487106,
+          1.889300973501121e-18,
+          0.9729777480346073
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          21.769557131301067,
+          1.469398021697998,
+          -5.690513888303816
+        ],
+        "rotation_xyzw": [
+          -4.483530324676835e-19,
+          0.23089889958487106,
+          -1.889300973501121e-18,
+          0.9729777480346073
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1111504,
+    "ac_header": "020143411a1403c280cc000002003a01000000003000000078cc00000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-family--father",
+    "offset": 1875104,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1593872,
+      "sample_offset": 1593888,
+      "flags": "0x01e2",
+      "frame_count": 314,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -22.602800369262695,
+          -1.6930222511291504,
+          4.885446548461914
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          1.734723475976807e-18,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          22.602800369262695,
+          1.6930222511291504,
+          -4.885446548461914
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -1.734723475976807e-18,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1331552,
+    "ac_header": "02014341d7d69fd6f066000001003a010000000030000000dc6600000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-family--joel",
+    "offset": 1875192,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1557856,
+      "sample_offset": 1557872,
+      "flags": "0x01ea",
+      "frame_count": 755,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -560.201416015625,
+          8.380090713500977,
+          301.79986572265625
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          560.201416015625,
+          -8.380090713500977,
+          -301.79986572265625
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 506720,
+    "ac_header": "02014341358b26d450b701000200f302000000003000000048b701000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-family--mother",
+    "offset": 1875280,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1611600,
+      "sample_offset": 1611616,
+      "flags": "0x01e2",
+      "frame_count": 314,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -7.797921180725098,
+          -1.4911913871765137,
+          -20.768651962280273
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.6717205674905781,
+          0.0,
+          0.7408046160831719
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          21.43047559243439,
+          1.4911913871765137,
+          -5.7340382762241155
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          0.6717205674905781,
+          -0.0,
+          0.7408046160831719
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1357904,
+    "ac_header": "0201434117e2d1dc7063000001003a010000000030000000606300000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-family--sarah",
+    "offset": 1875456,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1656944,
+      "sample_offset": 1656960,
+      "flags": "0x01fa",
+      "frame_count": 755,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -560.813232421875,
+          8.371710777282715,
+          303.0821838378906
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          560.813232421875,
+          -8.371710777282715,
+          -303.0821838378906
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 892384,
+    "ac_header": "02014341925941b9f03801000200f3020000000030000000e03801000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-family--tommy",
+    "offset": 1875544,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1644688,
+      "sample_offset": 1644704,
+      "flags": "0x01fa",
+      "frame_count": 755,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -561.2440185546875,
+          8.390945434570312,
+          301.57781982421875
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          2.7755575615628914e-17,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          561.2440185546875,
+          -8.390945434570344,
+          -301.57781982421875
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -2.7755575615628914e-17,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 619184,
+    "ac_header": "020143416edc7333908201000200f30200000000300000007c8201000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-joel-radio-off--joel",
+    "offset": 1875632,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1797040,
+      "sample_offset": 1797056,
+      "flags": "0x01ea",
+      "frame_count": 170,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.22182850539684296,
+          -0.5207509994506836,
+          2.637913227081299
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.22182850539684296,
+          0.5207509994506836,
+          -2.637913227081299
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1270608,
+    "ac_header": "02014341358b26d4708400000200aa000000000030000000688400000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-joel-radio-music--joel",
+    "offset": 1875720,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1849344,
+      "sample_offset": 1849360,
+      "flags": "0x01fa",
+      "frame_count": 150,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          1.265768051147461,
+          -0.5152010321617126,
+          2.465144634246826
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          -2.7755575615628914e-17,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -1.265768051147461,
+          0.5152010321617125,
+          -2.465144634246826
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          2.7755575615628914e-17,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1304512,
+    "ac_header": "02014341358b26d4a0690000020096000000000030000000986900000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-bridge-attack--inf-a",
+    "offset": 1875808,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1383440,
+      "sample_offset": 1383456,
+      "flags": "0x01ea",
+      "frame_count": 1003,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -13.300740242004395,
+          1.544539451599121,
+          16.09796905517578
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.912477481126753,
+          0.0,
+          0.4091269319374806
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          3.171303519315927,
+          -1.544539451599121,
+          20.639697979259438
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.912477481126753,
+          -0.0,
+          0.4091269319374806
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 355216,
+    "ac_header": "020143415181c7f6d04f02000200eb030000000030000000c04f02000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-bridge-attack--inf",
+    "offset": 1875896,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 972576,
+      "sample_offset": 972592,
+      "flags": "0x01e2",
+      "frame_count": 1003,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -5.28679084777832,
+          1.843408226966858,
+          -22.2847843170166
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          5.28679084777832,
+          -1.843408226966858,
+          22.2847843170166
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 6912,
+    "ac_header": "020143415181c7f6905005000200eb0300000000300000007c5005000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-bridge-attack--npc-a",
+    "offset": 1875984,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1407680,
+      "sample_offset": 1407696,
+      "flags": "0x01ea",
+      "frame_count": 1003,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -6.102667808532715,
+          1.5254850387573242,
+          -17.049467086791992
+        ],
+        "rotation_xyzw": [
+          7.251273706163375e-19,
+          0.32804239295706294,
+          -2.0881477982173193e-18,
+          0.9446630025691722
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -5.777672535514222,
+          -1.5254850387573242,
+          17.162324504485678
+        ],
+        "rotation_xyzw": [
+          -7.251273706163375e-19,
+          -0.32804239295706294,
+          2.0881477982173193e-18,
+          0.9446630025691722
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 808272,
+    "ac_header": "02014341d7d69fd6904801000100eb030000000030000000884801000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-police-car-1",
+    "offset": 1876160,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1669200,
+      "sample_offset": 1669216,
+      "flags": "0x01e2",
+      "frame_count": 211,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -91.22899627685547,
+          -1.7648457288742065,
+          91.38143157958984
+        ],
+        "rotation_xyzw": [
+          -0.0018154457859700303,
+          -0.5770631638573965,
+          0.0012827613848992768,
+          0.816696494175602
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -55.65582058661806,
+          2.171092352236556,
+          -116.5080532516647
+        ],
+        "rotation_xyzw": [
+          0.0018154457859700303,
+          0.5770631638573965,
+          -0.0012827613848992768,
+          0.816696494175602
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1860864,
+    "ac_header": "02014341c3614653100400000100d3000000000030000000000400000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-console--bag1",
+    "offset": 1876248,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1199520,
+      "sample_offset": 1199536,
+      "flags": "0x01e2",
+      "frame_count": 633,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -1.4994748830795288,
+          0.18502600491046906,
+          0.32133036851882935
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.8416761980048687,
+          0.0,
+          0.5399825716743727
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.3329543928495857,
+          -0.18502600491046906,
+          1.4969367064111219
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.8416761980048687,
+          -0.0,
+          0.5399825716743727
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878288,
+    "ac_header": "020143411cd2f2d140000000010079020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-bridge-attack--npc",
+    "offset": 1876336,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1431920,
+      "sample_offset": 1431936,
+      "flags": "0x01ea",
+      "frame_count": 1003,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          5.142027378082275,
+          1.5061016082763672,
+          -17.733104705810547
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -2.7755575615628914e-17,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -5.1420273780822745,
+          -1.5061016082763672,
+          17.733104705810547
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          2.7755575615628914e-17,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 718144,
+    "ac_header": "02014341d7d69fd6106001000100eb030000000030000000086001000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-helicopter",
+    "offset": 1876512,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1872016,
+      "sample_offset": 1872032,
+      "flags": "0x01fe",
+      "frame_count": 1050,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -817.836181640625,
+          -16.90730094909668,
+          370.0920104980469
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          817.836181640625,
+          16.90730094909668,
+          -370.0920104980469
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1456080,
+    "ac_header": "0201434183cf78946058000001001a040000000030000000545800000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-driving-panic--joel",
+    "offset": 1876600,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1499760,
+      "sample_offset": 1499776,
+      "flags": "0x01ea",
+      "frame_count": 867,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.5098717212677002,
+          -0.5157192349433899,
+          -0.6003077030181885
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.5098717212677002,
+          0.5157192349433899,
+          0.6003077030181885
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878992,
+    "ac_header": "02014341358b26d440000000020063030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-driving-panic--tommy",
+    "offset": 1876776,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1478784,
+      "sample_offset": 1478800,
+      "flags": "0x01ea",
+      "frame_count": 867,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -0.5014986395835876,
+          -0.4988752603530884,
+          -0.6679840087890625
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          0.5014986395835876,
+          0.4988752603530884,
+          0.6679840087890625
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878736,
+    "ac_header": "020143416edc733340000000020063030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-paramedics--civ-a",
+    "offset": 1876864,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1843008,
+      "sample_offset": 1843024,
+      "flags": "0x01fa",
+      "frame_count": 201,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -1.805573582649231,
+          0.014572869054973125,
+          0.5051880478858948
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9995065585186154,
+          0.0,
+          -0.031410817854265353
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -1.833731761578925,
+          -0.014572869054973125,
+          0.3908180557039216
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9995065585186154,
+          -0.0,
+          -0.031410817854265353
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1809408,
+    "ac_header": "02014341d7d69fd6c00f00000100c9000000000030000000b40f00000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-paramedics--civ-b",
+    "offset": 1877040,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1839616,
+      "sample_offset": 1839632,
+      "flags": "0x01fa",
+      "frame_count": 201,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          1.6661615371704102,
+          0.014572869054973125,
+          1.2599276304244995
+        ],
+        "rotation_xyzw": [
+          2.2931134168304225e-19,
+          0.23514209301017924,
+          -9.478595274944589e-19,
+          0.9719610054394118
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -0.9060011214143208,
+          -0.014572869054973129,
+          -1.8821992109894083
+        ],
+        "rotation_xyzw": [
+          -2.2931134168304225e-19,
+          -0.23514209301017924,
+          9.478595274944589e-19,
+          0.9719610054394118
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1805376,
+    "ac_header": "02014341d7d69fd6c00f00000100c9000000000030000000b40f00000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-flee-home--car",
+    "offset": 1877216,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1871824,
+      "sample_offset": 1871840,
+      "flags": "0x01fe",
+      "frame_count": 327,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -2.9169740676879883,
+          0.0,
+          7.2438130378723145
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          -5.551115123125783e-17,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          2.9169740676879883,
+          3.2384917721817045e-16,
+          -7.2438130378723145
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          5.551115123125783e-17,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878480,
+    "ac_header": "020143415f3fdbfa40000000010047010000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-paramedics--inf",
+    "offset": 1877392,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1836224,
+      "sample_offset": 1836240,
+      "flags": "0x01fa",
+      "frame_count": 201,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          1.6692750453948975,
+          -0.8068880438804626,
+          -0.08984836935997009
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -1.6692750453948975,
+          0.8068880438804626,
+          0.08984836935997009
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1771264,
+    "ac_header": "020143415181c7f6401500000200c9000000000030000000301500000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-flee-home--bag",
+    "offset": 1877480,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1539408,
+      "sample_offset": 1539424,
+      "flags": "0x01e2",
+      "frame_count": 327,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          5.139538288116455,
+          2.8175711631774902,
+          3.6814441680908203
+        ],
+        "rotation_xyzw": [
+          0.06040442764286657,
+          -0.31174643921599093,
+          0.24950289896035618,
+          0.9148299110586987
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -6.891614920731729,
+          0.25940392618653285,
+          0.5873207171393764
+        ],
+        "rotation_xyzw": [
+          -0.06040442764286657,
+          0.31174643921599093,
+          -0.24950289896035618,
+          0.9148299110586987
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878352,
+    "ac_header": "020143411cd2f2d140000000010047010000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-hospital-patients-arrive--civ-a",
+    "offset": 1877656,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1792048,
+      "sample_offset": 1792064,
+      "flags": "0x01fa",
+      "frame_count": 301,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          2.0576727390289307,
+          -0.0005420185043476522,
+          -0.5410475134849548
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -2.0576727390289307,
+          0.0005420185043476522,
+          0.5410475134849548
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1776704,
+    "ac_header": "02014341d7d69fd61014000001002d010000000030000000001400000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-console--bag",
+    "offset": 1877744,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1235104,
+      "sample_offset": 1235120,
+      "flags": "0x01e2",
+      "frame_count": 633,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -4.121700286865234,
+          3.4545578956604004,
+          6.2498908042907715
+        ],
+        "rotation_xyzw": [
+          -0.24479978602087898,
+          -0.5895681814810887,
+          0.04841121897810112,
+          0.7682049062758376
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -5.530192684552553,
+          0.5662743439200772,
+          -6.089320225929349
+        ],
+        "rotation_xyzw": [
+          0.24479978602087898,
+          0.5895681814810887,
+          -0.04841121897810112,
+          0.7682049062758376
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878608,
+    "ac_header": "020143411cd2f2d140000000010079020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-hospital-patients-arrive--civ-b",
+    "offset": 1877832,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1787056,
+      "sample_offset": 1787072,
+      "flags": "0x01fa",
+      "frame_count": 301,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          1.1478843688964844,
+          -0.0005420185043476522,
+          -0.7627031207084656
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -1.1478843688964844,
+          0.0005420185043476522,
+          0.7627031207084656
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1781840,
+    "ac_header": "02014341d7d69fd61014000001002d010000000030000000001400000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-tstrm.pak",
+    "name": "hom2-road-civilians-console--van",
+    "offset": 1877920,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1872592,
+      "sample_offset": 1872608,
+      "flags": "0x01fe",
+      "frame_count": 633,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.9603468179702759,
+          0.2916218936443329,
+          2.364828586578369
+        ],
+        "rotation_xyzw": [
+          -4.255600519261216e-19,
+          -0.031077739051862674,
+          -1.3686790238339647e-17,
+          0.9995169704089192
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -1.1054078147155466,
+          -0.2916218936443329,
+          -2.300598578163883
+        ],
+        "rotation_xyzw": [
+          4.255600519261216e-19,
+          0.031077739051862674,
+          1.3686790238339647e-17,
+          0.9995169704089192
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1878544,
+    "ac_header": "02014341c02a1ed540000000010079020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk1-stream-tstrm.pak",
+    "name": "hom2-drive-chunk1-wagoneer",
+    "offset": 608336,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 483096,
+      "sample_offset": 483112,
+      "flags": "0x01e2",
+      "frame_count": 1030,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          130.69200134277344,
+          -0.6174089908599854,
+          -5.179580211639404
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9996634653118613,
+          0.0,
+          0.02594139781664183
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          130.24746071406884,
+          0.6174089908599854,
+          -11.950993418348247
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9996634653118613,
+          -0.0,
+          0.02594139781664183
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 609568,
+    "ac_header": "02014341a44b7d5b40000000020006040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk1-stream-tstrm.pak",
+    "name": "hom2-drive-chunk1-tommy",
+    "offset": 608736,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 396248,
+      "sample_offset": 396264,
+      "flags": "0x01e2",
+      "frame_count": 1030,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          129.2653045654297,
+          -1.1440091133117676,
+          -15.755243301391602
+        ],
+        "rotation_xyzw": [
+          4.440560678461389e-16,
+          0.9999253708417394,
+          5.4253953107852596e-18,
+          -0.012216904149995066
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          129.61165002709149,
+          1.1440091133116528,
+          -12.592332315107594
+        ],
+        "rotation_xyzw": [
+          -4.440560678461389e-16,
+          -0.9999253708417394,
+          -5.4253953107852596e-18,
+          -0.012216904149995066
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 609440,
+    "ac_header": "020143416edc733340000000020006040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk1-stream-tstrm.pak",
+    "name": "hom2-drive-chunk1-joel",
+    "offset": 609088,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 135704,
+      "sample_offset": 135720,
+      "flags": "0x01e2",
+      "frame_count": 1030,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          130.4356231689453,
+          -1.166322112083435,
+          -15.079309463500977
+        ],
+        "rotation_xyzw": [
+          2.2203437452660561e-16,
+          0.9999539263814622,
+          2.1314560498099337e-18,
+          -0.009599224671680607
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          130.7010711787195,
+          1.166322112083377,
+          -12.572484165925257
+        ],
+        "rotation_xyzw": [
+          -2.2203437452660561e-16,
+          -0.9999539263814622,
+          -2.1314560498099337e-18,
+          -0.009599224671680607
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 609504,
+    "ac_header": "02014341358b26d440000000020006040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk1-stream-tstrm.pak",
+    "name": "hom2-drive-chunk1-policecar1",
+    "offset": 609264,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 309400,
+      "sample_offset": 309416,
+      "flags": "0x01e2",
+      "frame_count": 1030,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -30.60086441040039,
+          3.3870553970336914,
+          352.29742431640625
+        ],
+        "rotation_xyzw": [
+          -0.0019033249356055634,
+          -0.6345247303549596,
+          0.001148334288137267,
+          0.7728993629512954
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -339.60306465139723,
+          -1.81751258615584,
+          -98.62968799645648
+        ],
+        "rotation_xyzw": [
+          0.0019033249356055634,
+          0.6345247303549596,
+          -0.001148334288137267,
+          0.7728993629512954
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 609888,
+    "ac_header": "02014341c361465340000000010006040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk1-stream-tstrm.pak",
+    "name": "hom2-drive-chunk1-policecar2",
+    "offset": 609352,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 222552,
+      "sample_offset": 222568,
+      "flags": "0x01e2",
+      "frame_count": 1030,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -30.60086441040039,
+          2.633300304412842,
+          332.7546691894531
+        ],
+        "rotation_xyzw": [
+          -0.0019033249356055634,
+          -0.6345247303549596,
+          0.001148334288137267,
+          0.7728993629512954
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -320.4315285675693,
+          -1.1497423219316723,
+          -94.8226272204243
+        ],
+        "rotation_xyzw": [
+          0.0019033249356055634,
+          0.6345247303549596,
+          -0.001148334288137267,
+          0.7728993629512954
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 609632,
+    "ac_header": "02014341c361465340000000010006040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk2-stream-tstrm.pak",
+    "name": "hom2-drive-chunk2-wagoneer",
+    "offset": 420144,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 325800,
+      "sample_offset": 325816,
+      "flags": "0x01e2",
+      "frame_count": 580,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -76.96746826171875,
+          -2.9892635345458984,
+          34.64043045043945
+        ],
+        "rotation_xyzw": [
+          -0.004098668634561543,
+          0.699763883848506,
+          -0.00397211307439281,
+          0.7143514051882329
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          36.18448890944158,
+          3.3797716747844198,
+          76.23743302786502
+        ],
+        "rotation_xyzw": [
+          0.004098668634561543,
+          -0.699763883848506,
+          0.00397211307439281,
+          0.7143514051882329
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 421376,
+    "ac_header": "02014341a44b7d5b40000000020044020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk2-stream-tstrm.pak",
+    "name": "hom2-drive-chunk2-tommy",
+    "offset": 420544,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 276752,
+      "sample_offset": 276768,
+      "flags": "0x01e2",
+      "frame_count": 580,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -78.10281372070312,
+          -3.8859918117523193,
+          32.65348815917969
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.6936488952055869,
+          0.0,
+          0.720313272250393
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          35.57493700239024,
+          3.8859918117523193,
+          76.81616794222754
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.6936488952055869,
+          -0.0,
+          0.720313272250393
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 421248,
+    "ac_header": "020143416edc733340000000020044020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk2-stream-tstrm.pak",
+    "name": "hom2-drive-chunk2-joel",
+    "offset": 420896,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 129608,
+      "sample_offset": 129624,
+      "flags": "0x01e2",
+      "frame_count": 580,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -77.61865234375,
+          -3.9146862030029297,
+          31.259429931640625
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.6869002049381532,
+          0.0,
+          0.7267517516015514
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          35.582526635018965,
+          3.9146862030029297,
+          75.73434458407388
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.6869002049381532,
+          -0.0,
+          0.7267517516015514
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 421312,
+    "ac_header": "02014341358b26d440000000020044020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk2-stream-tstrm.pak",
+    "name": "hom2-drive-chunk2-policecar1",
+    "offset": 421072,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 227704,
+      "sample_offset": 227720,
+      "flags": "0x01e2",
+      "frame_count": 580,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -1.5666943788528442,
+          -3.313797950744629,
+          -125.5087661743164
+        ],
+        "rotation_xyzw": [
+          -0.005044367216837241,
+          -0.076996647622301,
+          -9.853669428303999e-05,
+          0.9970185860378075
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          20.820051095009728,
+          2.05460907992059,
+          123.8070685730997
+        ],
+        "rotation_xyzw": [
+          0.005044367216837241,
+          0.076996647622301,
+          9.853669428303999e-05,
+          0.9970185860378075
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 421696,
+    "ac_header": "02014341c361465340000000010044020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk2-stream-tstrm.pak",
+    "name": "hom2-drive-chunk2-policecar2",
+    "offset": 421160,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 178656,
+      "sample_offset": 178672,
+      "flags": "0x01e2",
+      "frame_count": 580,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          30.84696388244629,
+          -0.6193928122520447,
+          -172.76953125
+        ],
+        "rotation_xyzw": [
+          0.004143556634500478,
+          -0.19025719416289757,
+          -0.0031757741653310892,
+          0.9817204008607181
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          35.91702509526132,
+          2.0900185591659657,
+          171.77551888233157
+        ],
+        "rotation_xyzw": [
+          -0.004143556634500478,
+          0.19025719416289757,
+          0.0031757741653310892,
+          0.9817204008607181
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 421440,
+    "ac_header": "02014341c361465340000000010044020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk3-stream-tstrm.pak",
+    "name": "hom2-drive-chunk3-joel",
+    "offset": 257728,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 141208,
+      "sample_offset": 141224,
+      "flags": "0x01ea",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -6.436756134033203,
+          0.3692227602005005,
+          25.84549331665039
+        ],
+        "rotation_xyzw": [
+          -2.5359167583059284e-18,
+          -0.17192909096330075,
+          -1.453014873970506e-17,
+          0.9851093277806952
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -2.6986280916582164,
+          -0.36922276020050027,
+          -26.497901062781317
+        ],
+        "rotation_xyzw": [
+          2.5359167583059284e-18,
+          0.17192909096330075,
+          1.453014873970506e-17,
+          0.9851093277806952
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 258320,
+    "ac_header": "02014341358b26d4400000000200bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk3-stream-tstrm.pak",
+    "name": "hom2-drive-chunk3-tommy",
+    "offset": 257816,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 178008,
+      "sample_offset": 178024,
+      "flags": "0x01ea",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -3.5767080783843994,
+          0.40418556332588196,
+          26.35073471069336
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.09758289938022084,
+          0.0,
+          0.9952274000189855
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -1.6096276118181099,
+          -0.40418556332588196,
+          -26.543608636027486
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          0.09758289938022084,
+          -0.0,
+          0.9952274000189855
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 258256,
+    "ac_header": "020143416edc7333400000000200bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk3-stream-tstrm.pak",
+    "name": "hom2-drive-chunk3-wagoneer",
+    "offset": 257904,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 101608,
+      "sample_offset": 101624,
+      "flags": "0x01e2",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          0.19138726592063904,
+          -0.41060274839401245,
+          27.19930648803711
+        ],
+        "rotation_xyzw": [
+          0.024893016835849966,
+          -0.03749213269818986,
+          -0.000925439211127991,
+          0.998986396934822
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -2.228574090587712,
+          -0.94456393431765,
+          -27.095179527537187
+        ],
+        "rotation_xyzw": [
+          -0.024893016835849966,
+          0.03749213269818986,
+          0.000925439211127991,
+          0.998986396934822
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 258576,
+    "ac_header": "02014341a44b7d5b400000000200bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk4-stream-tstrm.pak",
+    "name": "hom2-drive-chunk4-wagoneer",
+    "offset": 758192,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 569192,
+      "sample_offset": 569208,
+      "flags": "0x01e2",
+      "frame_count": 1226,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -163.16990661621094,
+          -7.648283004760742,
+          25.70756721496582
+        ],
+        "rotation_xyzw": [
+          -0.0014309653218239305,
+          -0.11292507230179337,
+          0.0005609123272591476,
+          0.9936023177112882
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          153.25042091134296,
+          7.595463052440013,
+          -61.64747441453809
+        ],
+        "rotation_xyzw": [
+          0.0014309653218239305,
+          0.11292507230179337,
+          -0.0005609123272591476,
+          0.9936023177112882
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 759168,
+    "ac_header": "02014341a44b7d5b400000000200ca040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk4-stream-tstrm.pak",
+    "name": "hom2-drive-chunk4-tommy",
+    "offset": 758544,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 465880,
+      "sample_offset": 465896,
+      "flags": "0x01e2",
+      "frame_count": 1226,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -158.87107849121094,
+          -8.097070693969727,
+          46.99256896972656
+        ],
+        "rotation_xyzw": [
+          -3.160698225334813e-19,
+          -0.045362994135574486,
+          -6.960397300432964e-18,
+          0.9989705695179693
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          153.95816994893383,
+          8.097070693969728,
+          -61.198063901648275
+        ],
+        "rotation_xyzw": [
+          3.160698225334813e-19,
+          0.045362994135574486,
+          6.960397300432964e-18,
+          0.9989705695179693
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 759232,
+    "ac_header": "020143416edc7333400000000200ca040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk4-stream-tstrm.pak",
+    "name": "hom2-drive-chunk4-mother",
+    "offset": 758720,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 259256,
+      "sample_offset": 259272,
+      "flags": "0x01e2",
+      "frame_count": 1226,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -32.80550003051758,
+          4.595522880554199,
+          82.6780776977539
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.8821269061235942,
+          0.0,
+          -0.4710118061076765
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -86.95375115745844,
+          -4.595522880554199,
+          18.73260589706922
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.8821269061235942,
+          -0.0,
+          -0.4710118061076765
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 759296,
+    "ac_header": "0201434117e2d1dc400000000100ca040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk4-stream-tstrm.pak",
+    "name": "hom2-drive-chunk4-joel",
+    "offset": 758896,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 362568,
+      "sample_offset": 362584,
+      "flags": "0x01e2",
+      "frame_count": 1226,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -164.01007080078125,
+          -8.1432523727417,
+          13.884917259216309
+        ],
+        "rotation_xyzw": [
+          5.328334422083161e-19,
+          -0.14694627682381461,
+          3.586679844763605e-18,
+          0.9891444746484807
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          152.89068763292966,
+          8.143252372741697,
+          -60.963365117933684
+        ],
+        "rotation_xyzw": [
+          -5.328334422083161e-19,
+          0.14694627682381461,
+          -3.586679844763605e-18,
+          0.9891444746484807
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 759424,
+    "ac_header": "02014341358b26d4400000000200ca040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk4-stream-tstrm.pak",
+    "name": "hom2-drive-chunk4-father",
+    "offset": 758984,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 155944,
+      "sample_offset": 155960,
+      "flags": "0x01e2",
+      "frame_count": 1226,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          58.313865661621094,
+          4.87354850769043,
+          -64.65263366699219
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.3056952872468457,
+          0.0,
+          0.9521293984302074
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -85.05083099473312,
+          -4.87354850769043,
+          18.623268123109536
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.3056952872468457,
+          -0.0,
+          0.9521293984302074
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 759360,
+    "ac_header": "02014341d7d69fd6400000000100ca040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk4-stream-tstrm.pak",
+    "name": "hom2-drive-chunk4-daughter",
+    "offset": 759072,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 638200,
+      "sample_offset": 638216,
+      "flags": "0x01ea",
+      "frame_count": 1226,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          86.091552734375,
+          4.748703956604004,
+          -18.089921951293945
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          1.734723475976807e-18,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -86.091552734375,
+          -4.748703956604004,
+          18.089921951293945
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -1.734723475976807e-18,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 759488,
+    "ac_header": "02014341a3b558e2400000000200ca040000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-civa",
+    "offset": 928256,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 284328,
+      "sample_offset": 284344,
+      "flags": "0x01e2",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -60.30360412597656,
+          2.196350574493408,
+          -57.897647857666016
+        ],
+        "rotation_xyzw": [
+          -6.068560422273773e-19,
+          0.2907022240701288,
+          1.997398197019398e-18,
+          0.956813574799543
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          17.903145617745828,
+          -2.1963505744934086,
+          81.65867789171328
+        ],
+        "rotation_xyzw": [
+          6.068560422273773e-19,
+          -0.2907022240701288,
+          -1.997398197019398e-18,
+          0.956813574799543
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930736,
+    "ac_header": "02014341d7d69fd6400000000100d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-inf",
+    "offset": 928408,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 615208,
+      "sample_offset": 615224,
+      "flags": "0x01e2",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -48.36530685424805,
+          2.549816608428955,
+          78.74085235595703
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.908508193087223,
+          0.0,
+          0.41786703997011926
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          28.31076864681353,
+          -2.549816608428955,
+          87.96490843214012
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.908508193087223,
+          -0.0,
+          0.41786703997011926
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930352,
+    "ac_header": "020143415181c7f6400000000200d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-wagoneer",
+    "offset": 928712,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 697928,
+      "sample_offset": 697944,
+      "flags": "0x01e2",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -56.037784576416016,
+          0.18214622139930725,
+          3.889957904815674
+        ],
+        "rotation_xyzw": [
+          -0.007970269475710366,
+          0.29688199260508735,
+          -0.0025228740649030036,
+          0.954877579785896
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          48.365931925921195,
+          -0.11228601138603111,
+          28.567853800536376
+        ],
+        "rotation_xyzw": [
+          0.007970269475710366,
+          -0.29688199260508735,
+          0.0025228740649030036,
+          0.954877579785896
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930672,
+    "ac_header": "02014341a44b7d5b400000000200d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-helicopter",
+    "offset": 929112,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 804568,
+      "sample_offset": 804584,
+      "flags": "0x01fe",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -856.1646118164062,
+          -17.23551368713379,
+          330.1676025390625
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          856.1646118164062,
+          17.23551368713379,
+          -330.1676025390625
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930800,
+    "ac_header": "0201434183cf7894400000000100d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-tommy",
+    "offset": 929464,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 532488,
+      "sample_offset": 532504,
+      "flags": "0x01e2",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -56.443397521972656,
+          -0.42004966735839844,
+          5.500467777252197
+        ],
+        "rotation_xyzw": [
+          3.4191476684758117e-19,
+          0.31564902953788715,
+          -1.0278337329004366e-18,
+          0.9488760141092143
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          48.49090953945878,
+          0.42004966735839855,
+          29.406529234645227
+        ],
+        "rotation_xyzw": [
+          -3.4191476684758117e-19,
+          -0.31564902953788715,
+          1.0278337329004366e-18,
+          0.9488760141092143
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930544,
+    "ac_header": "020143416edc7333400000000200d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-sarah",
+    "offset": 929640,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 753208,
+      "sample_offset": 753224,
+      "flags": "0x01ea",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -48.662052154541016,
+          -0.43351101875305176,
+          -28.266216278076172
+        ],
+        "rotation_xyzw": [
+          0.0,
+          2.7755575615628914e-17,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          48.662052154541016,
+          0.43351101875305176,
+          28.266216278076175
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -2.7755575615628914e-17,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930480,
+    "ac_header": "020143411a1403c2400000000200d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-joel",
+    "offset": 929816,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 367048,
+      "sample_offset": 367064,
+      "flags": "0x01e2",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -55.52600860595703,
+          -17.23551368713379,
+          3.4456770420074463
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.29820797047702546,
+          0.0,
+          0.9545009200330681
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          47.61192904925669,
+          17.23551368713379,
+          28.776979240274315
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.29820797047702546,
+          -0.0,
+          0.9545009200330681
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930416,
+    "ac_header": "02014341358b26d4400000000200d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-infa",
+    "offset": 929992,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 201608,
+      "sample_offset": 201624,
+      "flags": "0x01e2",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -67.6858901977539,
+          2.570528745651245,
+          62.801536560058594
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.8396199143485019,
+          0.0,
+          0.5431743729498053
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          29.536523319118047,
+          -2.570528745651245,
+          87.48146384455376
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.8396199143485019,
+          -0.0,
+          0.5431743729498053
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 931120,
+    "ac_header": "020143415181c7f6400000000200d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-honda",
+    "offset": 930168,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 832408,
+      "sample_offset": 832424,
+      "flags": "0x01fe",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -56.58661651611328,
+          -5.588128566741943,
+          -61.24461364746094
+        ],
+        "rotation_xyzw": [
+          -0.06323773920110438,
+          0.25725465092028765,
+          -0.016873536119535102,
+          0.9641246375336733
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          18.451203452452738,
+          -2.459502725173906,
+          81.47195215500804
+        ],
+        "rotation_xyzw": [
+          0.06323773920110438,
+          -0.25725465092028765,
+          0.016873536119535102,
+          0.9641246375336733
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930608,
+    "ac_header": "0201434195206b12400000000100d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk5-stream-tstrm.pak",
+    "name": "hom2-drive-chunk5-civ",
+    "offset": 930256,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 449768,
+      "sample_offset": 449784,
+      "flags": "0x01e2",
+      "frame_count": 981,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -60.69646072387695,
+          2.2124404907226562,
+          -58.358638763427734
+        ],
+        "rotation_xyzw": [
+          -2.9855199855918396e-19,
+          0.28736049000995273,
+          9.951257828782147e-19,
+          0.9578225037976712
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          18.54700900362524,
+          -2.2124404907226562,
+          82.13281633881084
+        ],
+        "rotation_xyzw": [
+          2.9855199855918396e-19,
+          -0.28736049000995273,
+          -9.951257828782147e-19,
+          0.9578225037976712
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 930864,
+    "ac_header": "02014341d7d69fd6400000000100d5030000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-joel",
+    "offset": 1593032,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1457216,
+      "sample_offset": 1457232,
+      "flags": "0x01ea",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -16.32990837097168,
+          -0.5497859120368958,
+          20.587251663208008
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          16.32990837097168,
+          0.5497859120368958,
+          -20.587251663208008
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596608,
+    "ac_header": "02014341358b26d4400000000200bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civg",
+    "offset": 1593336,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 868336,
+      "sample_offset": 868352,
+      "flags": "0x01fa",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          9.587282180786133,
+          0.044021423906087875,
+          -9.675251960754395
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.986590917536715,
+          0.0,
+          -0.16321262645415263
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          12.192400584549773,
+          -0.044021423906087875,
+          -6.072219372187682
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.986590917536715,
+          -0.0,
+          -0.16321262645415263
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596800,
+    "ac_header": "02014341d7d69fd6400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civh",
+    "offset": 1593424,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1191648,
+      "sample_offset": 1191664,
+      "flags": "0x01ea",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -27.582237243652344,
+          -0.4794483482837677,
+          60.26456069946289
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.8902128422620319,
+          0.0,
+          0.45554483365718756
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          32.74395385648619,
+          0.4794483482837677,
+          57.623177398583906
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.8902128422620319,
+          -0.0,
+          0.45554483365718756
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596672,
+    "ac_header": "02014341d7d69fd6400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-npc",
+    "offset": 1593512,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1332848,
+      "sample_offset": 1332864,
+      "flags": "0x01fa",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -32.64027786254883,
+          -0.6702194809913635,
+          57.2863655090332
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.8642748091089473,
+          0.0,
+          0.5030199343362972
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          33.68780295422856,
+          0.6702194809913635,
+          56.67669136687509
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.8642748091089473,
+          -0.0,
+          0.5030199343362972
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596416,
+    "ac_header": "020143415181c7f6400000000200bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-ramtruck",
+    "offset": 1593600,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 952848,
+      "sample_offset": 952864,
+      "flags": "0x01e2",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -31.04091453552246,
+          0.002073999959975481,
+          59.202877044677734
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.8746216949559793,
+          0.0,
+          0.4848060341129532
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          33.75723543207099,
+          -0.002073999959975481,
+          57.69721034463079
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.8746216949559793,
+          -0.0,
+          0.4848060341129532
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596288,
+    "ac_header": "02014341d02c4779400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-sarah",
+    "offset": 1593688,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1417632,
+      "sample_offset": 1417648,
+      "flags": "0x01ea",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -17.348628997802734,
+          -0.5764399170875549,
+          21.160430908203125
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          17.348628997802734,
+          0.5764399170875549,
+          -21.160430908203125
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596992,
+    "ac_header": "020143411a1403c2400000000200bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-tommy",
+    "offset": 1593776,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1378048,
+      "sample_offset": 1378064,
+      "flags": "0x01ea",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -17.12267303466797,
+          -0.5682138204574585,
+          19.985904693603516
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          17.12267303466797,
+          0.5682138204574585,
+          -19.985904693603516
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596736,
+    "ac_header": "020143416edc7333400000000200bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-wagoneer",
+    "offset": 1593864,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1056448,
+      "sample_offset": 1056464,
+      "flags": "0x01f2",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          -3.4226489067077637,
+          -0.02324291132390499,
+          26.7288761138916
+        ],
+        "rotation_xyzw": [
+          -5.641606457158706e-19,
+          0.27575647669898024,
+          1.9665420719294426e-18,
+          0.9612275305870951
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          17.071885245975377,
+          0.023242911323904977,
+          -20.849414332268452
+        ],
+        "rotation_xyzw": [
+          5.641606457158706e-19,
+          -0.27575647669898024,
+          -1.9665420719294426e-18,
+          0.9612275305870951
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596160,
+    "ac_header": "02014341a44b7d5b400000000200bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civ-fem",
+    "offset": 1594744,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 603528,
+      "sample_offset": 603544,
+      "flags": "0x01ea",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          4.109270095825195,
+          -0.020645689219236374,
+          -0.2018374353647232
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9643267866664023,
+          0.0,
+          -0.2647146548977802
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          3.6364120179312014,
+          0.020645689219236374,
+          1.924408144496208
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9643267866664023,
+          -0.0,
+          -0.2647146548977802
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596544,
+    "ac_header": "0201434117e2d1dc400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civ-fema",
+    "offset": 1595096,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 384056,
+      "sample_offset": 384072,
+      "flags": "0x01e2",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          10.93078899383545,
+          0.08092224597930908,
+          7.104703903198242
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9585715457703861,
+          0.0,
+          -0.2848518766646493
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          5.2770359787404715,
+          -0.08092224597930908,
+          11.921067773440143
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9585715457703861,
+          -0.0,
+          -0.2848518766646493
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596480,
+    "ac_header": "0201434117e2d1dc400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civ-femb",
+    "offset": 1595272,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 271520,
+      "sample_offset": 271536,
+      "flags": "0x01e2",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          10.675002098083496,
+          0.03380228951573372,
+          7.430541038513184
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.992114705219418,
+          0.0,
+          -0.12533320265351577
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          8.491727478673214,
+          -0.03380228951573372,
+          9.851861466091668
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.992114705219418,
+          -0.0,
+          -0.12533320265351577
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596352,
+    "ac_header": "0201434117e2d1dc400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civ",
+    "offset": 1595360,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1124048,
+      "sample_offset": 1124064,
+      "flags": "0x01f2",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          1.2397913932800293,
+          0.028778668493032455,
+          12.971261978149414
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9971150782020964,
+          0.0,
+          0.07590468247761213
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          3.188983399147696,
+          -0.028778668493032455,
+          12.634124618848599
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9971150782020964,
+          -0.0,
+          0.07590468247761213
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596224,
+    "ac_header": "02014341d7d69fd6400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civa",
+    "offset": 1595624,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 783800,
+      "sample_offset": 783816,
+      "flags": "0x01fa",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          2.8308427333831787,
+          0.20103207230567932,
+          -3.2232909202575684
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9672677651127178,
+          0.0,
+          -0.2537578975595601
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          4.048594760255041,
+          -0.20103207230567932,
+          -1.4185046369323802
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9672677651127178,
+          -0.0,
+          -0.2537578975595601
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1597376,
+    "ac_header": "02014341d7d69fd6400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civb",
+    "offset": 1595712,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1287648,
+      "sample_offset": 1287664,
+      "flags": "0x01fa",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          6.519763469696045,
+          0.045059334486722946,
+          13.34228229522705
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9982346465118316,
+          0.0,
+          -0.059393522402688505
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          4.891672965079362,
+          -0.045059334486722946,
+          14.02124631225855
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9982346465118316,
+          -0.0,
+          -0.059393522402688505
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1597120,
+    "ac_header": "02014341d7d69fd6400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civd",
+    "offset": 1595800,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 693664,
+      "sample_offset": 693680,
+      "flags": "0x01ea",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          8.268046379089355,
+          -0.14672663807868958,
+          10.497210502624512
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9992960327239773,
+          0.0,
+          0.03751584974540416
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          9.031841920253477,
+          0.14672663807868958,
+          9.847733281864151
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9992960327239773,
+          -0.0,
+          0.03751584974540416
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1597056,
+    "ac_header": "02014341d7d69fd6400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-cive",
+    "offset": 1595976,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 1242448,
+      "sample_offset": 1242464,
+      "flags": "0x01fa",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          9.064648628234863,
+          0.20110496878623962,
+          16.859766006469727
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.9462202107391866,
+          0.0,
+          -0.32352328013404097
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          -3.15526319603935,
+          -0.20110496878623962,
+          18.880251023489908
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.9462202107391866,
+          -0.0,
+          -0.32352328013404097
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596928,
+    "ac_header": "02014341d7d69fd6400000000100bd020000000000000000300000000000f041"
+  },
+  {
+    "bank": "D:\\TLOUPS4\\Extracted\\actor50\\hom2-chunk6-stream-tstrm.pak",
+    "name": "hom2-drive-chunk6-civf",
+    "offset": 1596064,
+    "placement": {
+      "channel": "apReference",
+      "channel_id": "0xeb87513f",
+      "channel_offset": 496592,
+      "sample_offset": 496608,
+      "flags": "0x01f2",
+      "frame_count": 701,
+      "sample_time": 0.0,
+      "ap_reference": {
+        "position": [
+          12.127339363098145,
+          -0.008295303210616112,
+          9.375236511230469
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.950786520049962,
+          0.0,
+          -0.3098467254809755
+        ]
+      },
+      "relative_to_shared_locator": {
+        "position": [
+          4.274915558151495,
+          0.008295303210616112,
+          14.720479497622781
+        ],
+        "rotation_xyzw": [
+          -0.0,
+          -0.950786520049962,
+          -0.0,
+          -0.3098467254809755
+        ]
+      },
+      "semantics": "locator_world * inverse(ap_reference_at_time_0)",
+      "evidence": "PS4 eboot 0x9c78c0 -> 0x9e7860 -> 0x9e7490"
+    },
+    "ac_offset": 1596864,
+    "ac_header": "02014341d7d69fd6400000000100bd020000000000000000300000000000f041"
+  }
+]
